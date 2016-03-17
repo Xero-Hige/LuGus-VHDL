@@ -4,12 +4,12 @@ use ieee.std_logic_1164.all;
 entity contBCD_tb is
 end;
 
-architecture contBCD_tb_func of contBCD is
+architecture contBCD_tb_func of contBCD_tb is
 	signal rst_in: std_logic:='1';
 	signal enable_in: std_logic:='0';
 	signal clk_in: std_logic:='0';
 	signal n_out: std_logic_vector(3 downto 0);
-	signal c_out: std_logic;
+	signal c_out: std_logic:='0';
 	
 	component contBCD is
 		port (
