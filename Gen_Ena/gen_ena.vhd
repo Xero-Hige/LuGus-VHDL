@@ -12,10 +12,6 @@ end;
 	
 	
 architecture generic_enabler_arq of generic_enabler is	
-	signal rst_in: std_logic:='0';
-	signal enable_in: std_logic:='1';
-	signal clk_in: std_logic:='0';
-	signal enable_out: std_logic:='0';
 	
 	component genericCounter is
 		generic (
@@ -31,14 +27,12 @@ architecture generic_enabler_arq of generic_enabler is
 	end component;
 
 begin
-	genericCounterMap: genericCounter generic map (32,PERIOD/2) --32 bits son suficientes para hasta 4 GHz
+	genericCounterMap: genericCounter generic map (32,PERIOD) --32 bits son suficientes para hasta 4 GHz
 		port map(
-			clk => clk_in,
-			rst => rst_in,
-			ena => enable_in,
-			carry_o => enable_out); --El count_dummy esta conectado siempre a tierra.
+			clk => clk,
+			rst => rst,
+			ena => '1',
+			carry_o => ena_out); --El count_dummy esta conectado siempre a tierra.
 		
-	clk_in <= clk;
-	rst_in <= rst;
-	ena_out <= enable_out;
+	
 end;		
