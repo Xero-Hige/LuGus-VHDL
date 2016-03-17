@@ -1,5 +1,5 @@
 library ieee;
-use ieee.std_logic_ll64.all;
+use ieee.std_logic_1164.all;
 
 entity contBCD_tb is
 end;
@@ -8,7 +8,7 @@ architecture contBCD_tb_func of contBCD is
 	signal rst_in: std_logic:='1';
 	signal enable_in: std_logic:='0';
 	signal clk_in: std_logic:='0';
-	signal n_out: integer;
+	signal n_out: std_logic_vector(3 downto 0);
 	signal c_out: std_logic;
 	
 	component contBCD is
@@ -28,15 +28,11 @@ begin
 	
 	contadorBCDMap: contBCD port map(
 	
-		clk => clk_in;
-		rst => rst_in;
-		ena => enable_in;
-		s => n_out;
+		clk => clk_in,
+		rst => rst_in,
+		ena => enable_in,
+		s => n_out,
 		co => c_out
 	);
 		
 end architecture;		
-	
-	)
-	
-end;

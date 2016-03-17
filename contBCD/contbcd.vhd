@@ -1,6 +1,6 @@
 library ieee;
-use ieee.std_logic_ll64.all;
-
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 entity contBCD is
 	port (
 		clk: in std_logic;
@@ -21,19 +21,19 @@ begin
 			s <= (others => '0');
 			co <= '0';
 		elsif rising_edge(clk) then
-			if ena := '1' then
+			if ena = '1' then
 				count:=count + 1;
 				if count = 9 then
 					co <= '1';
 				elsif count = 10 then	
-					count := '0';
+					count := 0;
 					co <= '0';
 				else
 					co <= '0';
 				end if;
 			end if;	
 		end if;
-		s <= count;
+		s <= std_logic_vector(TO_UNSIGNED(count,4));
 	end process;
 
 end;
