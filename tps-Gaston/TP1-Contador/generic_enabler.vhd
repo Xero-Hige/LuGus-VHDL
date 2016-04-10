@@ -42,7 +42,7 @@ architecture generic_enabler_arq of generic_enabler is
 			clk => clk,
 			rst => rst,
 			ena => '1',
-			carry_o => enabler_out
+			carry_out => enabler_out
 			); --El count_dummy esta conectado siempre a tierra.
 
 end;

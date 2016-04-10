@@ -1,4 +1,4 @@
-ibrary ieee;
+library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
@@ -66,55 +66,66 @@ architecture led_display_controller_arq of led_display_controller is
         mux_output	    : out std_logic_vector  (3 downto 0)
         );
 
-end component;
+    end component;
 
-component anode_sel	 IS
-PORT(
-sel_in	: IN std_logic_vector(1 DOWNTO 0);
-sel_out	: OUT std_logic_vector(3 DOWNTO 0));
-END component;
+    component anode_selector	 is
 
-component led_enabler	 IS
-PORT(
-ena_in		:	IN std_logic_vector(3 DOWNTO 0);
-ena_out	:	OUT std_logic_vector(7 DOWNTO 0));
-END component;
+        port(
+        selector_in	    : in std_logic_vector   (1 downto 0);
+        selector_out	: out std_logic_vector  (3 downto 0)
+        );
+
+    end component;
+
+    component led_enabler	 is
+
+        port(
+        enabler_input   :	in    std_logic_vector(3 downto 0);
+        enabler_output	:	out   std_logic_vector(7 downto 0)
+        );
+
+    end component;
 
 begin
-    genericCounterMap: generic_counter generic map (2,4)
+    genericCounterMap: generic_counter
+    generic map (2,4)
     port map(
     clk => clk_in,
     rst => '0',
     ena => counter_enabler,
-    count => counter_output
+    counter_out => counter_output
     );
 
-    generic_enabler_map: generic_enabler generic map (100000)
+    generic_enabler_map: generic_enabler
+    generic map (100000)
     port map(
     clk => clk_in,
     rst => '0',
-    ena_out => counter_enabler
+    enabler_out => counter_enabler
     );
 
-    bcd_multiplexerMap: bcd_mux port map(
+    bcd_multiplexerMap: bcd_multiplexer
+    port map(
     bcd0_input => bcd0,
     bcd1_input => bcd1,
     bcd2_input => bcd2,
     bcd3_input => bcd3,
+
     mux_selector => counter_output,
-    mux_output => multiplex_output
+    mux_output   => multiplex_output
     );
 
 
-    anode_selMap: anode_sel port map(
-    sel_in	=> counter_output,
-    sel_out	=> anode_output
+    anode_selMap: anode_selector
+    port map(
+    selector_in	    => counter_output,
+    selector_out	=> anode_output
     );
 
-    led_enablerMap: led_enabler port map(
-
-    ena_in 		=>  multiplex_output,
-    ena_out	=>  led_output
+    led_enablerMap: led_enabler
+    port map(
+    enabler_input	=>  multiplex_output,
+    enabler_output  =>  led_output
     );
 
 
