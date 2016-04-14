@@ -33,9 +33,16 @@ ghdl -r generic_enabler_tb --vcd=out.vcd --stop-time=20us
 #gtkwave out.vcd
 rm out.vcd
 
+#Led display controller
+ghdl -a *.vhd
+ghdl -e led_display_controller_tb
+ghdl -r led_display_controller_tb --vcd=out.vcd --stop-time=20us
+gtkwave out.vcd
+rm out.vcd
+
 #Led enabler
 ghdl -a *.vhd
 ghdl -e led_enabler_tb
 ghdl -r led_enabler_tb --vcd=out.vcd --stop-time=20us
-gtkwave out.vcd
+#gtkwave out.vcd
 rm out.vcd

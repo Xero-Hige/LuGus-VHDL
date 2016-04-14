@@ -86,7 +86,7 @@ architecture tp1_arq of tp1 is
         bcd3_en  <=  co_bcd2 and bcd2_en;
 
         generic_enablerMap: generic_enabler
-        generic map(5000000)
+        generic map(50000000)
         port map (
         clk => clk_in,
         rst => '0',
@@ -99,7 +99,7 @@ architecture tp1_arq of tp1 is
         rst => rst_in,
         ena => enabler_output,
         counter_out => bcd0_out,
-        carry_out => co_bcd0
+        carry_out   => co_bcd0
         );
 
         bcd_counter1Map: bcd_counter
@@ -108,7 +108,7 @@ architecture tp1_arq of tp1 is
         rst => rst_in,
         ena => bcd1_en,
         counter_out => bcd1_out,
-        carry_out => co_bcd1
+        carry_out   => co_bcd1
         );
 
         bcd_counter2Map: bcd_counter
@@ -117,7 +117,7 @@ architecture tp1_arq of tp1 is
         rst => rst_in,
         ena => bcd2_en,
         counter_out => bcd2_out,
-        carry_out => co_bcd2
+        carry_out   => co_bcd2
         );
 
         bcd_counter3Map: bcd_counter
@@ -126,7 +126,7 @@ architecture tp1_arq of tp1 is
         rst => rst_in,
         ena => bcd3_en,
         counter_out => bcd3_out,
-        carry_out => co_bcd3
+        carry_out   => co_bcd3
         );
 
 
@@ -140,7 +140,7 @@ architecture tp1_arq of tp1 is
         bcd3 => bcd3_out,
 
         anode_output => clk_anode_ouput,
-        led_output => clk_led_output
+        led_output   => clk_led_output
         );
 
     end;

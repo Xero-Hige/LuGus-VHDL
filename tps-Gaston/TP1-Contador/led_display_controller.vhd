@@ -13,7 +13,7 @@ entity led_display_controller is
     bcd3: in std_logic_vector(3 downto 0);
 
     anode_output: out std_logic_vector(3 downto 0);
-    led_output: out std_logic_vector(7 downto 0)
+    led_output  : out std_logic_vector(7 downto 0)
     );
 
 end;
@@ -97,7 +97,7 @@ begin
     );
 
     generic_enabler_map: generic_enabler
-    generic map (100000)
+    generic map (500000)
     port map(
     clk => clk_in,
     rst => '0',

@@ -6,7 +6,7 @@ entity led_enabler	 is
 
     port(
     enabler_input   :	in    std_logic_vector(3 downto 0);
-    enabler_output	:	out   std_logic_vector(7 downto 0)
+    enabler_output  :	out   std_logic_vector(7 downto 0)
     );
 
 end led_enabler;

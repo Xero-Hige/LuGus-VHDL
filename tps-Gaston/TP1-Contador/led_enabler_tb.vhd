@@ -23,12 +23,12 @@ architecture led_enabler_tb_func of led_enabler_tb is
 	end component;
 
 begin
-	signal_in_a    	<= not signal_in_a after 10 ns;
-    signal_in_b    	<= not signal_in_b after 20 ns;
-	signal_in_c    	<= not signal_in_c after 40 ns;
-    signal_in_d    	<= not signal_in_d after 80 ns;
-    enabler_in(0)   <= signal_in_a;
-    enabler_in(1)   <= signal_in_b;
+	signal_in_a	<= not signal_in_a after 10 ns;
+	signal_in_b	<= not signal_in_b after 20 ns;
+	signal_in_c	<= not signal_in_c after 40 ns;
+	signal_in_d	<= not signal_in_d after 80 ns;
+	enabler_in(0)	<= signal_in_a;
+	enabler_in(1)   <= signal_in_b;
 	enabler_in(2)   <= signal_in_c;
 	enabler_in(3)   <= signal_in_d;
 

@@ -11,7 +11,7 @@ entity bcd_multiplexer is
     bcd3_input	: in std_logic_vector(3 downto 0);
 
     mux_selector    : in std_logic_vector   (1 downto 0);
-    mux_output	    : out std_logic_vector  (3 downto 0)
+    mux_output      : out std_logic_vector  (3 downto 0)
     );
 
 end bcd_multiplexer;

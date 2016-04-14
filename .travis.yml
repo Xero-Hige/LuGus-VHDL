@@ -1,0 +1,9 @@
+language: bash
+
+before_script:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y ghdl
+
+script:
+    - cd tps-Gaston/TP1-Contador
+    - bash ./run.sh
