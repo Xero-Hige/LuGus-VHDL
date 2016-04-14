@@ -18,7 +18,7 @@ end bcd_multiplexer;
 
 architecture bcd_multiplexer_arq of bcd_multiplexer is
     begin
-        process (mux_selector) is
+        process (mux_selector,bcd0_input,bcd1_input,bcd2_input,bcd3_input) is
         begin
             case mux_selector is
                 when "00"   => mux_output <= bcd0_input;
