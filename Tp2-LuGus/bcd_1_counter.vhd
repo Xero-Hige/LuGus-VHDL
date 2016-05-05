@@ -1,24 +1,25 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use work.utility.all;
 
 entity bcd_1_counter is
 
 	generic (
-	COUNTERS:natural := 4;
+	COUNTERS:natural := 5;
+	OUTPUT:natural := 3
 	);
 
     port (
     clk_in: in std_logic;
     rst_in: in std_logic;
-
-    bcd1_out: out std_logic_vector(3 downto 0);
-    clk_led_output: out std_logic_vector(7 downto 0)
+	ena_in: in std_logic;
+    counter_out: out bcd_vector (OUTPUT-1 downto 0)
     );
 	
 end;
 
-architecture tp1_arq of tp1 is
+architecture bcd_1_counter_arq of bcd_1_counter is
 
     component generic_counter is
 
@@ -35,33 +36,48 @@ architecture tp1_arq of tp1 is
 		carry_out: out std_logic
 		);
 
-	end;
+	end component;
 
+	
+	signal bcd_ena_input : signal_vector(0 to COUNTERS) := (others => '1'); --Un valor mas que la cantidad de contadores
+	signal bcd_cout : signal_vector(COUNTERS downto 0) := (others => '1'); --Un valor mas que la cantidad de contadores	
+	
     begin
-		counters : for i in 0 to N-1 generate
-		
-			counter_outs: if i<3 generate
-				counter_out: generic_counter
-					port map(
-					ck => clk ,
-					rst => rst,		
-					d => carry_out(i-1),
-					q => d (i +1)
-					);
-			end generate counter_outs;
-		
-		
-			counter_outs: if i>3 generate
-				counter_out: generic_counter
-					port map(
-					ck => clk ,
-					rst => rst,		
-					d => carry_out(i-1),
-					q => d (i +1)
-					);
-			end generate counter_outs;
+	
+		bcd_ena_input(0) <= ena_in;
+	
+		bcd_counters : for i in 1 to COUNTERS generate
 			
-		end generate counters;
+			bcd_ena_input(i) <= bcd_ena_input(i-1) AND bcd_cout(i-1);
+			
+			counter_outs_valid: if i>COUNTERS-OUTPUT generate
+				counter_out_valid: generic_counter
+					generic map(4,9)
+					port map(
+						clk => clk_in,
+						rst => rst_in,
+						ena => bcd_ena_input(i),
+						counter_out => counter_out(-i + COUNTERS), -- VIENE DE i-(COUNTERS-OUTPUT)-1
+						carry_out => bcd_cout(i)
+					);
+				
+			end generate counter_outs_valid;
+		
+		
+			counter_outs_not_valid : if i < COUNTERS-OUTPUT+1 generate
+				counter_out_not_valid: generic_counter
+					generic map(4,9)
+					port map(
+						clk => clk_in,
+						rst => rst_in,
+						ena => bcd_ena_input(i),
+						--counter_out => counter_out(-i + COUNTERS),
+						carry_out => bcd_cout(i)
+					);
+			end generate counter_outs_not_valid;
+			
+			
+		end generate bcd_counters;
 
 
     end;
