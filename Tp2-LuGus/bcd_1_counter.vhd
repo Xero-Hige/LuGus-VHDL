@@ -57,7 +57,7 @@ architecture bcd_1_counter_arq of bcd_1_counter is
 						clk => clk_in,
 						rst => rst_in,
 						ena => bcd_ena_input(i),
-						counter_out => counter_out(-i + COUNTERS), -- VIENE DE i-(COUNTERS-OUTPUT)-1
+						counter_out => counter_out(i-1 - COUNTERS + OUTPUT), -- VIENE DE i-(COUNTERS-OUTPUT)-1
 						carry_out => bcd_cout(i)
 					);
 				
