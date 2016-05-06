@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=D:\Gus y Lu\bcd_controller\bcd_controller\bcd_controller.ncd
+OUTFILE=D:\Gus y Lu\bcd_controller\bcd_controller\bcd_controller.bit
+FAMILY=Spartan3E
+PART=xc3s500e-4fg320
+WORKINGDIR=D:\Gus y Lu\bcd_controller\bcd_controller
+LICENSE=WebPack
+USER_INFO=202069503_0_0_810

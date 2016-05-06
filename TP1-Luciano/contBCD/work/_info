@@ -1,0 +1,76 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\questasim_6.6b\examples
+T_opt
+Z1 V4lPBMUe;:JF=F]d9iYB5d2
+Z2 04 10 15 work contbcd_tb contbcd_tb_func 1
+Z3 =1-bc5ff4121366-56eb0cbc-36b-bd8
+Z4 o-quiet -auto_acc_if_foreign -work work
+Z5 n@_opt
+Z6 OE;O;6.6b;45
+Z7 dC:\questasim_6.6b\examples
+T_opt1
+VLaP?]n@8g>6O6N_g>6c@E3
+R2
+Z8 =2-bc5ff4121366-5706bef1-8c-d58
+R4
+Z9 n@_opt1
+R6
+R7
+Econtbcd
+Z10 w1460059876
+Z11 DPx4 ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
+Z12 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z13 dD:\Gus y Lu\contBCD
+Z14 8C:\Documents and Settings\alumno\Escritorio\Gus y Lu\contBCD\contbcd.vhd
+Z15 FC:\Documents and Settings\alumno\Escritorio\Gus y Lu\contBCD\contbcd.vhd
+l0
+L4
+Z16 VDojhCTM]<:^7ZCGdbY;OH0
+Z17 OE;C;6.6b;45
+32
+Z18 o-work work -2002 -explicit
+Z19 tExplicit 1
+Z20 !s100 Yn[0GJIRW2F]@TgMPXTi:1
+Acontbcd_arq
+R11
+R12
+Z21 DEx4 work 7 contbcd 0 22 DojhCTM]<:^7ZCGdbY;OH0
+l15
+L14
+Z22 V5[_18JJnfLHh5oX68]5Oc0
+R17
+32
+Z23 Mx2 4 ieee 14 std_logic_1164
+Z24 Mx1 4 ieee 11 numeric_std
+R18
+R19
+Z25 !s100 Mi^alog]?P;jG9b?QTaQk2
+Econtbcd_tb
+Z26 w1460059580
+R12
+R13
+Z27 8C:\Documents and Settings\alumno\Escritorio\Gus y Lu\contBCD\contbcd_tb.vhd
+Z28 FC:\Documents and Settings\alumno\Escritorio\Gus y Lu\contBCD\contbcd_tb.vhd
+l0
+L4
+Z29 VS_:[5Al8D@=9AI0dZ094R3
+R17
+32
+R18
+R19
+Z30 !s100 k?_j9cYbebIXJ9QV2n>oT1
+Acontbcd_tb_func
+R12
+Z31 DEx4 work 10 contbcd_tb 0 22 S_:[5Al8D@=9AI0dZ094R3
+l23
+L7
+Z32 V9@SZ7hZ10K6Zm:`0[=UTC2
+R17
+32
+Z33 Mx1 4 ieee 14 std_logic_1164
+R18
+R19
+Z34 !s100 8bWXcaPVfGSUY81Ak4BPG2

@@ -1,0 +1,101 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\questasim_6.6b\examples
+T_opt
+Z1 V8LR^24fMYefCo@QE@hCMT0
+Z2 04 10 15 work decobcd_tb decobcd_tb_func 1
+Z3 =1-bc5ff4121366-56fd90dc-203-680
+Z4 o-quiet -auto_acc_if_foreign -work work
+Z5 n@_opt
+Z6 OE;O;6.6b;45
+Z7 dC:\questasim_6.6b\examples
+Econtbcd
+Z8 w1458243384
+Z9 DPx4 ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
+Z10 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z11 dD:\Gus y Lu\decoBCD
+Z12 8D:/Gus y Lu/decoBCD/contbcd.vhd
+Z13 FD:/Gus y Lu/decoBCD/contbcd.vhd
+l0
+L4
+Z14 VDojhCTM]<:^7ZCGdbY;OH0
+Z15 OE;C;6.6b;45
+32
+Z16 o-work work -2002 -explicit
+Z17 tExplicit 1
+Z18 !s100 Yn[0GJIRW2F]@TgMPXTi:1
+Acontbcd_arq
+R9
+R10
+Z19 DEx4 work 7 contbcd 0 22 DojhCTM]<:^7ZCGdbY;OH0
+l15
+L14
+Z20 Vc=@:4V9VF>WAf8cjfdT>A3
+R15
+32
+Z21 Mx2 4 ieee 14 std_logic_1164
+Z22 Mx1 4 ieee 11 numeric_std
+R16
+R17
+Z23 !s100 ihVZAj9SVESzfIgEhT[H20
+Edecobcd
+Z24 w1459457616
+R9
+R10
+R11
+Z25 8D:/Gus y Lu/decoBCD/decoBCD.vhd
+Z26 FD:/Gus y Lu/decoBCD/decoBCD.vhd
+l0
+L5
+Z27 V9j@YeB1J6Dof9zhjYEPic0
+R15
+32
+R16
+R17
+Z28 !s100 =K5Z4Yjoj[IBaQZ9gzhg@1
+Adecobcd_arq
+R9
+R10
+Z29 DEx4 work 7 decobcd 0 22 9j@YeB1J6Dof9zhjYEPic0
+l23
+L22
+Z30 V]`m^VDRBKOckd=U>0PdHo0
+R15
+32
+R21
+R22
+R16
+R17
+Z31 !s100 GfcKOl9DSbjLM5=fSa>df3
+Edecobcd_tb
+Z32 w1459458250
+Z33 DPx22 C:\questasim_6.6b\ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+32
+R11
+Z34 8D:/Gus y Lu/decoBCD/decoBCD_tb.vhd
+Z35 FD:/Gus y Lu/decoBCD/decoBCD_tb.vhd
+l0
+L4
+Z36 V[MnU@0;=:08F[zz`aTERl0
+R15
+R16
+R17
+Z37 !s100 N^:Y2T=Y:Mz9O`;L^[0Y63
+Adecobcd_tb_func
+Z38 DPx22 C:\questasim_6.6b\ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
+Z39 DEx24 D:\Gus y Lu\decoBCD\work 7 decobcd 0 22 9j@YeB1J6Dof9zhjYEPic0
+Z40 DEx24 D:\Gus y Lu\decoBCD\work 7 contbcd 0 22 DojhCTM]<:^7ZCGdbY;OH0
+R33
+Z41 DEx24 D:\Gus y Lu\decoBCD\work 10 decobcd_tb 0 22 [MnU@0;=:08F[zz`aTERl0
+32
+Z42 Mx2 22 C:\questasim_6.6b\ieee 14 std_logic_1164
+Z43 Mx1 22 C:\questasim_6.6b\ieee 11 numeric_std
+l48
+L7
+Z44 V;0;WC4;H6=2>G@cCNNh[g3
+R15
+R16
+R17
+Z45 !s100 L]G=1W3U21;LFM4VF^aHo1

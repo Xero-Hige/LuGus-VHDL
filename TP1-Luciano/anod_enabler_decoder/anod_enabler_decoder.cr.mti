@@ -1,0 +1,16 @@
+{D:/Gus y Lu/anod_enabler_decoder/anod_enabler_decoder.vhd} {1 {vcom -work work -2002 -explicit -vopt {D:/Gus y Lu/anod_enabler_decoder/anod_enabler_decoder.vhd}
+QuestaSim vcom 6.6b Compiler 2010.05 May 21 2010
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Loading package numeric_std
+-- Compiling entity anod_enabler_decoder
+-- Compiling architecture anod_enabler_decoder_arq of anod_enabler_decoder
+
+} {} {}} {D:/Gus y Lu/anod_enabler_decoder/anod_enabler_decoder_tb.vhd} {1 {vcom -work work -2002 -explicit -vopt {D:\Gus y Lu\anod_enabler_decoder\anod_enabler_decoder_tb.vhd}
+QuestaSim vcom 6.6b Compiler 2010.05 May 21 2010
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Compiling entity anod_enabler_decoder_tb
+-- Compiling architecture anod_enabler_decoder_tb_func of anod_enabler_decoder_tb
+
+} {} {}}

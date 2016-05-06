@@ -1,0 +1,137 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Documents and Settings\alumno\Escritorio\Gus y Lu\genericCounter
+T_opt
+Z1 VG8JablP9BI>`o_2nZFAaJ2
+Z2 04 10 15 work gen_ena_tb gen_ena_tb_func 1
+Z3 =1-bc5ff4121366-56eb235b-ea-980
+Z4 o-quiet -auto_acc_if_foreign -work work
+Z5 n@_opt
+Z6 OE;O;6.6b;45
+Z7 dC:\Documents and Settings\alumno\Escritorio\Gus y Lu\genericCounter
+T_opt1
+Z8 V2=QgL;FTGimQT2g@mdK_=3
+R2
+Z9 04 14 18 work genericcounter genericcounter_arq 1
+Z10 =3-bc5ff4121366-56eb286c-6d-cc8
+R4
+Z11 n@_opt1
+R6
+R7
+T_opt2
+VkUCoMY@lLe=^1fKS>=Qz`3
+R2
+Z12 =1-bc5ff4121366-5706b427-3c8-f68
+R4
+Z13 n@_opt2
+R6
+R7
+Egen_ena_tb
+Z14 w1458250703
+Z15 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z16 dC:\Documents and Settings\alumno\Escritorio\Gus y Lu\Gen_Ena
+Z17 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/Gen_Ena/gen_ena_tb.vhd
+Z18 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/Gen_Ena/gen_ena_tb.vhd
+l0
+L4
+Z19 VU>4PZQnIagGzmI[TDieHh0
+Z20 OE;C;6.6b;45
+32
+Z21 o-work work -2002 -explicit
+Z22 tExplicit 1
+Z23 !s100 Vf[G`Wb7N^BETnWZCfRde3
+Agen_ena_tb_func
+R15
+Z24 DEx4 work 10 gen_ena_tb 0 22 U>4PZQnIagGzmI[TDieHh0
+l20
+L7
+Z25 V@a;Liz7DER9;Pz43n^;H@1
+R20
+32
+Z26 Mx1 4 ieee 14 std_logic_1164
+R21
+R22
+Z27 !s100 G`IS=HlK=X<?N?LJWe=OZ1
+Egeneric_enabler
+Z28 w1458251873
+R15
+R16
+Z29 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/Gen_Ena/gen_ena.vhd
+Z30 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/Gen_Ena/gen_ena.vhd
+l0
+L4
+Z31 V3WK3Bm5nTXKl6]?g[YbT`2
+R20
+32
+R21
+R22
+Z32 !s100 ?SOJ@4lQhPC<dTR1SjRPd3
+Ageneric_enabler_arq
+R15
+Z33 DEx4 work 15 generic_enabler 0 22 3WK3Bm5nTXKl6]?g[YbT`2
+l29
+L14
+Z34 VL]^I03M0^4PQXJ1^cnLh11
+R20
+32
+R26
+R21
+R22
+Z35 !s100 8d6cocWDbZg?UfkI:nZ941
+Egenericcounter
+Z36 w1458246570
+Z37 DPx4 ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
+R15
+R16
+Z38 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/genericCounter/generic_counter.vhd
+Z39 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/genericCounter/generic_counter.vhd
+l0
+L4
+Z40 VD?laP_lPZNAnYB0VXLG2K2
+R20
+32
+R21
+R22
+Z41 !s100 3k9_MHIdHfQTOIohQccR53
+Agenericcounter_arq
+R37
+R15
+Z42 DEx4 work 14 genericcounter 0 22 D?laP_lPZNAnYB0VXLG2K2
+l18
+L17
+Z43 VAN5cNkzG[8OfQ2[aMKCd93
+R20
+32
+Z44 Mx2 4 ieee 14 std_logic_1164
+Z45 Mx1 4 ieee 11 numeric_std
+R21
+R22
+Z46 !s100 hilQ7zoJ4E4zSCYhmb07[2
+Egenericcounter_tb
+Z47 w1458249062
+R15
+R16
+R17
+R18
+l0
+L4
+Z48 VHD3B0LdE@6?T`DaKZ2hV?0
+R20
+32
+R21
+R22
+Z49 !s100 ;OdWoR`LJW`2nU;kPl2U_1
+Agenericcounter_tb_func
+R15
+Z50 DEx4 work 17 genericcounter_tb 0 22 HD3B0LdE@6?T`DaKZ2hV?0
+l22
+L7
+Z51 VlzRK7V;oBdi=8H?hh^RA>1
+R20
+32
+R26
+R21
+R22
+Z52 !s100 c1OU?`PQZ5Rnb5mP^cBoO2

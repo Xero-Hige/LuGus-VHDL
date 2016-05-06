@@ -1,0 +1,7 @@
+vhdl work "D:\Gus y Lu\bcd_controller\generic_counter.vhd"
+vhdl work "D:\Gus y Lu\bcd_controller\gen_ena.vhd"
+vhdl work "D:\Gus y Lu\bcd_controller\decoBCD.vhd"
+vhdl work "D:\Gus y Lu\bcd_controller\contbcd.vhd"
+vhdl work "D:\Gus y Lu\bcd_controller\anod_enabler_decoder.vhd"
+vhdl work "D:\Gus y Lu\bcd_controller\4_port_multiplexer.vhd"
+vhdl work "D:\Gus y Lu\bcd_controller\bcd_controller.vhd"

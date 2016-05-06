@@ -1,0 +1,66 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Documents and Settings\alumno\Escritorio\TP3 Sistemas digitales zorza\questasim
+T_opt
+Z1 V@S1I1nAXZ404N;kMKKZ;B3
+Z2 04 6 7 work ffd_tb ffd_sim 1
+Z3 =1-bc5ff4121366-56e1d116-186-dcc
+Z4 o-quiet -auto_acc_if_foreign -work work
+Z5 n@_opt
+Z6 OE;O;6.6b;45
+Z7 dC:\Documents and Settings\alumno\Escritorio\TP3 Sistemas digitales zorza\questasim
+Effd
+Z8 w1457638929
+Z9 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z10 dC:\Documents and Settings\alumno\Escritorio\Gus y Lu
+Z11 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD.vhd
+Z12 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD.vhd
+l0
+L4
+Z13 V>neeiiF0H5Vb:ekcfcU3_1
+Z14 OE;C;6.6b;45
+32
+Z15 o-work work -2002 -explicit
+Z16 tExplicit 1
+Z17 !s100 ek?_0fH:@1[Y;R@<:lCRZ3
+Affd_funct
+R9
+Z18 DEx4 work 3 ffd 0 22 >neeiiF0H5Vb:ekcfcU3_1
+l15
+L14
+Z19 Vdm`PV8V]3@fH^Ye_d7X3z0
+R14
+32
+Z20 Mx1 4 ieee 14 std_logic_1164
+R15
+R16
+Z21 !s100 DB27aY5LFIaDH6mNKX?>b2
+Effd_tb
+Z22 w1457639684
+Z23 DPx22 C:\questasim_6.6b\ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+32
+R10
+Z24 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD_tb.vhd
+Z25 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD_tb.vhd
+l0
+L4
+Z26 V`f>VzMY8YO[0OnnzXC=dP1
+R14
+R15
+R16
+Z27 !s100 WBKZYQ1ZghaPVTVcj>hWd1
+Affd_sim
+Z28 DEx57 C:\Documents and Settings\alumno\Escritorio\Gus y Lu\work 3 ffd 0 22 >neeiiF0H5Vb:ekcfcU3_1
+R23
+Z29 DEx57 C:\Documents and Settings\alumno\Escritorio\Gus y Lu\work 6 ffd_tb 0 22 `f>VzMY8YO[0OnnzXC=dP1
+32
+Z30 Mx1 22 C:\questasim_6.6b\ieee 14 std_logic_1164
+l26
+L7
+Z31 VcMZBfBmB3<UdUaTRo6=i>1
+R14
+R15
+R16
+Z32 !s100 fVgzFe4g9R4;L@h25gIXh0
