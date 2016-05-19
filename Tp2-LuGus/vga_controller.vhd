@@ -20,9 +20,12 @@ entity vga_ctrl is
 		blu_i: in std_logic;
 		hs: out std_logic;
 		vs: out std_logic;
-		red_o: out std_logic_vector(2 downto 0);
-		grn_o: out std_logic_vector(2 downto 0);
-		blu_o: out std_logic_vector(1 downto 0);
+		-- red_o: out std_logic_vector(2 downto 0);
+		-- grn_o: out std_logic_vector(2 downto 0);
+		-- blu_o: out std_logic_vector(1 downto 0);
+		red_o: out std_logic;
+		grn_o: out std_logic;
+		blu_o: out std_logic;
 		pixel_row: out std_logic_vector(9 downto 0);
 		pixel_col: out std_logic_vector(9 downto 0)
 	);
@@ -30,15 +33,15 @@ entity vga_ctrl is
 	attribute loc: string;
 			
 	-- Mapeo de pines para el kit Nexys 2 (spartan 3E)
-	attribute loc of mclk: signal is "B8";
-	attribute loc of red_i: signal is "K18";
-	attribute loc of grn_i: signal is "H18";
-	attribute loc of blu_i: signal is "G18";
-	attribute loc of hs: signal is "T4";
-	attribute loc of vs: signal is "U3";
-	attribute loc of red_o: signal is "R8 T8 R9";
-	attribute loc of grn_o: signal is "P6 P8 N8";
-	attribute loc of blu_o: signal is "U4 U5";
+	-- attribute loc of mclk: signal is "B8";
+	-- attribute loc of red_i: signal is "K18";
+	-- attribute loc of grn_i: signal is "H18";
+	-- attribute loc of blu_i: signal is "G18";
+	-- attribute loc of hs: signal is "T4";
+	-- attribute loc of vs: signal is "U3";
+	-- attribute loc of red_o: signal is "R8 T8 R9";
+	-- attribute loc of grn_o: signal is "P6 P8 N8";
+	-- attribute loc of blu_o: signal is "U4 U5";
 
 	-- Mapeo de pines para el kit spartan 3E
 	-- attribute loc of mclk: signal is "C9";
@@ -142,20 +145,23 @@ begin
 	-- Los colores est?n comandados por los switches de entrada del kit
 
 	-- Dibuja un cuadrado rojo
-    red_o <= (others => '1') when ((hc(9 downto 6) = "0111") and vc(9 downto 6) = "0100" and red_i = '1' and vidon ='1') else (others => '0');
+   -- red_o <= (others => '1') when ((hc(9 downto 6) = "0111") and vc(9 downto 6) = "0100" and red_i = '1' and vidon ='1') else (others => '0');
 
 	-- Dibuja una linea roja (valor espec?fico del contador horizontal
 	-- red_o <= '1' when (hc = "1010101100" and red_i = '1' and vidon ='1') else '0';
 	
 	-- Dibuja una linea verde (valor espec?fico del contador horizontal)
-    grn_o <= (others => '1') when (hc = "0100000100" and grn_i = '1' and vidon ='1') else (others => '0');	
+  --  grn_o <= (others => '1') when (hc = "0100000100" and grn_i = '1' and vidon ='1') else (others => '0');	
 	
 	-- Dibuja una linea azul (valor espec?fico del contador vertical)
-    blu_o <= (others => '1') when (vc = "0100100001" and blu_i = '1' and vidon ='1') else (others => '0');	
+ --   blu_o <= (others => '1') when (vc = "0100100001" and blu_i = '1' and vidon ='1') else (others => '0');	
 
 	-- Pinta la pantalla del color formado por la combinaci?n de las entradas red_i, grn_i y blu_i (switches)
-	-- red_o <= '1' when (red_i = '1' and vidon = '1') else '0';
-	-- grn_o <= '1' when (grn_i = '1' and vidon = '1') else '0';
-	-- blu_o <= '1' when (blu_i = '1' and vidon = '1') else '0';
+	-- red_o <= "111" when (red_i = '1' and vidon = '1') else "000";
+	-- grn_o <= "111"	when (grn_i = '1' and vidon = '1') else "000";
+	-- blu_o <= "11" when (blu_i = '1' and vidon = '1') else "00";
+	red_o <= '1' when (red_i = '1' and vidon = '1') else '0';
+	grn_o <= '1' when (grn_i = '1' and vidon = '1') else '0';
+	blu_o <= '1' when (blu_i = '1' and vidon = '1') else '0';
 
 end vga_ctrl_arq;
