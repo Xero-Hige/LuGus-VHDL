@@ -29,9 +29,9 @@ begin
 	rst_in <= '0' after 50 ns;
 	enable_in <= '1' after 60 ns;
 
-	genericCounterMap: generic_counter generic map (4,19)
+	generic_counter_map: generic_counter generic map (4,19)
 		port map(
-
+	
 			clk => clk_in,
 			rst => rst_in,
 			ena => enable_in,

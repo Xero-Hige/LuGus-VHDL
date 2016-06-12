@@ -1,7 +1,0 @@
-v 4
-file . "bcd_counter/cont_bcd_tb.vhd" "c8aee33c741a82d5319fd629df433b1c1c273262" "20160331195417.595":
-  entity cont_bcd_tb at 1( 0) + 0 on 19;
-  architecture cont_bcd_tb_func of cont_bcd_tb at 7( 78) + 0 on 20;
-file . "bcd_counter/cont_bcd.vhd" "b2d0f6be391e5cda74284f71d653df8cef370365" "20160331195417.583":
-  entity contbcd at 1( 0) + 0 on 17;
-  architecture contbcd_arq of contbcd at 14( 240) + 0 on 18;

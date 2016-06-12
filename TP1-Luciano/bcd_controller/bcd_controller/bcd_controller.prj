@@ -1,7 +1,0 @@
-vhdl work "../generic_counter.vhd"
-vhdl work "../gen_ena.vhd"
-vhdl work "../decoBCD.vhd"
-vhdl work "../contbcd.vhd"
-vhdl work "../anod_enabler_decoder.vhd"
-vhdl work "../4_port_multiplexer.vhd"
-vhdl work "../bcd_controller.vhd"
