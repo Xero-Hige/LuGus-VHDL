@@ -1,0 +1,30 @@
+xst -intstyle ise -ifn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.xst" -ofn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.syr" 
+xst -intstyle ise -ifn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.xst" -ofn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s500e-fg320-4 "bcd_controller.ngc" bcd_controller.ngd  
+map -intstyle ise -p xc3s500e-fg320-4 -cm area -ir off -pr off -c 100 -o bcd_controller_map.ncd bcd_controller.ngd bcd_controller.pcf 
+par -w -intstyle ise -ol high -t 1 bcd_controller_map.ncd bcd_controller.ncd bcd_controller.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml bcd_controller.twx bcd_controller.ncd -o bcd_controller.twr bcd_controller.pcf 
+xst -intstyle ise -ifn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.xst" -ofn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s500e-fg320-4 "bcd_controller.ngc" bcd_controller.ngd  
+map -intstyle ise -p xc3s500e-fg320-4 -cm area -ir off -pr off -c 100 -o bcd_controller_map.ncd bcd_controller.ngd bcd_controller.pcf 
+par -w -intstyle ise -ol high -t 1 bcd_controller_map.ncd bcd_controller.ncd bcd_controller.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml bcd_controller.twx bcd_controller.ncd -o bcd_controller.twr bcd_controller.pcf 
+bitgen -intstyle ise -f bcd_controller.ut bcd_controller.ncd 
+xst -intstyle ise -ifn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.xst" -ofn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s500e-fg320-4 "bcd_controller.ngc" bcd_controller.ngd  
+map -intstyle ise -p xc3s500e-fg320-4 -cm area -ir off -pr off -c 100 -o bcd_controller_map.ncd bcd_controller.ngd bcd_controller.pcf 
+par -w -intstyle ise -ol high -t 1 bcd_controller_map.ncd bcd_controller.ncd bcd_controller.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml bcd_controller.twx bcd_controller.ncd -o bcd_controller.twr bcd_controller.pcf 
+bitgen -intstyle ise -f bcd_controller.ut bcd_controller.ncd 
+xst -intstyle ise -ifn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.xst" -ofn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s500e-fg320-4 "bcd_controller.ngc" bcd_controller.ngd  
+map -intstyle ise -p xc3s500e-fg320-4 -cm area -ir off -pr off -c 100 -o bcd_controller_map.ncd bcd_controller.ngd bcd_controller.pcf 
+par -w -intstyle ise -ol high -t 1 bcd_controller_map.ncd bcd_controller.ncd bcd_controller.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml bcd_controller.twx bcd_controller.ncd -o bcd_controller.twr bcd_controller.pcf 
+bitgen -intstyle ise -f bcd_controller.ut bcd_controller.ncd 
+xst -intstyle ise -ifn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.xst" -ofn "D:/Gus y Lu/bcd_controller/bcd_controller/bcd_controller.syr" 
+ngdbuild -intstyle ise -dd _ngo -nt timestamp -i -p xc3s500e-fg320-4 "bcd_controller.ngc" bcd_controller.ngd  
+map -intstyle ise -p xc3s500e-fg320-4 -cm area -ir off -pr off -c 100 -o bcd_controller_map.ncd bcd_controller.ngd bcd_controller.pcf 
+par -w -intstyle ise -ol high -t 1 bcd_controller_map.ncd bcd_controller.ncd bcd_controller.pcf 
+trce -intstyle ise -v 3 -s 4 -n 3 -fastpaths -xml bcd_controller.twx bcd_controller.ncd -o bcd_controller.twr bcd_controller.pcf 
+bitgen -intstyle ise -f bcd_controller.ut bcd_controller.ncd 

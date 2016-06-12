@@ -1,0 +1,164 @@
+# Current time Thu May 05 17:56:43 2016
+# QuestaSim Stack Trace
+# Program = vish
+# Id = "6.6b"
+# Version = "2010.05"
+# Date = "May 21 2010"
+# Platform = win32
+
+Exception c0000005 has occurred at address 004e9c3d. Traceback:
+# 0    0x004e9c3d: 'Mtirpc_Init + 0x5f92d'
+# 1    0x00465e47: '<unknown (@0x465e47)>'
+# 2    0x004698ae: '<unknown (@0x4698ae)>'
+# 3    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 4    0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 5    0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 6    0x1005391f: 'TclObjInterpProc + 0x23f'
+# 7    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 8    0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 9    0x1023fcaa: 'Tk_BindEvent + 0x72a'
+# 10   0x102593e2: 'TkBindEventProc + 0xf2'
+# 11   0x10263410: 'Tk_HandleEvent + 0x470'
+# 12   0x10263606: 'Tk_CollapseMotionEvents + 0x86'
+# 13   0x1004aed0: 'Tcl_ServiceEvent + 0x60'
+# 14   0x1004b07a: 'Tcl_DoOneEvent + 0x6a'
+# 15   0x1026368f: 'Tk_MainLoop + 0x1f'
+# 16   0x0049edb1: 'Mtirpc_Init + 0x14aa1'
+# 17   0x004a04f1: 'Mtirpc_Init + 0x161e1'
+# 18   0x0073792a: '<unknown (@0x73792a)>'
+# 19   0x7c816d4f: '<unknown (@0x7c816d4f)>'
+StackWalk failed 487
+# End of Stack Trace
+
+# Current time Thu May 05 17:56:43 2016
+# QuestaSim Stack Trace
+# Program = vish
+# Id = "6.6b"
+# Version = "2010.05"
+# Date = "May 21 2010"
+# Platform = win32
+
+Exception c0000005 has occurred at address 004e9c3d. Traceback:
+# 0    0x004e9c3d: 'Mtirpc_Init + 0x5f92d'
+# 1    0x00465e47: '<unknown (@0x465e47)>'
+# 2    0x004698ae: '<unknown (@0x4698ae)>'
+# 3    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 4    0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 5    0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 6    0x1005391f: 'TclObjInterpProc + 0x23f'
+# 7    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 8    0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 9    0x1023fcaa: 'Tk_BindEvent + 0x72a'
+# 10   0x102593e2: 'TkBindEventProc + 0xf2'
+# 11   0x10263410: 'Tk_HandleEvent + 0x470'
+# 12   0x10263606: 'Tk_CollapseMotionEvents + 0x86'
+# 13   0x1004aed0: 'Tcl_ServiceEvent + 0x60'
+# 14   0x1004b07a: 'Tcl_DoOneEvent + 0x6a'
+# 15   0x1002b4bb: 'Tcl_VwaitObjCmd + 0x6b'
+# 16   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 17   0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 18   0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 19   0x1005391f: 'TclObjInterpProc + 0x23f'
+# 20   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 21   0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 22   0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 23   0x1005391f: 'TclObjInterpProc + 0x23f'
+# 24   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 25   0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 26   0x1000e0d6: 'Tcl_Eval + 0x16'
+# 27   0x00498193: 'Mtirpc_Init + 0xde83'
+# 28   0x0049cafa: 'Mtirpc_Init + 0x127ea'
+# 29   0x004a051d: 'Mtirpc_Init + 0x1620d'
+# 30   0x0073792a: '<unknown (@0x73792a)>'
+# 31   0x7c816d4f: '<unknown (@0x7c816d4f)>'
+StackWalk failed 487
+# End of Stack Trace
+
+# Current time Thu May 05 17:56:43 2016
+# QuestaSim Stack Trace
+# Program = vish
+# Id = "6.6b"
+# Version = "2010.05"
+# Date = "May 21 2010"
+# Platform = win32
+
+Exception c0000005 has occurred at address 004e9c3d. Traceback:
+# 0    0x004e9c3d: 'Mtirpc_Init + 0x5f92d'
+# 1    0x00465e47: '<unknown (@0x465e47)>'
+# 2    0x004698ae: '<unknown (@0x4698ae)>'
+# 3    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 4    0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 5    0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 6    0x1005391f: 'TclObjInterpProc + 0x23f'
+# 7    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 8    0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 9    0x1023fcaa: 'Tk_BindEvent + 0x72a'
+# 10   0x102593e2: 'TkBindEventProc + 0xf2'
+# 11   0x10263410: 'Tk_HandleEvent + 0x470'
+# 12   0x10263606: 'Tk_CollapseMotionEvents + 0x86'
+# 13   0x1004aed0: 'Tcl_ServiceEvent + 0x60'
+# 14   0x1004b07a: 'Tcl_DoOneEvent + 0x6a'
+# 15   0x1002b4bb: 'Tcl_VwaitObjCmd + 0x6b'
+# 16   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 17   0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 18   0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 19   0x1005391f: 'TclObjInterpProc + 0x23f'
+# 20   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 21   0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 22   0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 23   0x1005391f: 'TclObjInterpProc + 0x23f'
+# 24   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 25   0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 26   0x1000e0d6: 'Tcl_Eval + 0x16'
+# 27   0x00498193: 'Mtirpc_Init + 0xde83'
+# 28   0x0049cafa: 'Mtirpc_Init + 0x127ea'
+# 29   0x004a051d: 'Mtirpc_Init + 0x1620d'
+# 30   0x0073792a: '<unknown (@0x73792a)>'
+# 31   0x7c816d4f: '<unknown (@0x7c816d4f)>'
+StackWalk failed 487
+# End of Stack Trace
+
+# Current time Thu May 05 17:56:43 2016
+# QuestaSim Stack Trace
+# Program = vish
+# Id = "6.6b"
+# Version = "2010.05"
+# Date = "May 21 2010"
+# Platform = win32
+
+Exception c0000005 has occurred at address 004e9c3d. Traceback:
+# 0    0x004e9c3d: 'Mtirpc_Init + 0x5f92d'
+# 1    0x00465e47: '<unknown (@0x465e47)>'
+# 2    0x004698ae: '<unknown (@0x4698ae)>'
+# 3    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 4    0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 5    0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 6    0x1005391f: 'TclObjInterpProc + 0x23f'
+# 7    0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 8    0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 9    0x1023fcaa: 'Tk_BindEvent + 0x72a'
+# 10   0x102593e2: 'TkBindEventProc + 0xf2'
+# 11   0x10263410: 'Tk_HandleEvent + 0x470'
+# 12   0x10263606: 'Tk_CollapseMotionEvents + 0x86'
+# 13   0x1004aed0: 'Tcl_ServiceEvent + 0x60'
+# 14   0x1004b07a: 'Tcl_DoOneEvent + 0x6a'
+# 15   0x1002b4bb: 'Tcl_VwaitObjCmd + 0x6b'
+# 16   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 17   0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 18   0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 19   0x1005391f: 'TclObjInterpProc + 0x23f'
+# 20   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 21   0x1002d7bb: 'TclExprFloatError + 0x10eb'
+# 22   0x1002bc79: 'TclCompEvalObj + 0xd9'
+# 23   0x1005391f: 'TclObjInterpProc + 0x23f'
+# 24   0x1000c770: 'TclEvalObjvInternal + 0x230'
+# 25   0x1000dd77: 'Tcl_EvalEx + 0x167'
+# 26   0x1000e0d6: 'Tcl_Eval + 0x16'
+# 27   0x00498193: 'Mtirpc_Init + 0xde83'
+# 28   0x0049cafa: 'Mtirpc_Init + 0x127ea'
+# 29   0x004a051d: 'Mtirpc_Init + 0x1620d'
+# 30   0x0073792a: '<unknown (@0x73792a)>'
+# 31   0x7c816d4f: '<unknown (@0x7c816d4f)>'
+StackWalk failed 487
+# End of Stack Trace
+

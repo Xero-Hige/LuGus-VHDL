@@ -1,0 +1,44 @@
+V3 27
+FL "D:/Gus y Lu/bcd_controller/4_port_multiplexer.vhd" 2016/03/31.18:32:14 M.53d
+EN work/four_port_multiplexer 1460060633 \
+      FL "D:/Gus y Lu/bcd_controller/4_port_multiplexer.vhd" \
+      PB ieee/std_logic_1164 1270894585 PB ieee/NUMERIC_STD 1270894586
+AR work/four_port_multiplexer/four_port_multiplexer_arq 1460060634 \
+      FL "D:/Gus y Lu/bcd_controller/4_port_multiplexer.vhd" \
+      EN work/four_port_multiplexer 1460060633
+FL "D:/Gus y Lu/bcd_controller/anod_enabler_decoder.vhd" 2016/04/07.16:01:14 M.53d
+EN work/anod_enabler_decoder 1460060627 \
+      FL "D:/Gus y Lu/bcd_controller/anod_enabler_decoder.vhd" \
+      PB ieee/std_logic_1164 1270894585 PB ieee/NUMERIC_STD 1270894586
+AR work/anod_enabler_decoder/anod_enabler_decoder_arq 1460060628 \
+      FL "D:/Gus y Lu/bcd_controller/anod_enabler_decoder.vhd" \
+      EN work/anod_enabler_decoder 1460060627
+FL "D:/Gus y Lu/bcd_controller/bcd_controller.vhd" 2016/04/07.17:23:32 M.53d
+EN work/bcd_controller 1460060637 \
+      FL "D:/Gus y Lu/bcd_controller/bcd_controller.vhd" PB ieee/std_logic_1164 1270894585
+AR work/bcd_controller/bcd_controller_arq 1460060638 \
+      FL "D:/Gus y Lu/bcd_controller/bcd_controller.vhd" EN work/bcd_controller 1460060637 \
+      CP genericCounter CP anod_enabler_decoder CP generic_enabler CP contBCD \
+      CP four_port_multiplexer CP decoBCD
+FL "D:/Gus y Lu/bcd_controller/contbcd.vhd" 2016/04/07.17:12:48 M.53d
+EN work/contBCD 1460060631 FL "D:/Gus y Lu/bcd_controller/contbcd.vhd" \
+      PB ieee/std_logic_1164 1270894585 PB ieee/NUMERIC_STD 1270894586
+AR work/contBCD/contBCD_arq 1460060632 \
+      FL "D:/Gus y Lu/bcd_controller/contbcd.vhd" EN work/contBCD 1460060631
+FL "D:/Gus y Lu/bcd_controller/decoBCD.vhd" 2016/03/31.17:53:36 M.53d
+EN work/decoBCD 1460060635 FL "D:/Gus y Lu/bcd_controller/decoBCD.vhd" \
+      PB ieee/std_logic_1164 1270894585 PB ieee/NUMERIC_STD 1270894586
+AR work/decoBCD/decoBCD_arq 1460060636 \
+      FL "D:/Gus y Lu/bcd_controller/decoBCD.vhd" EN work/decoBCD 1460060635
+FL "D:/Gus y Lu/bcd_controller/generic_counter.vhd" 2016/03/17.17:29:32 M.53d
+EN work/genericCounter 1460060625 \
+      FL "D:/Gus y Lu/bcd_controller/generic_counter.vhd" PB ieee/std_logic_1164 1270894585 \
+      PB ieee/NUMERIC_STD 1270894586
+AR work/genericCounter/genericCounter_arq 1460060626 \
+      FL "D:/Gus y Lu/bcd_controller/generic_counter.vhd" EN work/genericCounter 1460060625
+FL "D:/Gus y Lu/bcd_controller/gen_ena.vhd" 2016/03/17.18:57:54 M.53d
+EN work/generic_enabler 1460060629 FL "D:/Gus y Lu/bcd_controller/gen_ena.vhd" \
+      PB ieee/std_logic_1164 1270894585
+AR work/generic_enabler/generic_enabler_arq 1460060630 \
+      FL "D:/Gus y Lu/bcd_controller/gen_ena.vhd" EN work/generic_enabler 1460060629 \
+      CP genericCounter

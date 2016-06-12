@@ -1,0 +1,24 @@
+{D:/Gus y Lu/decoBCD/decoBCD.vhd} {1 {vcom -work work -2002 -explicit -vopt {D:/Gus y Lu/decoBCD/decoBCD.vhd}
+QuestaSim vcom 6.6b Compiler 2010.05 May 21 2010
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Loading package numeric_std
+-- Compiling entity decobcd
+-- Compiling architecture decobcd_arq of decobcd
+
+} {} {}} {D:/Gus y Lu/decoBCD/contbcd.vhd} {1 {vcom -work work -2002 -explicit -vopt {D:/Gus y Lu/decoBCD/contbcd.vhd}
+QuestaSim vcom 6.6b Compiler 2010.05 May 21 2010
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Loading package numeric_std
+-- Compiling entity contbcd
+-- Compiling architecture contbcd_arq of contbcd
+
+} {} {}} {D:/Gus y Lu/decoBCD/decoBCD_tb.vhd} {1 {vcom -work work -2002 -explicit -vopt {D:/Gus y Lu/decoBCD/decoBCD_tb.vhd}
+QuestaSim vcom 6.6b Compiler 2010.05 May 21 2010
+-- Loading package standard
+-- Loading package std_logic_1164
+-- Compiling entity decobcd_tb
+-- Compiling architecture decobcd_tb_func of decobcd_tb
+
+} {} {}}

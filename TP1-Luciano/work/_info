@@ -1,0 +1,185 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\Documents and Settings\alumno\Escritorio\TP3 Sistemas digitales zorza\questasim
+T_opt
+Z1 V@S1I1nAXZ404N;kMKKZ;B3
+Z2 04 6 7 work ffd_tb ffd_sim 1
+Z3 =1-bc5ff4121366-56e1d116-186-dcc
+Z4 o-quiet -auto_acc_if_foreign -work work
+Z5 n@_opt
+Z6 OE;O;6.6b;45
+Z7 dC:\Documents and Settings\alumno\Escritorio\TP3 Sistemas digitales zorza\questasim
+T_opt1
+Z8 V__g3i[MM88@QdY@Lia30A2
+Z9 04 11 12 work contador_tb contador_sim 1
+Z10 =3-bc5ff4121366-56e1dab1-35b-e54
+R4
+Z11 n@_opt1
+R6
+R7
+T_opt2
+VG==FY]^^kLSL]MU^]^7^d1
+Z12 04 18 12 work contador_vector_tb contador_sim 1
+Z13 =4-bc5ff4121366-56e1dfaf-2ce-f2c
+R4
+Z14 n@_opt2
+R6
+R7
+Econtador
+Z15 w1457642255
+Z16 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z17 dC:\Documents and Settings\alumno\Escritorio\Gus y Lu
+Z18 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador.vhd
+Z19 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador.vhd
+l0
+L5
+Z20 V;c8KmdH6HzEU3:8V[]MjE2
+Z21 OE;C;6.6b;45
+32
+Z22 o-work work -2002 -explicit
+Z23 tExplicit 1
+Z24 !s100 0P41Ii`Fn]jU:bUZYmSVG1
+Acontador_func
+R16
+Z25 DEx4 work 8 contador 0 22 ;c8KmdH6HzEU3:8V[]MjE2
+l29
+L16
+Z26 V<5fYfNR39MZNIM2cKk`9:2
+R21
+32
+Z27 Mx1 4 ieee 14 std_logic_1164
+R22
+R23
+Z28 !s100 GPQC6L06F5^i516KQ`Z=d2
+Econtador_tb
+Z29 w1457642021
+R16
+R17
+Z30 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador_td.vhd
+Z31 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador_td.vhd
+l0
+L4
+Z32 VdXa6c6OoY_GMch[PDMN4n2
+R21
+32
+R22
+R23
+Z33 !s100 2DZ=IW5MR2VHoI>RcN2=^0
+Acontador_sim
+R16
+Z34 DEx4 work 11 contador_tb 0 22 dXa6c6OoY_GMch[PDMN4n2
+l26
+L7
+Z35 Vf@fRmg<Y:l1Q2PmVn5KPN3
+R21
+32
+R27
+R22
+R23
+Z36 !s100 `<edOVmlaZf8`6ld<5LVB1
+Econtador_vector
+Z37 w1457643114
+R16
+R17
+Z38 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador_vector.vhd
+Z39 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador_vector.vhd
+l0
+L5
+Z40 VY3gYHjmkRGfbQ3k6iSILL1
+R21
+32
+R22
+R23
+Z41 !s100 l@;VEUPiTIWZ?n4=6S5M52
+Acontador_func
+R16
+Z42 DEx4 work 15 contador_vector 0 22 Y3gYHjmkRGfbQ3k6iSILL1
+l28
+L15
+Z43 VdUAF2cn1b5IPT6]IQO7=31
+R21
+32
+R27
+R22
+R23
+Z44 !s100 0GQ8EI`Lz`F^]m2cA_z3n3
+Econtador_vector_tb
+Z45 w1457643425
+R16
+R17
+Z46 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador_vector_tb.vhd
+Z47 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/Contador_vector_tb.vhd
+l0
+L4
+Z48 VciHnDfkNn6>5g=h]Sz=@Y0
+R21
+32
+R22
+R23
+Z49 !s100 T;a`[4d`?`aaA_@P>?UDh2
+Acontador_sim
+R16
+Z50 DEx4 work 18 contador_vector_tb 0 22 ciHnDfkNn6>5g=h]Sz=@Y0
+l24
+L7
+Z51 VkZ6JKebXa=oL1UT1Cin?W2
+R21
+32
+R27
+R22
+R23
+Z52 !s100 ?WA`ON?917OViR82zaU5L1
+Effd
+Z53 w1457638929
+R16
+R17
+Z54 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD.vhd
+Z55 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD.vhd
+l0
+L4
+Z56 V>neeiiF0H5Vb:ekcfcU3_1
+R21
+32
+R22
+R23
+Z57 !s100 ek?_0fH:@1[Y;R@<:lCRZ3
+Affd_funct
+R16
+Z58 DEx4 work 3 ffd 0 22 >neeiiF0H5Vb:ekcfcU3_1
+l15
+L14
+Z59 Vdm`PV8V]3@fH^Ye_d7X3z0
+R21
+32
+R27
+R22
+R23
+Z60 !s100 DB27aY5LFIaDH6mNKX?>b2
+Effd_tb
+Z61 w1457639684
+R16
+R17
+Z62 8C:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD_tb.vhd
+Z63 FC:/Documents and Settings/alumno/Escritorio/Gus y Lu/FFD_tb.vhd
+l0
+L4
+Z64 V`f>VzMY8YO[0OnnzXC=dP1
+R21
+32
+R22
+R23
+Z65 !s100 WBKZYQ1ZghaPVTVcj>hWd1
+Affd_sim
+R16
+Z66 DEx4 work 6 ffd_tb 0 22 `f>VzMY8YO[0OnnzXC=dP1
+l26
+L7
+Z67 VcMZBfBmB3<UdUaTRo6=i>1
+R21
+32
+R27
+R22
+R23
+Z68 !s100 fVgzFe4g9R4;L@h25gIXh0

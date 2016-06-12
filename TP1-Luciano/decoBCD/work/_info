@@ -1,0 +1,97 @@
+m255
+K3
+13
+cModel Technology
+Z0 dC:\questasim_6.6b\examples
+T_opt
+V8LR^24fMYefCo@QE@hCMT0
+Z1 04 10 15 work decobcd_tb decobcd_tb_func 1
+Z2 =1-bc5ff4121366-56fd90dc-203-680
+Z3 o-quiet -auto_acc_if_foreign -work work
+Z4 n@_opt
+Z5 OE;O;6.6b;45
+Z6 dC:\questasim_6.6b\examples
+Econtbcd
+Z7 w1458243384
+Z8 DPx4 ieee 11 numeric_std 0 22 =NSdli^?T5OD8;4F<blj<3
+Z9 DPx4 ieee 14 std_logic_1164 0 22 GH1=`jDDBJ=`LM;:Ak`kf2
+Z10 dD:\Gus y Lu\decoBCD
+Z11 8D:/Gus y Lu/decoBCD/contbcd.vhd
+Z12 FD:/Gus y Lu/decoBCD/contbcd.vhd
+l0
+L4
+Z13 VDojhCTM]<:^7ZCGdbY;OH0
+Z14 OE;C;6.6b;45
+32
+Z15 o-work work -2002 -explicit
+Z16 tExplicit 1
+Z17 !s100 Yn[0GJIRW2F]@TgMPXTi:1
+Acontbcd_arq
+R8
+R9
+Z18 DEx4 work 7 contbcd 0 22 DojhCTM]<:^7ZCGdbY;OH0
+l15
+L14
+Z19 Vc=@:4V9VF>WAf8cjfdT>A3
+R14
+32
+Z20 Mx2 4 ieee 14 std_logic_1164
+Z21 Mx1 4 ieee 11 numeric_std
+R15
+R16
+Z22 !s100 ihVZAj9SVESzfIgEhT[H20
+Edecobcd
+Z23 w1459457616
+R8
+R9
+R10
+Z24 8D:/Gus y Lu/decoBCD/decoBCD.vhd
+Z25 FD:/Gus y Lu/decoBCD/decoBCD.vhd
+l0
+L5
+Z26 V9j@YeB1J6Dof9zhjYEPic0
+R14
+32
+R15
+R16
+Z27 !s100 =K5Z4Yjoj[IBaQZ9gzhg@1
+Adecobcd_arq
+R8
+R9
+Z28 DEx4 work 7 decobcd 0 22 9j@YeB1J6Dof9zhjYEPic0
+l23
+L22
+Z29 V]`m^VDRBKOckd=U>0PdHo0
+R14
+32
+R20
+R21
+R15
+R16
+Z30 !s100 GfcKOl9DSbjLM5=fSa>df3
+Edecobcd_tb
+Z31 w1459458250
+R9
+R10
+Z32 8D:/Gus y Lu/decoBCD/decoBCD_tb.vhd
+Z33 FD:/Gus y Lu/decoBCD/decoBCD_tb.vhd
+l0
+L4
+Z34 V[MnU@0;=:08F[zz`aTERl0
+R14
+32
+R15
+R16
+Z35 !s100 N^:Y2T=Y:Mz9O`;L^[0Y63
+Adecobcd_tb_func
+R9
+Z36 DEx4 work 10 decobcd_tb 0 22 [MnU@0;=:08F[zz`aTERl0
+l48
+L7
+Z37 V;0;WC4;H6=2>G@cCNNh[g3
+R14
+32
+Z38 Mx1 4 ieee 14 std_logic_1164
+R15
+R16
+Z39 !s100 L]G=1W3U21;LFM4VF^aHo1
