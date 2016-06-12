@@ -37,7 +37,7 @@ rm out.vcd
 ghdl -a *.vhd
 ghdl -e led_display_controller_tb
 ghdl -r led_display_controller_tb --vcd=out.vcd --stop-time=20us
-gtkwave out.vcd
+#gtkwave out.vcd
 rm out.vcd
 
 #Led enabler
