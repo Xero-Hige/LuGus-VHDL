@@ -8,9 +8,9 @@ entity adder is
 	);
 
 	port (
-        number1_in: in  std_logic_vector(TOTAL_BITS-1 downto 0);
-        number2_in: in  std_logic_vector(TOTAL_BITS-1 downto 0);
-        result:     out std_logic_vector(TOTAL_BITS-1 downto 0);
+        number1_in: in  std_logic_vector(BITS-1 downto 0);
+        number2_in: in  std_logic_vector(BITS-1 downto 0);
+        result:     out std_logic_vector(BITS-1 downto 0);
         carry_out:  out std_logic
 	);
 end;
