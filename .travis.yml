@@ -6,5 +6,5 @@ before_script:
   - sudo apt-get install -y ghdl
 
 script:
-    - cd tps-Gaston/TP1-Contador
+    - cd TP3
     - bash ./run.sh
