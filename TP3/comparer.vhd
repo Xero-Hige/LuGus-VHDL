@@ -11,9 +11,9 @@ entity comparer is
 	port (
 		number1_in: in  std_logic_vector(BITS-1 downto 0);
 		number2_in: in  std_logic_vector(BITS-1 downto 0);
-		first_greater: in std_logic;
-		second_greater: in std_logic;
-		equals: in std_logic
+		first_greater: out std_logic;
+		second_greater: out std_logic;
+		equals: out std_logic
 	);
 end;
 
@@ -27,18 +27,18 @@ begin
 		variable first: integer;
 		variable second: integer;
 	begin
-		first_g := 0;
-		second_g := 0;
-		both_eq := 0;
+		first_g 	:= '0';
+		second_g 	:= '0';
+		both_eq 	:= '0';
 		first := to_integer(signed(number1_in));
 		second := to_integer(signed(number2_in));
 
 		if first > second then
-			first_g := 1;
+			first_g := '1';
 		elsif first < second then
-			second_g := 1;
+			second_g := '1';
 		else
-			both_eq := 1;
+			both_eq := '1';
 		end if;
 
 		first_greater <= first_g;
