@@ -30,8 +30,8 @@ begin
 		first_g := 0;
 		second_g := 0;
 		both_eq := 0;
-		first := to_integer(signed(number1_in))
-		second := to_integer(signed(number2_in))
+		first := to_integer(signed(number1_in));
+		second := to_integer(signed(number2_in));
 
 		if first > second then
 			first_g := 1;
