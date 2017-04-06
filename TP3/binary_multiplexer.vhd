@@ -24,8 +24,8 @@ architecture binary_multiplexer_arq of binary_multiplexer is
         process (number1_in,number2_in,chooser) is
         begin
             case chooser is
-                when "0"   => mux_output <= number1_in;
-                when "1"   => mux_output <= number1_in;
+                when '0'  => mux_output <= number1_in;
+                when '1'  => mux_output <= number1_in;
             end case;
         end process;
 
