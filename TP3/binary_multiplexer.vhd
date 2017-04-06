@@ -26,6 +26,7 @@ architecture binary_multiplexer_arq of binary_multiplexer is
             case chooser is
                 when '0'  => mux_output <= number1_in;
                 when '1'  => mux_output <= number1_in;
+                when others => null;
             end case;
         end process;
 
