@@ -22,4 +22,4 @@ install:
   - if [ ! -f ${CACHE_FILE_VUNIT} ]; then docker build -t digitales . && docker save digitales | gzip > ${CACHE_FILE_VUNIT}; fi
 
 script:
-    - docker run digitales -v $(pwd)/TP3:/LuGus
+    - docker run -v $(pwd)/TP3:/LuGus digitales
