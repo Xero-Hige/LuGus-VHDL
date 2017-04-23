@@ -9,7 +9,7 @@ RUN apt-get update && \
         wget \
         locales \
         python3-pip \
-		python3-setuptools
+		python3-setuptools && \
     rm -rf /var/lib/apt/lists/* && \
     aptitude clean
 
