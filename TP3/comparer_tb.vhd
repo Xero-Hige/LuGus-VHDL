@@ -12,7 +12,7 @@ architecture comparer_splitter_tb_arq of comparer_splitter_tb is
 
 	signal first_greater: std_logic;
 	signal second_greater: std_logic;
-	signal equals: out std_logic
+	signal equals: std_logic;
 
 	component number_splitter is
 		generic(
