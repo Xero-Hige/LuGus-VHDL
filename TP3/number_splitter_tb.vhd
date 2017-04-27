@@ -1,19 +1,16 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
-library vunit_lib;
-context vunit_lib.vunit_context;
-
-entity tb_standalone is
-	generic (runner_cfg : string := runner_cfg_default);
+entity number_splitter_tb is
 end entity;
 
-architecture number_splitter_tb_arq of tb_standalone is
+architecture number_splitter_tb_arq of number_splitter_tb is
 
-	signal number_in: std_logic_vector(22 downto 0) := (others => '1');
+	signal number_in: std_logic_vector(22 downto 0);
 	signal sign_out: std_logic;
-	signal exp_out: std_logic_vector(5 downto 0) := (others => '0');
-	signal mant_out: std_logic_vector(15 downto 0) := (others => '0');
+	signal exp_out: std_logic_vector(5 downto 0);
+	signal mant_out: std_logic_vector(15 downto 0);
 
 
 	component number_splitter is
@@ -28,36 +25,44 @@ architecture number_splitter_tb_arq of tb_standalone is
 			mant_out: out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0)
 		);
 	end component;
+	for number_splitter_0: number_splitter use entity work.number_splitter;
 
 begin
-	type pattern_type is record
-		 --  The inputs of the adder.
-		 i0, i1, ci : std_logic_vector;
-		 --  The expected outputs of the adder.
-		 s, co : bit;
-	end record;
-	--  The patterns to apply.
-	type pattern_array is array (natural range <>) of pattern_type;
-	constant patterns : pattern_array :=
-		(('0', '0', '0', '0', '0'),
-		 ('0', '0', '1', '1', '0'),
-		 ('0', '1', '0', '1', '0'),
-		 ('0', '1', '1', '0', '1'),
-		 ('1', '0', '0', '1', '0'),
-		 ('1', '0', '1', '0', '1'),
-		 ('1', '1', '0', '0', '1'),
-		 ('1', '1', '1', '1', '1'));
 
-	number_splitter_map: number_splitter port map(
+	number_splitter_0: number_splitter port map(
 			number_in => number_in,
 			sign_out => sign_out,
 			exp_out => exp_out,
 			mant_out => mant_out
 		);
 
-	info("===EXP===" & LF & to_string(exp_out));
-	info("===MAN===" & LF & to_string(mant_out));
-	info("===SIG===" & LF & to_string(sign_out));
+	process
+		type pattern_type is record
+			 n : std_logic_vector(22 downto 0); --input number
+			 s : std_logic; --output sign
+			 m : std_logic_vector(15 downto 0); --output mantisa
+			 e : std_logic_vector(5 downto 0); --output exponent
+		end record;
+		--  The patterns to apply.
+		type pattern_array is array (natural range<>) of pattern_type;
+		constant patterns : pattern_array := (
+			("11111111111111111111111", '1', "1111111111111111", "111111"),
+			("11111111111111111111111", '1', "1111111111111111", "111111")
+		);
 
+		begin
 
-end architecture;
+	  for i in patterns'range loop
+	     --  Set the inputs.
+	     number_in <= patterns(i).n;
+	     --  Wait for the results.
+	     wait for 1 ns;
+	     --  Check the outputs.
+			 assert sign_out = patterns(i).s report "BAD SIGN: " & std_logic'image(sign_out) severity error;
+	     assert mant_out = patterns(i).m report "BAD MANTISSA: " & integer'image(to_integer(unsigned(mant_out))) severity error;
+	     assert exp_out = patterns(i).e report "BAD EXP: " & integer'image(to_integer(unsigned(exp_out))) severity error;
+    end loop;
+		assert false report "end of test" severity note;
+		wait;
+	end process;
+end number_splitter_tb_arq;
