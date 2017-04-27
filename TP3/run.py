@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 ANALYZER = 'ghdl -a '
 COMPILER = 'ghdl -e '
