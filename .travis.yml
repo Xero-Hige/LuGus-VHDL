@@ -2,24 +2,13 @@ sudo: required
 
 language: bash
 
-services:
-  - docker
-
-env:
-  global:
-    - CACHE_DIR=$HOME/.cache/docker
-    - CACHE_FILE_VUNIT=$CACHE_DIR/vunit.tar.gz
-
-cache:
-  directories:
-  - $CACHE_DIR
-
-before_install:
-  - if [ -f ${CACHE_FILE_VUNIT} ]; then gunzip -c ${CACHE_FILE_VUNIT} | docker load; fi
-
-install:
-  - mkdir -p $CACHE_DIR
-  - if [ ! -f ${CACHE_FILE_VUNIT} ]; then docker build -t digitales . && docker save digitales | gzip > ${CACHE_FILE_VUNIT}; fi
+language: bash
+before_script:
+- sudo add-apt-repository -y ppa:pgavin/ghdl
+- sudo apt-get -qq update
+- sudo apt-get install -y ghdl
+- sudo apt-get install -y python python-pip
 
 script:
-    - docker run -v $(pwd)/TP3:/LuGus digitales
+- cd TP3
+- python run.py
