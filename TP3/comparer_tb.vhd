@@ -33,7 +33,7 @@ architecture comparer_tb_arq of comparer_tb is
 begin
 
 	comparer_0: comparer
-		generic map (BITS => 6);	
+		generic map (BITS => 6)	
 		port map(
 			number1_in => number1_in,
 			number2_in => number2_in,
