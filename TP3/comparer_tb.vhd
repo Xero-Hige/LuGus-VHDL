@@ -7,8 +7,8 @@ end entity;
 
 architecture comparer_tb_arq of comparer_tb is
 
-	signal number1_in: std_logic_vector(22 downto 0);
-	signal number2_in: std_logic_vector(22 downto 0);
+	signal number1_in: std_logic_vector(5 downto 0);
+	signal number2_in: std_logic_vector(5 downto 0);
 
 	signal first_greater: std_logic;
 	signal second_greater: std_logic;
@@ -32,7 +32,9 @@ architecture comparer_tb_arq of comparer_tb is
 
 begin
 
-	comparer_0: comparer port map(
+	comparer_0: comparer
+		generic (BITS => 6);	
+		port map(
 			number1_in => number1_in,
 			number2_in => number2_in,
 			first_greater => first_greater,
@@ -51,9 +53,9 @@ begin
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-			("00000", "00000", '0', '0','1'),
-			("00001", "00000", '1', '0','0'),
-			("00000", "00001", '0', '1','0')
+			("000000", "00000", '0', '0','1'),
+			("000001", "00000", '1', '0','0'),
+			("000000", "00001", '0', '1','0')
 		);
 
 		begin
