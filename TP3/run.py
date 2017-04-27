@@ -10,12 +10,16 @@ def analyze_file(filepath):
     rvalue = os.system(ANALYZER + filepath)
     if not rvalue:
         print "OK"
+    else:
+        sys.exit(rvalue)
 
 def compile_file(filepath):
     print '\n\n###### COMPILING ' + get_name(filepath) + ' ######'
     rvalue = os.system(COMPILER + filepath)
     if not rvalue:
         print "OK"
+    else:
+        sys.exit(rvalue)
 
 def get_extension(filepath):
     return filepath.split('.')[-1]
@@ -70,10 +74,11 @@ def main():
         entities += get_entities(tb)
 
     map(compile_file,entities)
+    end_status = 0
     for f in entities:
         name = get_name(f)
         print "\n\n\n\n####### RUNING TEST FOR: " +  name + ' ######'
-        os.system("./" + name)
-
+        end_status += os.system("./" + name)
+    return end_status
 
 main()
