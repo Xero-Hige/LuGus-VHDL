@@ -2,6 +2,10 @@ import os
 import re
 import sys
 
+ANALISIS_ERRROR = 1
+COMPILE_ERROR = 2
+RUN_ERROR = 3
+
 ANALYZER = 'ghdl -a '
 COMPILER = 'ghdl -e '
 VALID_EXTENSIONS = ['vhd','vhdl']
@@ -12,7 +16,7 @@ def analyze_file(filepath):
     if not rvalue:
         print "OK"
     else:
-        sys.exit(rvalue)
+        sys.exit(ANALISIS_ERRROR)
 
 def compile_file(filepath):
     print '\n\n###### COMPILING ' + get_name(filepath) + ' ######'
@@ -20,7 +24,7 @@ def compile_file(filepath):
     if not rvalue:
         print "OK"
     else:
-        sys.exit(rvalue)
+        sys.exit(COMPILE_ERROR)
 
 def get_extension(filepath):
     return filepath.split('.')[-1]
@@ -80,6 +84,7 @@ def main():
         name = get_name(f)
         print "\n\n\n\n####### RUNING TEST FOR: " +  name + ' ######'
         end_status += os.system("./" + name)
-    return end_status
+    if end_status:
+        sys.exit(RUN_ERROR)
 
 main()
