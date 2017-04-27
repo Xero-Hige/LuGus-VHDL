@@ -51,9 +51,9 @@ begin
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-			("00000", '00000', "0", "0","1"),
-			("00001", '00000', "1", "0","0"),
-			("00000", '00001', "0", "1","0")
+			("00000", "00000", '0', '0','1'),
+			("00001", "00000", '1', '0','0'),
+			("00000", "00001", '0', '1','0')
 		);
 
 		begin
