@@ -6,6 +6,7 @@ ANALISIS_ERRROR = 1
 COMPILE_ERROR = 2
 RUN_ERROR = 3
 
+
 ANALYZER = 'ghdl -a '
 COMPILER = 'ghdl -e '
 VALID_EXTENSIONS = ['vhd','vhdl']

@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity number_splitter_tb is
+entity number_splitter_23_bits_tb is
 end entity;
 
-architecture number_splitter_tb_arq of number_splitter_tb is
+architecture number_splitter_tb_arq of number_splitter_23_bits_tb is
 
 	signal number_in: std_logic_vector(22 downto 0);
 	signal sign_out: std_logic;
@@ -47,7 +47,8 @@ begin
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
 			("11111111111111111111111", '1', "1111111111111111", "111111"),
-			("11111111111111111111111", '1', "1111111111111111", "111111")
+			("00000000000000000000000", '0', "0000000000000000", "000000"),
+			("10101010101010101010101", '1', "0101010101010101", "010101")
 		);
 
 		begin
@@ -65,4 +66,4 @@ begin
 		assert false report "end of test" severity note;
 		wait;
 	end process;
-end number_splitter_tb_arq;
+end;

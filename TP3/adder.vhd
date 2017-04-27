@@ -26,12 +26,12 @@ begin
 	begin
         carry := '0';
         for i in 0 to BITS-1 loop
-    		s1 := number1_in(i) xor number2_in(i);
-            s2 := s1 and carry;
-            s3 := number1_in(i) and number2_in(i);
+    			s1 := number1_in(i) xor number2_in(i);
+          s2 := s1 and carry;
+          s3 := number1_in(i) and number2_in(i);
 
-            result(i) <= s1 xor carry;
-            carry := s2 or s3;
+          result(i) <= s1 xor carry;
+          carry := s2 or s3;
         end loop;
         carry_out <= carry;
 	end process;
