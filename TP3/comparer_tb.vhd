@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity comparer_splitter_tb is
+entity compare_tb is
 end entity;
 
-architecture comparer_splitter_tb_arq of comparer_splitter_tb is
+architecture comparer_tb_arq of comparer_tb is
 
 	signal number1_in: std_logic_vector(22 downto 0);
 	signal number2_in: std_logic_vector(22 downto 0);
@@ -73,4 +73,4 @@ begin
 		assert false report "end of test" severity note;
 		wait;
 	end process;
-end number_splitter_tb_arq;
+end comparer_tb_arq;
