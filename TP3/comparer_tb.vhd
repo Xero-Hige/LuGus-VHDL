@@ -14,7 +14,7 @@ architecture comparer_tb_arq of comparer_tb is
 	signal second_greater: std_logic;
 	signal equals: std_logic;
 
-	component number_splitter is
+	component comparer is
 		generic(
 			BITS:natural := 16
 		);
@@ -27,13 +27,13 @@ architecture comparer_tb_arq of comparer_tb is
 			equals: out std_logic
 		);
 	end component;
-	
+
 	for comparer_0: comparer use entity work.comparer;
 
 begin
 
 	comparer_0: comparer
-		generic map (BITS => 6)	
+		generic map (BITS => 6)
 		port map(
 			number1_in => number1_in,
 			number2_in => number2_in,
@@ -53,24 +53,24 @@ begin
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-			("000000", "00000", '0', '0','1'),
-			("000001", "00000", '1', '0','0'),
-			("000000", "00001", '0', '1','0')
+			("000000", "000000", '0', '0','1'),
+			("000001", "000000", '1', '0','0'),
+			("000000", "000001", '0', '1','0')
 		);
 
 		begin
 
 	  for i in patterns'range loop
 	     --  Set the inputs.
-	     number1_in <= patterns(i).n1;
-     	     number2_in <= patterns(i).n2;
-	     
+	    number1_in <= patterns(i).n1;
+     	number2_in <= patterns(i).n2;
+
 	     --  Wait for the results.
-	     wait for 1 ns;
+	    wait for 1 ns;
 	     --  Check the outputs.
-	     assert first_greater = 	patterns(i).fg report "BAD FIRST GREATER:" & integer'image(to_integer(unsigned(number1_in))) & " AND " & integer'image(to_integer(unsigned(number2_in))) severity error;
-	     assert second_greater = 	patterns(i).sg report "BAD SECOND GREATER: " & integer'image(to_integer(unsigned(number1_in))) & " AND " & integer'image(to_integer(unsigned(number2_in))) severity error;
-	     assert equals = 		patterns(i).eq report "BAD EQUALS:" & integer'image(to_integer(unsigned(number1_in))) & " AND " & integer'image(to_integer(unsigned(number2_in))) severity error;
+	    assert first_greater = patterns(i).fg report "BAD FIRST GREATER:" & integer'image(to_integer(unsigned(number1_in))) & " AND " & integer'image(to_integer(unsigned(number2_in))) severity error;
+	    assert second_greater = patterns(i).sg report "BAD SECOND GREATER: " & integer'image(to_integer(unsigned(number1_in))) & " AND " & integer'image(to_integer(unsigned(number2_in))) severity error;
+	    assert equals = patterns(i).eq report "BAD EQUALS:" & integer'image(to_integer(unsigned(number1_in))) & " AND " & integer'image(to_integer(unsigned(number2_in))) severity error;
     end loop;
 		assert false report "end of test" severity note;
 		wait;
