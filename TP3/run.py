@@ -45,6 +45,16 @@ def get_files_recursively(folderpath=os.getcwd()):
                 files.append(folderpath + "/" + f)
     return files
 
+def get_file_level(filepath):
+    total_components = 0
+    f = open(filepath, 'r')
+    for line in f:
+        match = re.search('.*component .* is.*', line)
+        if match:
+            total_components += 1
+    f.close()
+    return total_components
+
 def get_entities(filepath):
     entities = []
     f = open(filepath, 'r')
@@ -68,6 +78,7 @@ def get_components(filelist):
 def main():
     files = get_files_recursively()
     components = get_components(files)
+    components.sort(key=lambda elem: get_file_level(elem))
 
     '''Components should be analyzed before test benches always to prevent compilation errors '''
     map(analyze_file,components)
