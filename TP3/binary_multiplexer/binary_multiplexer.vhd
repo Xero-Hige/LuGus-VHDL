@@ -5,8 +5,8 @@ use ieee.numeric_std.all;
 entity binary_multiplexer is
 
     generic(
-		BITS:natural := 16
-	);
+		  BITS:natural := 16
+	  );
 
     port(
     number1_in: in  std_logic_vector(BITS-1 downto 0);
