@@ -9,12 +9,10 @@ entity binary_multiplexer is
 	  );
 
     port(
-    number1_in: in  std_logic_vector(BITS-1 downto 0);
-    number2_in: in  std_logic_vector(BITS-1 downto 0);
-
-    chooser: in std_logic;
-
-    mux_output: out  std_logic_vector(BITS-1 downto 0)
+      number1_in: in  std_logic_vector(BITS-1 downto 0);
+      number2_in: in  std_logic_vector(BITS-1 downto 0);
+      chooser: in std_logic;
+      mux_output: out  std_logic_vector(BITS-1 downto 0)
     );
 
 end binary_multiplexer;

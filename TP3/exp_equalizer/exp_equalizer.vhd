@@ -74,15 +74,16 @@ architecture exp_equalizer_arq of exp_equalizer is
 begin
 
 	comparer_0: comparer
-		generic map ( BITS => EXP_BITS )
-		port map (first_greater => comparer_greater,
-			second_greater => comparer_smaller,
+		generic map( BITS => EXP_BITS )
+		port map (
+			first_greater => comparer_smaller,
+			second_greater => comparer_greater,
 			number1_in => exp_1,
 			number2_in => exp_2
 		);
 
 	greater_mux: binary_multiplexer
-		generic map(BITS => EXP_BITS)
+		generic map( BITS => EXP_BITS )
 		port map(
 			chooser => comparer_greater,
 			number1_in => exp_1,
@@ -91,7 +92,7 @@ begin
 		);
 
 	smaller_mux: binary_multiplexer
-		generic map(BITS => EXP_BITS)
+		generic map( BITS => EXP_BITS )
 		port map(
 			chooser => comparer_smaller,
 			number1_in => exp_1,
@@ -106,10 +107,7 @@ begin
 		exp_1 <= exp_1_in;
 		exp_2 <= exp_2_in;
 
-		report "GREATER: " & integer'image(to_integer(unsigned(greater_exp)));
-		report "SMALLER: " & integer'image(to_integer(unsigned(smaller_exp)));
-
-		shifting_difference := unsigned(exp_1_in) - unsigned(exp_2_in);
+		shifting_difference := unsigned(greater_exp) - unsigned(smaller_exp);
 		difference <= shifting_difference;
 
 	end process;
