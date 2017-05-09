@@ -11,10 +11,9 @@ architecture exp_equalizer_tb_arq of exp_equalizer_tb is
   signal exp_1_in: std_logic_vector(5 downto 0);
   signal man_2_in: std_logic_vector(15 downto 0);
   signal exp_2_in: std_logic_vector(5 downto 0);
-  signal man_1_out: std_logic_vector(15 downto 0);
-  signal exp_1_out: std_logic_vector(5 downto 0);
-  signal man_2_out: std_logic_vector(15 downto 0);
-  signal exp_2_out: std_logic_vector(5 downto 0);
+  signal man_1_out: std_logic_vector(31 downto 0);
+  signal man_2_out: std_logic_vector(31 downto 0);
+  signal exp_out: std_logic_vector(5 downto 0);
   signal difference: unsigned(5 downto 0);
 
 
@@ -29,10 +28,9 @@ architecture exp_equalizer_tb_arq of exp_equalizer_tb is
   		exp_1_in: in std_logic_vector(EXP_BITS-1 downto 0);
   		man_2_in: in std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
   		exp_2_in: in std_logic_vector(EXP_BITS-1 downto 0);
-  		man_1_out: out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
-  		exp_1_out: out std_logic_vector(EXP_BITS-1 downto 0);
-  		man_2_out: out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
-  		exp_2_out: out std_logic_vector(EXP_BITS-1 downto 0);
+      man_1_out: out std_logic_vector((TOTAL_BITS - EXP_BITS - 2) * 2 + 1 downto 0); --extended precision
+  		man_2_out: out std_logic_vector((TOTAL_BITS - EXP_BITS - 2) * 2 + 1 downto 0);
+  		exp_out: out std_logic_vector(EXP_BITS-1 downto 0);
       difference: out unsigned(EXP_BITS-1 downto 0)
   	);
   end component;
@@ -47,8 +45,7 @@ begin
       exp_2_in => exp_2_in,
       man_1_in => man_1_in,
       man_2_in => man_2_in,
-      exp_1_out => exp_1_out,
-      exp_2_out => exp_2_out,
+      exp_out => exp_out,
       man_1_out => man_1_out,
       man_2_out => man_2_out,
       difference => difference
@@ -61,14 +58,15 @@ begin
 			 e1 : std_logic_vector(5 downto 0);
 			 m2 : std_logic_vector(15 downto 0);
 			 e2 : std_logic_vector(5 downto 0);
+       mo1: std_logic_vector(31 downto 0);
+       mo2: std_logic_vector(31 downto 0);
+       eo: std_logic_vector(5 downto 0);
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-      ("1010101010101010", "111111", "0000000000000000", "100000"),
-			("1010101010101010", "000001", "1010101010101011", "000000"),
-			("1010101010101010", "000000", "0000000000000000", "000001"),
-      ("1010101010101010", "000011", "0000000000000000", "000010")
+      ("0000000000000001", "111111", "0000000000000000", "111111","00000000000000010000000000000000","00000000000000000000000000000000","111111"),
+      ("0000000000000001", "000001", "0000000000000001", "000000","00000000000000010000000000000000","00000000000000001000000000000000","000001")
 
 		);
 
@@ -81,9 +79,11 @@ begin
        man_1_in <= patterns(i).m1;
        man_2_in <= patterns(i).m2;
 
-	     wait for 1 ms;
+	     wait for 100 ms;
 
-       report "DIFF: " & integer'image(to_integer(difference));
+       assert patterns(i).mo1 = man_1_out report "BAD MANTISSA 1, GOT: " & integer'image(to_integer(unsigned(man_1_out)));
+       assert patterns(i).mo2 = man_2_out report "BAD MANTISSA 2, GOT: " & integer'image(to_integer(unsigned(man_2_out)));
+       assert patterns(i).eo = exp_out report "BAD EXP, GOT: " & integer'image(to_integer(unsigned(exp_out)));
 	     --  Check the outputs.
     end loop;
 		assert false report "end of test" severity note;
