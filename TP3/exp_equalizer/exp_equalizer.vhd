@@ -16,8 +16,8 @@ entity exp_equalizer is
 		exp_1_in   : in  std_logic_vector(EXP_BITS - 1 downto 0);
 		man_2_in   : in  std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
 		exp_2_in   : in  std_logic_vector(EXP_BITS - 1 downto 0);
-		man_1_out  : out std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0); --extended precision
-		man_2_out  : out std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0);
+		man_greater_out  : out std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0); --extended precision
+		man_smaller_out  : out std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0);
 		exp_out    : out std_logic_vector(EXP_BITS - 1 downto 0);
 		difference : out unsigned(EXP_BITS - 1 downto 0)
 	);
@@ -25,16 +25,12 @@ end exp_equalizer;
 
 architecture exp_equalizer_arq of exp_equalizer is
 
-	signal exp_1            : std_logic_vector(EXP_BITS - 1 downto 0)              := (others => '0');
-	signal exp_2            : std_logic_vector(EXP_BITS - 1 downto 0)              := (others => '0');
-	signal man_1            : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
-	signal man_2            : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 	signal comparer_greater : std_logic                                            := '0';
-	signal comparer_smaller : std_logic                                            := '1';
+	signal comparer_smaller : std_logic                                            := '0';
 	signal smaller_exp      : std_logic_vector(EXP_BITS - 1 downto 0)              := (others => '0');
 	signal greater_exp      : std_logic_vector(EXP_BITS - 1 downto 0)              := (others => '0');
-	signal smaller_man      : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '1');
-	signal greater_man      : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '1');
+	signal smaller_man      : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	signal greater_man      : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 
 	component comparer is
 		generic(
@@ -76,8 +72,8 @@ begin
 		port map(
 			first_greater  => comparer_smaller,
 			second_greater => comparer_greater,
-			number1_in     => exp_1,
-			number2_in     => exp_2,
+			number1_in     => exp_1_in,
+			number2_in     => exp_2_in,
 			equals => open
 		);
 
@@ -85,8 +81,8 @@ begin
 		generic map(BITS => EXP_BITS)
 		port map(
 			chooser    => comparer_greater,
-			number1_in => exp_1,
-			number2_in => exp_2,
+			number1_in => exp_1_in,
+			number2_in => exp_2_in,
 			mux_output => greater_exp
 		);
 
@@ -94,8 +90,8 @@ begin
 		generic map(BITS => EXP_BITS)
 		port map(
 			chooser    => comparer_smaller,
-			number1_in => exp_1,
-			number2_in => exp_2,
+			number1_in => exp_1_in,
+			number2_in => exp_2_in,
 			mux_output => smaller_exp
 		);
 
@@ -103,8 +99,8 @@ begin
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
 			chooser    => comparer_greater,
-			number1_in => man_1,
-			number2_in => man_2,
+			number1_in => man_1_in,
+			number2_in => man_2_in,
 			mux_output => greater_man
 		);
 
@@ -112,23 +108,27 @@ begin
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
 			chooser    => comparer_smaller,
-			number1_in => man_1,
-			number2_in => man_2,
+			number1_in => man_1_in,
+			number2_in => man_2_in,
 			mux_output => smaller_man
 		);
 
-	process(man_1_in,exp_1_in,man_2_in,exp_2_in) is
-		variable shifting_difference  : unsigned(EXP_BITS - 1 downto 0)                                := (others => '0');
+	process(man_1_in,exp_1_in,man_2_in,exp_2_in,comparer_greater,comparer_smaller,smaller_exp,greater_exp,smaller_man,greater_man) is
+		variable greater_exp_u : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
+		variable smaller_exp_u : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
+		variable shifting_difference  : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
 		variable extended_man_greater : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
 		variable extended_man_smaller : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
+		variable shifted_extended_man_smaller : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
 	begin
-		exp_1 <= exp_1_in;
-		exp_2 <= exp_2_in;
 		extended_man_greater((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto (TOTAL_BITS - EXP_BITS - 1)) := greater_man;
 		extended_man_smaller((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto (TOTAL_BITS - EXP_BITS - 1)) := smaller_man;
-		shifting_difference := unsigned(greater_exp) - unsigned(smaller_exp);
-		man_1_out <= std_logic_vector(shift_right(unsigned(extended_man_smaller), to_integer(shifting_difference)));
-		man_2_out <= extended_man_greater;
+		greater_exp_u := unsigned(greater_exp);
+		smaller_exp_u := unsigned(smaller_exp);
+		shifting_difference := greater_exp_u - smaller_exp_u;
+		shifted_extended_man_smaller := std_logic_vector(shift_right(unsigned(extended_man_smaller), to_integer(shifting_difference)));
+		man_smaller_out <= shifted_extended_man_smaller;
+		man_greater_out <= extended_man_greater;
 		exp_out <= greater_exp;
 	end process;
 
