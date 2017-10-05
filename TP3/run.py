@@ -96,7 +96,7 @@ def main():
     for f in entities:
         name = get_name(f)
         print "\n\n\n\n####### RUNING TEST FOR: " +  name + ' ######'
-        end_status += os.system("./" + name)
+        end_status += os.system("ghdl -r " + name)
     if end_status:
         sys.exit(RUN_ERROR)
 
