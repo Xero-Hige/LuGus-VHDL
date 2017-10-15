@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--STEP 1
 --This component takes 2 numbers written in scientific notation and returns the same 2 numbers specifying which has the biggest 
 --exponent and which has the smaller
 
