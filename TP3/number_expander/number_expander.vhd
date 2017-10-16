@@ -3,7 +3,8 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 --STEP 2.5
---This component expands the number so that we can work and operate with double precision.
+--This component expands the number so that we can work and operate with double precision. 
+--It also adds the implicit 1 in the most significant bit
 
 entity number_expander is
 
@@ -23,7 +24,8 @@ begin
 	process(number_in) is
 		variable double_precision_number : std_logic_vector(BITS * 2 - 1 downto 0) := (others => '0');
 		begin
-			double_precision_number(BITS * 2 - 1 downto BITS) := number_in;
+			double_precision_number(BITS * 2 - 1) := '1'; --implicit 1
+			double_precision_number(BITS * 2 - 2 downto BITS - 1) := number_in;
 			number_out <= double_precision_number;
 	end process;
 

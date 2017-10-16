@@ -24,7 +24,7 @@ architecture expanded_mantissa_adder_arq of expanded_mantissa_adder is
 
 	signal sum_result : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 	signal complemented_result : std_logic_vector(BITS -1 downto 0) := (others => '0');
-	signal cout : std_logic := '1';
+	signal cout : std_logic := '0';
 
 	component class_adder is
 		generic(N: integer:= 4);
