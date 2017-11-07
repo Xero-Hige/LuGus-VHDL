@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity number_splitter_23_bits_tb is
+entity number_splitter_tb is
 end entity;
 
-architecture number_splitter_tb_arq of number_splitter_23_bits_tb is
+architecture number_splitter_tb_arq of number_splitter_tb is
 
 	signal number_in: std_logic_vector(22 downto 0);
 	signal sign_out: std_logic;
