@@ -1,0 +1,298 @@
+$date
+  Sun Nov  5 17:42:00 2017
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$var reg 24 ! number_1_in[23:0] $end
+$var reg 24 " number_2_in[23:0] $end
+$var reg 24 # result[23:0] $end
+$scope module floating_point_adder_0 $end
+$var reg 24 $ number_1_in[23:0] $end
+$var reg 24 % number_2_in[23:0] $end
+$var reg 24 & result[23:0] $end
+$var reg 24 ' number_1[23:0] $end
+$var reg 24 ( number_2[23:0] $end
+$var reg 17 ) man_1[16:0] $end
+$var reg 17 * man_2[16:0] $end
+$var reg 6 + exp_1[5:0] $end
+$var reg 6 , exp_2[5:0] $end
+$var reg 1 - sign_1 $end
+$var reg 1 . sign_2 $end
+$var reg 17 / man_greater[16:0] $end
+$var reg 17 0 man_smaller[16:0] $end
+$var reg 6 1 exp_greater[5:0] $end
+$var reg 6 2 exp_smaller[5:0] $end
+$var reg 17 3 complemented_man_smaller[16:0] $end
+$var reg 34 4 expanded_man_greater[33:0] $end
+$var reg 34 5 expanded_complemented_man_smaller[33:0] $end
+$var reg 34 6 shifted_expanded_complemented_man_smaller[33:0] $end
+$var reg 34 7 expanded_man_result[33:0] $end
+$var reg 1 8 addition_cout $end
+$var reg 1 9 diff_signs $end
+$var reg 34 : complemented_expanded_man_result[33:0] $end
+$var reg 17 ; man_result[16:0] $end
+$var reg 6 < exp_result[5:0] $end
+$var reg 1 = sign_result $end
+$scope module number_splitter_1 $end
+$var reg 24 > number_in[23:0] $end
+$var reg 1 ? sign_out $end
+$var reg 6 @ exp_out[5:0] $end
+$var reg 17 A mant_out[16:0] $end
+$upscope $end
+$scope module number_splitter_2 $end
+$var reg 24 B number_in[23:0] $end
+$var reg 1 C sign_out $end
+$var reg 6 D exp_out[5:0] $end
+$var reg 17 E mant_out[16:0] $end
+$upscope $end
+$scope module number_swapper_0 $end
+$var reg 17 F man_1_in[16:0] $end
+$var reg 6 G exp_1_in[5:0] $end
+$var reg 17 H man_2_in[16:0] $end
+$var reg 6 I exp_2_in[5:0] $end
+$var reg 17 J man_greater_out[16:0] $end
+$var reg 17 K man_smaller_out[16:0] $end
+$var reg 6 L exp_greater_out[5:0] $end
+$var reg 6 M exp_smaller_out[5:0] $end
+$var reg 1 N comparer_greater $end
+$var reg 1 O comparer_smaller $end
+$var reg 6 P smaller_exp[5:0] $end
+$var reg 6 Q greater_exp[5:0] $end
+$var reg 17 R smaller_man[16:0] $end
+$var reg 17 S greater_man[16:0] $end
+$scope module comparer_0 $end
+$var reg 6 T number1_in[5:0] $end
+$var reg 6 U number2_in[5:0] $end
+$var reg 1 V first_greater $end
+$var reg 1 W second_greater $end
+$var reg 1 X equals $end
+$upscope $end
+$scope module greater_exp_mux $end
+$var reg 6 Y number1_in[5:0] $end
+$var reg 6 Z number2_in[5:0] $end
+$var reg 1 [ chooser $end
+$var reg 6 \ mux_output[5:0] $end
+$upscope $end
+$scope module smaller_exp_mux $end
+$var reg 6 ] number1_in[5:0] $end
+$var reg 6 ^ number2_in[5:0] $end
+$var reg 1 _ chooser $end
+$var reg 6 ` mux_output[5:0] $end
+$upscope $end
+$scope module greater_man_mux $end
+$var reg 17 a number1_in[16:0] $end
+$var reg 17 b number2_in[16:0] $end
+$var reg 1 c chooser $end
+$var reg 17 d mux_output[16:0] $end
+$upscope $end
+$scope module smaller_man_mux $end
+$var reg 17 e number1_in[16:0] $end
+$var reg 17 f number2_in[16:0] $end
+$var reg 1 g chooser $end
+$var reg 17 h mux_output[16:0] $end
+$upscope $end
+$upscope $end
+$scope module sign_based_complementer_0 $end
+$var reg 1 i sign_1_in $end
+$var reg 1 j sign_2_in $end
+$var reg 17 k man_in[16:0] $end
+$var reg 17 l man_out[16:0] $end
+$var reg 17 m complemented_mantissa[16:0] $end
+$scope module base_complementer_0 $end
+$var reg 17 n number_in[16:0] $end
+$var reg 17 o number_out[16:0] $end
+$upscope $end
+$upscope $end
+$scope module number_expander_1 $end
+$var reg 17 p number_in[16:0] $end
+$var reg 34 q number_out[33:0] $end
+$upscope $end
+$scope module number_expander_2 $end
+$var reg 17 r number_in[16:0] $end
+$var reg 34 s number_out[33:0] $end
+$upscope $end
+$scope module number_shifter_0 $end
+$var reg 1 t sign_1_in $end
+$var reg 1 u sign_2_in $end
+$var reg 6 v greater_exp[5:0] $end
+$var reg 6 w smaller_exp[5:0] $end
+$var reg 34 x man_in[33:0] $end
+$var reg 34 y man_out[33:0] $end
+$upscope $end
+$scope module expanded_mantissa_adder_0 $end
+$var reg 34 z man_1_in[33:0] $end
+$var reg 34 { man_2_in[33:0] $end
+$var reg 34 | result[33:0] $end
+$var reg 1 } cout $end
+$var reg 34 !" sum_result[33:0] $end
+$var reg 1 "" result_carry $end
+$scope module adder_0 $end
+$var reg 34 #" number1_in[33:0] $end
+$var reg 34 $" number2_in[33:0] $end
+$var reg 1 %" cin $end
+$var reg 34 &" result[33:0] $end
+$var reg 1 '" cout $end
+$var reg 36 (" aux[35:0] $end
+$upscope $end
+$upscope $end
+$scope module result_complementer_0 $end
+$var reg 34 )" in_result[33:0] $end
+$var reg 1 *" sign_1_in $end
+$var reg 1 +" sign_2_in $end
+$var reg 1 ," result_cout $end
+$var reg 34 -" out_result[33:0] $end
+$var reg 34 ." complemented_result[33:0] $end
+$scope module base_complementer_0 $end
+$var reg 34 /" number_in[33:0] $end
+$var reg 34 0" number_out[33:0] $end
+$upscope $end
+$upscope $end
+$scope module normalizer_0 $end
+$var reg 34 1" man_in[33:0] $end
+$var reg 6 2" exp_in[5:0] $end
+$var reg 1 3" cin $end
+$var reg 1 4" diff_signs $end
+$var reg 17 5" man_out[16:0] $end
+$var reg 6 6" exp_out[5:0] $end
+$upscope $end
+$scope module sign_computer_0 $end
+$var reg 17 7" man_1_in[16:0] $end
+$var reg 17 8" man_2_in[16:0] $end
+$var reg 1 9" sign_1_in $end
+$var reg 1 :" sign_2_in $end
+$var reg 17 ;" man_greater_in[16:0] $end
+$var reg 34 <" pre_complemented_result[33:0] $end
+$var reg 34 =" complemented_result[33:0] $end
+$var reg 1 >" sign_out $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+b101110010010011000000010 !
+b001110101011010111100011 "
+b001110100010001011100010 #
+b101110010010011000000010 $
+b001110101011010111100011 %
+b001110100010001011100010 &
+b101110010010011000000010 '
+b001110101011010111100011 (
+b10010011000000010 )
+b01011010111100011 *
+b011100 +
+b011101 ,
+1-
+0.
+b01011010111100011 /
+b10010011000000010 0
+b011101 1
+b011100 2
+b01101100111111110 3
+b1010110101111000110000000000000000 4
+b1011011001111111100000000000000000 5
+b1101101100111111110000000000000000 6
+b1000100010111000100000000000000000 7
+18
+19
+b1000100010111000100000000000000000 :
+b00010001011100010 ;
+b011101 <
+0=
+b101110010010011000000010 >
+1?
+b011100 @
+b10010011000000010 A
+b001110101011010111100011 B
+0C
+b011101 D
+b01011010111100011 E
+b10010011000000010 F
+b011100 G
+b01011010111100011 H
+b011101 I
+b01011010111100011 J
+b10010011000000010 K
+b011101 L
+b011100 M
+1N
+0O
+b011100 P
+b011101 Q
+b10010011000000010 R
+b01011010111100011 S
+b011100 T
+b011101 U
+0V
+1W
+0X
+b011100 Y
+b011101 Z
+1[
+b011101 \
+b011100 ]
+b011101 ^
+0_
+b011100 `
+b10010011000000010 a
+b01011010111100011 b
+1c
+b01011010111100011 d
+b10010011000000010 e
+b01011010111100011 f
+0g
+b10010011000000010 h
+1i
+0j
+b10010011000000010 k
+b01101100111111110 l
+b01101100111111110 m
+b10010011000000010 n
+b01101100111111110 o
+b01011010111100011 p
+b1010110101111000110000000000000000 q
+b01101100111111110 r
+b1011011001111111100000000000000000 s
+1t
+0u
+b011101 v
+b011100 w
+b1011011001111111100000000000000000 x
+b1101101100111111110000000000000000 y
+b1010110101111000110000000000000000 z
+b1101101100111111110000000000000000 {
+b1000100010111000100000000000000000 |
+1}
+b1000100010111000100000000000000000 !"
+1""
+b1010110101111000110000000000000000 #"
+b1101101100111111110000000000000000 $"
+0%"
+b1000100010111000100000000000000000 &"
+1'"
+b110001000101110001000000000000000001 ("
+b1000100010111000100000000000000000 )"
+1*"
+0+"
+1,"
+b1000100010111000100000000000000000 -"
+b0111011101000111100000000000000000 ."
+b1000100010111000100000000000000000 /"
+b0111011101000111100000000000000000 0"
+b1000100010111000100000000000000000 1"
+b011101 2"
+13"
+14"
+b00010001011100010 5"
+b011101 6"
+b10010011000000010 7"
+b01011010111100011 8"
+19"
+0:"
+b01011010111100011 ;"
+b1000100010111000100000000000000000 <"
+b1000100010111000100000000000000000 ="
+0>"
+#100000000000000

@@ -28,6 +28,8 @@ begin
 	process(sign_1_in, sign_2_in,greater_exp,smaller_exp, man_in) is
 		variable shifted_number : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 		variable shifting_difference : integer := 0;
+		variable before : integer := 0;
+		variable aft : integer := 0;
 		begin
 			shifting_difference := to_integer(unsigned(greater_exp) - unsigned(smaller_exp));
 			if (sign_1_in = sign_2_in) then

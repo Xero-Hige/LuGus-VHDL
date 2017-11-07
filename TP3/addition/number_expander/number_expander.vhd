@@ -13,8 +13,8 @@ entity number_expander is
 	);
 
 	port(
-		number_in  : in  std_logic_vector(BITS - 1 downto 0);
-		number_out : out std_logic_vector(BITS*2 - 1 downto 0)
+		number_in  : in  std_logic_vector(BITS - 1 downto 0) := (others => '0');
+		number_out : out std_logic_vector(BITS*2 - 1 downto 0) := (others => '0')
 	);
 
 end number_expander;

@@ -15,6 +15,7 @@ entity normalizer is
 		man_in : in std_logic_vector((TOTAL_BITS - EXP_BITS - 1)*2 - 1 downto 0); --number enters in double precision
 		exp_in : in std_logic_vector(EXP_BITS - 1 downto 0);
 		cin : in std_logic; --To check if the sum had a carry
+		diff_signs : in std_logic;
 		man_out : out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
 		exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
 	);
@@ -27,9 +28,9 @@ begin
 		variable tmp_mantissa : std_logic_vector((TOTAL_BITS - EXP_BITS - 1)*2 - 1 downto 0) := (others => '0');
 		variable tmp_exp : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
 		begin
-			if(cin = '1') then
+			if(cin = '1' and diff_signs = '0') then
 				man_out <= man_in((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto (TOTAL_BITS - EXP_BITS - 1));
-				exp_out <= exp_in;
+				exp_out <= std_logic_vector(unsigned(exp_in) + 1);
 			else
 				tmp_mantissa := man_in;
 				tmp_exp := unsigned(exp_in);

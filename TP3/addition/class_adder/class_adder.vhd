@@ -15,10 +15,10 @@ entity class_adder is
 end;
 
 architecture class_adder_arq of class_adder is
-     signal aux: unsigned (N+1 downto 0);
+    signal aux: unsigned (N+1 downto 0) := to_unsigned(0, N+2);
 
-     begin
-         aux    <= ('0' & unsigned(number1_in) & cin) + ('0' & unsigned(number2_in) & '1');
-         result <= std_logic_vector( aux (N downto 1) );
-         cout   <= aux (N+1);
+    begin
+      aux    <= ('0' & unsigned(number1_in) & cin) + ('0' & unsigned(number2_in) & '1');
+      result <= std_logic_vector( aux (N downto 1) );
+      cout   <= aux (N+1);
 end;

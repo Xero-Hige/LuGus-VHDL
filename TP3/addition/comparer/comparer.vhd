@@ -21,11 +21,11 @@ architecture comparer_arq of comparer is
 begin
 
 	process(number1_in,number2_in)
-		variable first_g: std_logic;
-		variable second_g: std_logic;
-		variable both_eq: std_logic;
-		variable first: unsigned(BITS-1 downto 0);
-		variable second: unsigned(BITS-1 downto 0);
+		variable first_g: std_logic := '0';
+		variable second_g: std_logic := '0';
+		variable both_eq: std_logic := '0';
+		variable first: unsigned(BITS-1 downto 0) := to_unsigned(0, BITS);
+		variable second: unsigned(BITS-1 downto 0) := to_unsigned(0, BITS);
 	begin
 		first_g 	:= '0';
 		second_g 	:= '0';
