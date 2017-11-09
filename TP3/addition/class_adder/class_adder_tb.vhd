@@ -30,7 +30,8 @@ architecture class_adder_tb_arq of class_adder_tb is
 
 begin
 
-	class_adder_0: class_adder port map(
+	class_adder_0: class_adder 
+	port map(
 			number1_in => number1_in,
 			number2_in => number2_in,
 			result => result,

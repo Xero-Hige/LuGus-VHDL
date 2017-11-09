@@ -14,115 +14,198 @@ entity floating_point_multiplier is
 		number2_in : in std_logic_vector(TOTAL_BITS - 1 downto 0);
 		multiplication_result : out std_logic_vector(TOTAL_BITS - 1 downto 0)
 	);
+
 end floating_point_multiplier;
 
 architecture floating_point_multiplier_arq of floating_point_multiplier is
+
+	signal number1 : std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
+	signal number2 : std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
 
 	signal man1 : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 	signal man2 : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 	signal exp1 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 	signal exp2 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 	signal sign1 : std_logic := '0';
-	siganl sign2 : std_logic := '0';
+	signal sign2 : std_logic := '0';
 
-	component comparer is
+	signal added_exponents : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+
+	signal multiplied_mantissas : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+
+	signal rounded_added_exponents : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+
+	signal result_man : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	signal result_exp : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal result_sign : std_logic := '0';
+
+	component number_splitter is
 		generic(
-			BITS : natural := 16
-		);
+			TOTAL_BITS:natural := 23;
+			EXP_BITS:natural := 6);
+		port (
 
-		port(
-			number1_in     : in  std_logic_vector(BITS - 1 downto 0);
-			number2_in     : in  std_logic_vector(BITS - 1 downto 0);
-			first_greater  : out std_logic;
-			second_greater : out std_logic;
-			equals         : out std_logic
-		);
-
-	end component;
-
-	component binary_multiplexer is
-		generic(
-			BITS : natural := 16
-		);
-		port(
-			number1_in : in  std_logic_vector(BITS - 1 downto 0);
-			number2_in : in  std_logic_vector(BITS - 1 downto 0);
-			chooser    : in  std_logic;
-			mux_output : out std_logic_vector(BITS - 1 downto 0)
+			number_in: in std_logic_vector(TOTAL_BITS-1 downto 0);
+			sign_out: out std_logic;
+			exp_out: out std_logic_vector(EXP_BITS-1 downto 0);
+			mant_out: out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0)
 		);
 	end component;
 
-	for greater_exp_mux : binary_multiplexer use entity work.binary_multiplexer;
-	for smaller_exp_mux : binary_multiplexer use entity work.binary_multiplexer;
-	for greater_man_mux : binary_multiplexer use entity work.binary_multiplexer;
-	for smaller_man_mux : binary_multiplexer use entity work.binary_multiplexer;
-	for comparer_0 : comparer use entity work.comparer;
+	component class_adder is
+		generic(N: integer:= 4);
+		port(
+				 number1_in: in std_logic_vector(N-1 downto 0);
+				 number2_in: in std_logic_vector(N-1 downto 0);
+				 cin:        in std_logic;
+
+				 result:     out std_logic_vector(N-1 downto 0);
+				 cout:       out std_logic
+		);
+
+  end component;
+
+  component mantissa_multiplier is
+
+		generic(
+			BITS:natural := 16
+		);
+
+		port (
+			man1_in: in std_logic_vector(BITS - 1 downto 0);
+			man2_in: in std_logic_vector(BITS - 1 downto 0);
+			result: out std_logic_vector(BITS downto 0) --Add one to shift if necessary
+		);
+	end component;
+
+	component rounder is
+
+		generic(
+			TOTAL_BITS:natural := 23;
+			EXP_BITS: natural := 6
+		);
+
+		port (
+			man_in: in std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0);
+			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
+			man_out : out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
+			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
+		);
+	end component;
+
+	component biaser is
+
+		generic(
+			EXP_BITS: natural := 6
+		);
+
+		port (
+			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
+			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
+		);
+	end component;
+
+	component sign_computer is
+  port(
+    sign1_in : in std_logic;
+    sign2_in : in std_logic;
+    sign_out : out std_logic
+  );
+	end component;
+	
+	for sign_computer_0 : sign_computer use entity work.sign_computer;
+	for mantissa_multiplier_0: mantissa_multiplier use entity work.mantissa_multiplier;
+	for class_adder_0: class_adder use entity work.class_adder;
+	for rounder_0: rounder use entity work.rounder;
+	for biaser_0: biaser use entity work.biaser;
+	for number_splitter_1 : number_splitter use entity work.number_splitter;
+	for number_splitter_2 : number_splitter use entity work.number_splitter;
+
 
 begin
 
-	comparer_0 : comparer
-		generic map(BITS => EXP_BITS)
+	number_splitter_1: number_splitter 
+		generic map(TOTAL_BITS => TOTAL_BITS, EXP_BITS => EXP_BITS)
 		port map(
-			first_greater  => comparer_smaller,
-			second_greater => comparer_greater,
-			number1_in     => exp_1_in,
-			number2_in     => exp_2_in,
-			equals => open
+			number_in => number1,
+			sign_out => sign1,
+			exp_out => exp1,
+			mant_out => man1
 		);
 
-	greater_exp_mux : binary_multiplexer
-		generic map(BITS => EXP_BITS)
+	number_splitter_2: number_splitter 
+		generic map(TOTAL_BITS => TOTAL_BITS, EXP_BITS => EXP_BITS)
 		port map(
-			chooser    => comparer_greater,
-			number1_in => exp_1_in,
-			number2_in => exp_2_in,
-			mux_output => greater_exp
+			number_in => number2,
+			sign_out => sign2,
+			exp_out => exp2,
+			mant_out => man2
 		);
 
-	smaller_exp_mux : binary_multiplexer
-		generic map(BITS => EXP_BITS)
+	class_adder_0: class_adder 
+		generic map(N => EXP_BITS)
 		port map(
-			chooser    => comparer_smaller,
-			number1_in => exp_1_in,
-			number2_in => exp_2_in,
-			mux_output => smaller_exp
-		);
+			number1_in => exp1,
+			number2_in => exp2,
+			result => added_exponents,
+		  cout => open,
+			cin => '0'
+	);
 
-	greater_man_mux : binary_multiplexer
+	mantissa_multiplier_0: mantissa_multiplier 
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
-			chooser    => comparer_greater,
-			number1_in => man_1_in,
-			number2_in => man_2_in,
-			mux_output => greater_man
+			man1_in => man1,
+			man2_in => man2,
+			result => multiplied_mantissas
 		);
 
-	smaller_man_mux : binary_multiplexer
-		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
+	rounder_0: rounder 
+		generic map(TOTAL_BITS => TOTAL_BITS, EXP_BITS => EXP_BITS)
 		port map(
-			chooser    => comparer_smaller,
-			number1_in => man_1_in,
-			number2_in => man_2_in,
-			mux_output => smaller_man
+			man_in => multiplied_mantissas,
+			exp_in => added_exponents,
+			man_out => result_man,
+			exp_out => rounded_added_exponents
 		);
 
-	process(man_1_in,exp_1_in,man_2_in,exp_2_in,comparer_greater,comparer_smaller,smaller_exp,greater_exp,smaller_man,greater_man) is
-		variable greater_exp_u : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
-		variable smaller_exp_u : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
-		variable shifting_difference  : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
-		variable extended_man_greater : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
-		variable extended_man_smaller : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
-		variable shifted_extended_man_smaller : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
+	biaser_0: biaser
+		generic map(EXP_BITS => EXP_BITS)
+		port map(
+			exp_in => rounded_added_exponents,
+			exp_out => result_exp
+		);
+
+
+	sign_computer_0: sign_computer 
+		port map(
+			sign1_in => sign1,
+			sign2_in => sign2,
+			sign_out => result_sign
+	);
+
+	process(number1_in,
+					number2_in,
+					number1,
+					number2,
+					man1,
+					man2,
+					exp1,
+					exp2,
+					sign1,
+					sign2,
+					added_exponents,
+					multiplied_mantissas,
+					result_man,
+					result_exp,
+					result_sign) is
+		
 	begin
-		extended_man_greater((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto (TOTAL_BITS - EXP_BITS - 1)) := greater_man;
-		extended_man_smaller((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto (TOTAL_BITS - EXP_BITS - 1)) := smaller_man;
-		greater_exp_u := unsigned(greater_exp);
-		smaller_exp_u := unsigned(smaller_exp);
-		shifting_difference := greater_exp_u - smaller_exp_u;
-		shifted_extended_man_smaller := std_logic_vector(shift_right(unsigned(extended_man_smaller), to_integer(shifting_difference)));
-		man_smaller_out <= shifted_extended_man_smaller;
-		man_greater_out <= extended_man_greater;
-		exp_out <= greater_exp;
+
+		number1 <= number1_in;
+		number2 <= number2_in;
+	
+		multiplication_result <= result_sign & result_exp & result_man;
 	end process;
 
-end architecture;
+end;
