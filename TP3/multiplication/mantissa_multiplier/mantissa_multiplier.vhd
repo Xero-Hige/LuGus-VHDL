@@ -18,10 +18,14 @@ end;
 architecture mantissa_multiplier_arq of mantissa_multiplier is
 begin
 	process(man1_in, man2_in)
-	variable tmp_result: std_logic_vector(BITS*2 - 1 downto 0) := (others => '0');
+	variable expanded_mantissa_1 : std_logic_vector(BITS downto 0) := (others => '0');
+	variable expanded_mantissa_2 : std_logic_vector(BITS downto 0) := (others => '0');
+	variable tmp_result: std_logic_vector((BITS + 1)*2 - 1 downto 0) := (others => '0');
 	begin
-		tmp_result := std_logic_vector(unsigned(man1_in) * unsigned(man2_in));
-		result <= tmp_result(BITS*2 - 1 downto BITS - 1);
+		expanded_mantissa_1 := '1' & man1_in;
+		expanded_mantissa_2 := '1' & man2_in;
+		tmp_result := std_logic_vector(unsigned(expanded_mantissa_1) * unsigned(expanded_mantissa_2));
+		result <= tmp_result((BITS + 1)*2 - 2 downto BITS);
 	end process;
 
 end architecture;

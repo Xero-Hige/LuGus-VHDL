@@ -29,6 +29,9 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 	signal sign1 : std_logic := '0';
 	signal sign2 : std_logic := '0';
 
+	signal unbiased_exp1 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal unbiased_exp2 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+
 	signal added_exponents : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 
 	signal multiplied_mantissas : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
@@ -100,6 +103,7 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 		);
 
 		port (
+			operation : in std_logic;
 			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
 			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
 		);
@@ -118,6 +122,8 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 	for class_adder_0: class_adder use entity work.class_adder;
 	for rounder_0: rounder use entity work.rounder;
 	for biaser_0: biaser use entity work.biaser;
+	for biaser_1: biaser use entity work.biaser;
+	for biaser_2: biaser use entity work.biaser;
 	for number_splitter_1 : number_splitter use entity work.number_splitter;
 	for number_splitter_2 : number_splitter use entity work.number_splitter;
 
@@ -142,11 +148,27 @@ begin
 			mant_out => man2
 		);
 
+	biaser_1: biaser
+		generic map(EXP_BITS => EXP_BITS)
+		port map(
+			operation => '1',
+			exp_in => exp1,
+			exp_out => unbiased_exp1
+		);
+
+	biaser_2: biaser
+		generic map(EXP_BITS => EXP_BITS)
+		port map(
+			operation => '1',
+			exp_in => exp2,
+			exp_out => unbiased_exp2
+		);
+
 	class_adder_0: class_adder 
 		generic map(N => EXP_BITS)
 		port map(
-			number1_in => exp1,
-			number2_in => exp2,
+			number1_in => unbiased_exp1,
+			number2_in => unbiased_exp2,
 			result => added_exponents,
 		  cout => open,
 			cin => '0'
@@ -172,6 +194,7 @@ begin
 	biaser_0: biaser
 		generic map(EXP_BITS => EXP_BITS)
 		port map(
+			operation => '0',
 			exp_in => rounded_added_exponents,
 			exp_out => result_exp
 		);
@@ -194,6 +217,8 @@ begin
 					exp2,
 					sign1,
 					sign2,
+					unbiased_exp1,
+					unbiased_exp2,
 					added_exponents,
 					multiplied_mantissas,
 					result_man,

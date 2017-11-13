@@ -1,19 +1,46 @@
 v 3
-file . "sign_computer/sign_computer_tb.vhd" "20171107220403.000" "20171107190404.980":
-  entity sign_computer_tb at 1( 0) + 0 on 43;
-  architecture sign_computer_tb_arq of sign_computer_tb at 8( 110) + 0 on 44;
-file . "number_splitter/number_splitter_tb.vhd" "20171004130011.000" "20171107190404.971":
-  entity number_splitter_23_bits_tb at 1( 0) + 0 on 41;
-  architecture number_splitter_tb_arq of number_splitter_23_bits_tb at 8( 120) + 0 on 42;
-file . "sign_computer/sign_computer.vhd" "20171107220350.000" "20171107190404.947":
-  entity sign_computer at 1( 0) + 0 on 37;
-  architecture sign_computer_arq of sign_computer at 14( 201) + 0 on 38;
-file . "number_splitter/number_splitter.vhd" "20171107215334.000" "20171107190404.927":
-  entity number_splitter at 1( 0) + 0 on 33;
-  architecture number_splitter_arq of number_splitter at 19( 388) + 0 on 34;
-file . "class_adder/class_adder.vhd" "20171105200948.000" "20171107190404.938":
-  entity class_adder at 1( 0) + 0 on 35;
-  architecture class_adder_arq of class_adder at 17( 392) + 0 on 36;
-file . "class_adder/class_adder_tb.vhd" "20171004130011.000" "20171107190404.958":
-  entity class_adder_tb at 1( 0) + 0 on 39;
-  architecture class_adder_tb_arq of class_adder_tb at 8( 108) + 0 on 40;
+file . "biaser/biaser_tb.vhd" "20171113232803.000" "20171113203242.186":
+  entity biaser_tb at 1( 0) + 0 on 1799;
+  architecture biaser_tb_arq of biaser_tb at 8( 103) + 0 on 1800;
+file . "biaser/biaser.vhd" "20171113232452.000" "20171113203242.111":
+  entity biaser at 1( 0) + 0 on 1785;
+  architecture biaser_arq of biaser at 18( 329) + 0 on 1786;
+file . "floating_point_multiplier/floating_point_multiplier_tb.vhd" "20171109032029.000" "20171113203242.209":
+  entity floating_point_multiplier_tb at 1( 0) + 0 on 1803;
+  architecture floating_point_multiplier_tb_arq of floating_point_multiplier_tb at 8( 122) + 0 on 1804;
+file . "rounder/rounder_tb.vhd" "20171109014605.000" "20171113203242.252":
+  entity rounder_tb at 1( 0) + 0 on 1811;
+  architecture rounder_tb_arq of rounder_tb at 8( 104) + 0 on 1812;
+file . "class_adder/class_adder_tb.vhd" "20171004130011.000" "20171113203242.198":
+  entity class_adder_tb at 1( 0) + 0 on 1801;
+  architecture class_adder_tb_arq of class_adder_tb at 8( 108) + 0 on 1802;
+file . "class_adder/class_adder.vhd" "20171105200948.000" "20171113203242.120":
+  entity class_adder at 1( 0) + 0 on 1787;
+  architecture class_adder_arq of class_adder at 17( 392) + 0 on 1788;
+file . "number_splitter/number_splitter.vhd" "20171107215334.000" "20171113203242.152":
+  entity number_splitter at 1( 0) + 0 on 1793;
+  architecture number_splitter_arq of number_splitter at 19( 388) + 0 on 1794;
+file . "sign_computer/sign_computer.vhd" "20171107220350.000" "20171113203242.141":
+  entity sign_computer at 1( 0) + 0 on 1791;
+  architecture sign_computer_arq of sign_computer at 14( 201) + 0 on 1792;
+file . "number_splitter/number_splitter_tb.vhd" "20171107221419.000" "20171113203242.241":
+  entity number_splitter_tb at 1( 0) + 0 on 1809;
+  architecture number_splitter_tb_arq of number_splitter_tb at 8( 112) + 0 on 1810;
+file . "sign_computer/sign_computer_tb.vhd" "20171107220415.000" "20171113203242.262":
+  entity sign_computer_tb at 1( 0) + 0 on 1813;
+  architecture sign_computer_tb_arq of sign_computer_tb at 8( 110) + 0 on 1814;
+file . "mantissa_multiplier/mantissa_multiplier.vhd" "20171113231149.000" "20171113203242.130":
+  entity mantissa_multiplier at 1( 0) + 0 on 1789;
+  architecture mantissa_multiplier_arq of mantissa_multiplier at 18( 335) + 0 on 1790;
+file . "mantissa_multiplier/mantissa_multiplier_tb.vhd" "20171109012428.000" "20171113203242.218":
+  entity mantissa_multiplier_tb at 1( 0) + 0 on 1805;
+  architecture mantissa_multiplier_tb_arq of mantissa_multiplier_tb at 8( 116) + 0 on 1806;
+file . "rounder/rounder.vhd" "20171113233236.000" "20171113203242.162":
+  entity rounder at 1( 0) + 0 on 1795;
+  architecture rounder_arq of rounder at 20( 422) + 0 on 1796;
+file . "floating_point_multiplier/floating_point_multiplier.vhd" "20171113232945.000" "20171113203242.174":
+  entity floating_point_multiplier at 1( 0) + 0 on 1797;
+  architecture floating_point_multiplier_arq of floating_point_multiplier at 20( 418) + 0 on 1798;
+file . "multiplier_tester/multiplier_tester_tb.vhd" "20171113223435.000" "20171113203242.231":
+  entity multiplier_tester_tb at 1( 0) + 0 on 1807;
+  architecture multiplier_tester_tb_arq of multiplier_tester_tb at 12( 290) + 0 on 1808;

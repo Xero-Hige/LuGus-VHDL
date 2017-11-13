@@ -7,6 +7,7 @@ end entity;
 
 architecture biaser_tb_arq of biaser_tb is
 
+	signal operation : std_logic := '0';
 	signal exp_in: std_logic_vector(2 downto 0) := (others => '0');
 	signal exp_out: std_logic_vector(2 downto 0) := (others => '0');
 
@@ -17,6 +18,7 @@ architecture biaser_tb_arq of biaser_tb is
 		);
 
 		port (
+			operation : in std_logic;
 			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
 			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
 		);
@@ -29,26 +31,30 @@ begin
 	biaser_0: biaser
 		generic map(EXP_BITS => 3)
 		port map(
+			operation => operation,
 			exp_in => exp_in,
 			exp_out => exp_out
 		);
 
 	process
 		type pattern_type is record
+				o : std_logic;
 			 ei : std_logic_vector(2 downto 0);
 			 eo : std_logic_vector(2 downto 0);
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-			("000","101"),
-			("001","110")
+			('1',"000","101"),
+			('1',"001","110"),
+			('0',"000","011")
 		);
 
 		begin
 
 	  for i in patterns'range loop
 	     --  Set the inputs.
+	     operation <= patterns(i).o;
 	     exp_in <= patterns(i).ei;
 	     --  Wait for the results.
 	     wait for 1 ns;
