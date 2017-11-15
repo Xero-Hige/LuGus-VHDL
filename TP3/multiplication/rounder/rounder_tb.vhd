@@ -7,10 +7,11 @@ end entity;
 
 architecture rounder_tb_arq of rounder_tb is
 
-	signal man_in: std_logic_vector(6 downto 0) := (others => '0');
+	signal man_in: std_logic_vector(7 downto 0) := (others => '0');
 	signal exp_in: std_logic_vector(2 downto 0) := (others => '0');
 	signal man_out: std_logic_vector(5 downto 0) := (others => '0');
 	signal exp_out: std_logic_vector(2 downto 0) := (others => '0');
+	signal exponent_addition_cout: std_logic := '0';
 
 
 	component rounder is
@@ -21,7 +22,8 @@ architecture rounder_tb_arq of rounder_tb is
 		);
 
 		port (
-			man_in: in std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0);
+			exponent_addition_cout: in std_logic;
+			man_in: in std_logic_vector(TOTAL_BITS - EXP_BITS downto 0);
 			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
 			man_out : out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
 			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
@@ -35,6 +37,7 @@ begin
 	rounder_0: rounder 
 		generic map(TOTAL_BITS => 10, EXP_BITS => 3)
 		port map(
+			exponent_addition_cout => exponent_addition_cout,
 			man_in => man_in,
 			exp_in => exp_in,
 			man_out => man_out,
@@ -43,18 +46,18 @@ begin
 
 	process
 		type pattern_type is record
-			 mi : std_logic_vector(6 downto 0);
+			 mi : std_logic_vector(7 downto 0);
 			 ei : std_logic_vector(2 downto 0);
-			 mo : std_logic_vector(5 downto 0); 
+			 mo : std_logic_vector(5 downto 0);
+			 ec : std_logic; 
 			 eo : std_logic_vector(2 downto 0);
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-			("0000000","000","000000","000"),
-			("1111111","000","111111","001"),
-			("1000001","110","100000","111"),
-			("0111111","000","111111","000")
+			("00000000","000","000000",'0',"000"),
+			("11111111","000","000000",'0',"000"),
+			("10000001","110","000000",'0',"100")
 		);
 
 		begin
@@ -63,6 +66,7 @@ begin
 	     --  Set the inputs.
 	     man_in <= patterns(i).mi;
 	     exp_in <= patterns(i).ei;
+	     exponent_addition_cout <= patterns(i).ec;	
 	     --  Wait for the results.
 	     wait for 1 ns;
 	     --  Check the outputs.

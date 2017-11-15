@@ -5,11 +5,11 @@ def binary_to_float(total_bits, exp_bits, binary_string):
 	sign = 1 if binary_string[0] is '0' else -1
 	bias = 2**(exp_bits - 1) - 1;
 	exponent_bits = binary_string[1:exp_bits+1]
-	exponent = int(exponent_bits,2) - bias + 1
+	exponent = int(exponent_bits,2) - bias
 	mantissa_bits = binary_string[exp_bits + 1:]
 	mantissa_bits = '1' + mantissa_bits
 	mantissa = mantissa_bits_to_integer(mantissa_bits)
-	print str(sign) + " * 0." + mantissa_bits + " x 2^" + str(exponent)
+	print str(sign) + " * 1." + mantissa_bits[1:] + " x 2^" + str(exponent)
 	return sign * mantissa * (2.0**(exponent)) 
 
 

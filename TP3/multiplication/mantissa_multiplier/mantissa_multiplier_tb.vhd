@@ -9,7 +9,7 @@ architecture mantissa_multiplier_tb_arq of mantissa_multiplier_tb is
 
 	signal man1_in: std_logic_vector(5 downto 0);
 	signal man2_in: std_logic_vector(5 downto 0);
-	signal result: std_logic_vector(6 downto 0);
+	signal result: std_logic_vector(7 downto 0);
 
 
 	component mantissa_multiplier is
@@ -21,7 +21,7 @@ architecture mantissa_multiplier_tb_arq of mantissa_multiplier_tb is
 		port (
 			man1_in: in std_logic_vector(BITS - 1 downto 0);
 			man2_in: in std_logic_vector(BITS - 1 downto 0);
-			result: out std_logic_vector(BITS downto 0) --Add one to shift if necessary
+			result: out std_logic_vector(BITS + 1 downto 0) --Add one to shift if necessary
 		);
 	end component;
 	for mantissa_multiplier_0: mantissa_multiplier use entity work.mantissa_multiplier;
@@ -40,13 +40,13 @@ begin
 		type pattern_type is record
 			 m1 : std_logic_vector(5 downto 0);
 			 m2 : std_logic_vector(5 downto 0);
-			 r : std_logic_vector(6 downto 0); 
+			 r : std_logic_vector(7 downto 0); 
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
-			("000000","000000","0000000"),
-			("111111","111111","1111100")
+			("000000","000000","01000000"),
+			("111111","111111","01111100")
 		);
 
 		begin

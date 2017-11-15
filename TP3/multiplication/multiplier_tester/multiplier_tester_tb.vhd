@@ -4,9 +4,9 @@ use ieee.numeric_std.all;
 use std.textio.all; 
 
 entity multiplier_tester_tb is
-	file TEST_FILE : text open READ_MODE is "testing_files/test_mul_float_23_6.txt";
-	constant TOTAL_BITS : integer := 23;
-	constant EXP_BITS : integer := 6;
+	file TEST_FILE : text open READ_MODE is "testing_files/test_mul_float_32_8.txt";
+	constant TOTAL_BITS : integer := 32;
+	constant EXP_BITS : integer := 8;
 end entity;
 
 architecture multiplier_tester_tb_arq of multiplier_tester_tb is
@@ -67,8 +67,6 @@ begin
 	 		wait for 100 ms;
 			
 	 		to_integer_result := to_integer(unsigned(result));
-	 		report "INPUT 1: " & integer'image(number1_in);
-	 		report "INPUT 2: " & integer'image(number2_in);
 			assert precomputed_result = to_integer_result report "EXPECTED: " & integer'image(precomputed_result) & " ACTUAL: " & integer'image(to_integer_result);
 
 	 	end loop;

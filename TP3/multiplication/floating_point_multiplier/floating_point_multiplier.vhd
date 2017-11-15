@@ -29,14 +29,10 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 	signal sign1 : std_logic := '0';
 	signal sign2 : std_logic := '0';
 
-	signal unbiased_exp1 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
-	signal unbiased_exp2 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
-
 	signal added_exponents : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal exponent_addition_cout: std_logic := '0';
 
-	signal multiplied_mantissas : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
-
-	signal rounded_added_exponents : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal multiplied_mantissas : std_logic_vector(TOTAL_BITS - EXP_BITS downto 0) := (others => '0');
 
 	signal result_man : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 	signal result_exp : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
@@ -77,7 +73,7 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 		port (
 			man1_in: in std_logic_vector(BITS - 1 downto 0);
 			man2_in: in std_logic_vector(BITS - 1 downto 0);
-			result: out std_logic_vector(BITS downto 0) --Add one to shift if necessary
+			result: out std_logic_vector(BITS + 1 downto 0) --Add one to shift if necessary
 		);
 	end component;
 
@@ -89,22 +85,10 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 		);
 
 		port (
-			man_in: in std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0);
+			exponent_addition_cout: in std_logic;
+			man_in: in std_logic_vector(TOTAL_BITS - EXP_BITS downto 0);
 			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
 			man_out : out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
-			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
-		);
-	end component;
-
-	component biaser is
-
-		generic(
-			EXP_BITS: natural := 6
-		);
-
-		port (
-			operation : in std_logic;
-			exp_in: in std_logic_vector(EXP_BITS - 1 downto 0);
 			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
 		);
 	end component;
@@ -121,9 +105,6 @@ architecture floating_point_multiplier_arq of floating_point_multiplier is
 	for mantissa_multiplier_0: mantissa_multiplier use entity work.mantissa_multiplier;
 	for class_adder_0: class_adder use entity work.class_adder;
 	for rounder_0: rounder use entity work.rounder;
-	for biaser_0: biaser use entity work.biaser;
-	for biaser_1: biaser use entity work.biaser;
-	for biaser_2: biaser use entity work.biaser;
 	for number_splitter_1 : number_splitter use entity work.number_splitter;
 	for number_splitter_2 : number_splitter use entity work.number_splitter;
 
@@ -148,29 +129,13 @@ begin
 			mant_out => man2
 		);
 
-	biaser_1: biaser
-		generic map(EXP_BITS => EXP_BITS)
-		port map(
-			operation => '1',
-			exp_in => exp1,
-			exp_out => unbiased_exp1
-		);
-
-	biaser_2: biaser
-		generic map(EXP_BITS => EXP_BITS)
-		port map(
-			operation => '1',
-			exp_in => exp2,
-			exp_out => unbiased_exp2
-		);
-
 	class_adder_0: class_adder 
 		generic map(N => EXP_BITS)
 		port map(
-			number1_in => unbiased_exp1,
-			number2_in => unbiased_exp2,
+			number1_in => exp1,
+			number2_in => exp2,
 			result => added_exponents,
-		  cout => open,
+		  cout => exponent_addition_cout,
 			cin => '0'
 	);
 
@@ -185,20 +150,12 @@ begin
 	rounder_0: rounder 
 		generic map(TOTAL_BITS => TOTAL_BITS, EXP_BITS => EXP_BITS)
 		port map(
+			exponent_addition_cout => exponent_addition_cout,
 			man_in => multiplied_mantissas,
 			exp_in => added_exponents,
 			man_out => result_man,
-			exp_out => rounded_added_exponents
-		);
-
-	biaser_0: biaser
-		generic map(EXP_BITS => EXP_BITS)
-		port map(
-			operation => '0',
-			exp_in => rounded_added_exponents,
 			exp_out => result_exp
 		);
-
 
 	sign_computer_0: sign_computer 
 		port map(
@@ -217,20 +174,29 @@ begin
 					exp2,
 					sign1,
 					sign2,
-					unbiased_exp1,
-					unbiased_exp2,
 					added_exponents,
+					exponent_addition_cout,
 					multiplied_mantissas,
 					result_man,
 					result_exp,
 					result_sign) is
-		
+	
+	variable int_1: integer := 0;
+	variable int_2 : integer := 0;
 	begin
-
+		int_1 := to_integer(unsigned(number1_in));
+		int_2 := to_integer(unsigned(number2_in));
+		
 		number1 <= number1_in;
 		number2 <= number2_in;
+		
+		if(int_1 = 0 or int_2 = 0) then
+			multiplication_result <= (others => '0');
+		else 
+			multiplication_result <= result_sign & result_exp & result_man;
+		end if;
 	
-		multiplication_result <= result_sign & result_exp & result_man;
+		
 	end process;
 
 end;
