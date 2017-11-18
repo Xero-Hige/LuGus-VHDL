@@ -8,7 +8,7 @@ end entity;
 architecture number_expander_tb_arq of number_expander_tb is
 
 	signal number_in   : std_logic_vector(15 downto 0) := (others => '0');
-	signal number_out  : std_logic_vector(31 downto 0) := (others => '0');
+	signal number_out  : std_logic_vector(16 downto 0) := (others => '0');
 
 	component number_expander is
 		generic(
@@ -17,7 +17,7 @@ architecture number_expander_tb_arq of number_expander_tb is
 
 		port(
 			number_in   : in  std_logic_vector(BITS - 1 downto 0);
-			number_out  : out  std_logic_vector(BITS * 2 - 1  downto 0)
+			number_out  : out  std_logic_vector(BITS  downto 0)
 		);
 	end component;
 	
@@ -35,14 +35,14 @@ begin
 	process
 		type pattern_type is record
 			ni  : std_logic_vector(15 downto 0);
-			no  : std_logic_vector(31 downto 0);
+			no  : std_logic_vector(16 downto 0);
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
-			("0000000000000000","10000000000000000000000000000000"),
-			("1111111111111111","11111111111111111000000000000000"),
-			("1010101010101010","11010101010101010000000000000000")
+			("0000000000000000","10000000000000000"),
+			("1111111111111111","11111111111111111"),
+			("1010101010101010","11010101010101010")
 		);
 
 	begin

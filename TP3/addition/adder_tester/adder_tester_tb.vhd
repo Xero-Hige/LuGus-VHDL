@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 use std.textio.all; 
 
 entity adder_tester_tb is
-	file TEST_FILE : text open READ_MODE is "testing_files/test_sum_float_24_6.txt";
-	constant TOTAL_BITS : integer := 24;
+	file TEST_FILE : text open READ_MODE is "testing_files/test_sum_float_23_6.txt";
+	constant TOTAL_BITS : integer := 23;
 	constant EXP_BITS : integer := 6;
 end entity;
 

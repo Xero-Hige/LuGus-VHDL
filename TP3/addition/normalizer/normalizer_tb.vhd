@@ -7,7 +7,7 @@ end entity;
 
 architecture normalizer_tb_arq of normalizer_tb is
 
-	signal man_in   : std_logic_vector(31 downto 0) := (others => '0');
+	signal man_in   : std_logic_vector(16 downto 0) := (others => '0');
 	signal exp_in : std_logic_vector(5 downto 0) := (others => '0');
 	signal cin : std_logic := '0';
 	signal diff_signs : std_logic := '0';
@@ -21,7 +21,7 @@ architecture normalizer_tb_arq of normalizer_tb is
 		);
 
 		port(
-			man_in : in std_logic_vector((TOTAL_BITS - EXP_BITS - 1)*2 - 1 downto 0); --number enters in double precision
+			man_in : in std_logic_vector((TOTAL_BITS - EXP_BITS - 1) downto 0);
 			exp_in : in std_logic_vector(EXP_BITS - 1 downto 0);
 			cin : in std_logic; --To check if the sum had a carry
 			diff_signs : in std_logic;
@@ -47,7 +47,7 @@ begin
 
 	process
 		type pattern_type is record
-			mi  : std_logic_vector(31 downto 0);
+			mi  : std_logic_vector(16 downto 0);
 			ei  : std_logic_vector(5 downto 0);
 			ci : std_logic;
 			ds : std_logic;
@@ -57,12 +57,12 @@ begin
 		--  The patterns to apply.
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
-			("00000000000000000000000000000000","000000",'0','1',"0000000000000000","000000"),
-			("00000000000000000000000000000000","111111",'0','1',"0000000000000000","000000"),
-			("00000000000000000000000000000001","011111",'0','1',"0000000000000000","000000"),
-			("01000000000000000000000000000000","111111",'1','1',"0000000000000000","111110"),
-			("00000111000000000000000000000000","000101",'0','1',"1100000000000000","000000"),
-			("01110001001010011100000000000000","011101",'0','0',"1100010010100111","011011")
+			("00000000000000000","000000",'0','1',"0000000000000000","000000"),
+			("00000000000000000","111111",'0','1',"0000000000000000","000000"),
+			("00000000000000001","011111",'0','1',"0000000000000000","001111"),
+			("01000000000000000","111111",'1','1',"0000000000000000","111110"),
+			("00000111000000000","000101",'0','1',"1100000000000000","000000"),
+			("01110001001010010","011101",'0','0',"1100010010100100","011100")
 
 		);
 
