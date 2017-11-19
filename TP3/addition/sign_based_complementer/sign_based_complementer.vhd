@@ -16,7 +16,7 @@ entity sign_based_complementer is
 		sign_1_in   : in  std_logic;
 		sign_2_in   : in  std_logic;
 		man_in   : in  std_logic_vector(BITS - 1 downto 0);
-		man_out : out std_logic_vector(BITS -1 downto 0)
+		man_out : out std_logic_vector(BITS - 1 downto 0)
 	);
 
 end sign_based_complementer;

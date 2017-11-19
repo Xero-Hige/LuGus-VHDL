@@ -16,6 +16,7 @@ entity normalizer is
 		exp_in : in std_logic_vector(EXP_BITS - 1 downto 0);
 		cin : in std_logic; --To check if the sum had a carry
 		diff_signs : in std_logic;
+		rounding_bit : in std_logic;
 		man_out : out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
 		exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
 	);
@@ -24,21 +25,26 @@ end normalizer;
 
 architecture normalizer_arq of normalizer is
 begin
-	process(man_in, exp_in, cin) is
-		variable tmp_mantissa : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	process(man_in, exp_in, cin, diff_signs, rounding_bit) is
+		variable tmp_mantissa : std_logic_vector(TOTAL_BITS - EXP_BITS downto 0) := (others => '0');
 		variable tmp_exp : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
+		variable zero_mant : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 		begin
 			if(cin = '1' and diff_signs = '0') then
-				man_out <= man_in(TOTAL_BITS - EXP_BITS - 2 downto 0);
+				man_out <= man_in(TOTAL_BITS - EXP_BITS - 1 downto 1);
 				exp_out <= std_logic_vector(unsigned(exp_in) + 1);
 			else
-				tmp_mantissa := man_in;
+				tmp_mantissa := man_in & rounding_bit;
 				tmp_exp := unsigned(exp_in);
-				while(tmp_mantissa(TOTAL_BITS - EXP_BITS - 1) /= '1' and tmp_exp > 0) loop
+				while(tmp_mantissa(TOTAL_BITS - EXP_BITS) /= '1' and tmp_exp > 0) loop
 					tmp_mantissa := std_logic_vector(shift_left(unsigned(tmp_mantissa), 1));
 					tmp_exp := tmp_exp - 1;
 				end loop;
-				man_out <= tmp_mantissa((TOTAL_BITS - EXP_BITS - 2) downto 0);
+				if(tmp_exp = 0) then
+					man_out <= zero_mant;
+				else
+					man_out <= tmp_mantissa((TOTAL_BITS - EXP_BITS - 1) downto 1);
+				end if;
 				exp_out <= std_logic_vector(tmp_exp);
 			end if;
 	end process;

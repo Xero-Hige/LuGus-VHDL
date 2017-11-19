@@ -13,6 +13,7 @@ architecture number_shifter_tb_arq of number_shifter_tb is
 	signal greater_exp : std_logic_vector(5 downto 0) := (others => '0');
 	signal smaller_exp : std_logic_vector(5 downto 0) := (others => '0');
 	signal man_out  : std_logic_vector(31 downto 0) := (others => '0');
+	signal rounding_bit : std_logic := '0';
 
 	component number_shifter is
 		generic(
@@ -26,7 +27,8 @@ architecture number_shifter_tb_arq of number_shifter_tb is
 			greater_exp : in std_logic_vector(EXP_BITS - 1 downto 0);
 			smaller_exp : in std_logic_vector(EXP_BITS - 1 downto 0);
 			man_in  : in  std_logic_vector(BITS - 1 downto 0);
-			man_out : out std_logic_vector(BITS - 1 downto 0)
+			man_out : out std_logic_vector(BITS - 1 downto 0);
+			rounding_bit : out std_logic
 		);
 	end component;
 	
@@ -42,7 +44,8 @@ begin
 			sign_2_in => sign_2_in,
 			greater_exp => greater_exp,
 			smaller_exp => smaller_exp,
-			man_out => man_out
+			man_out => man_out,
+			rounding_bit => rounding_bit
 		);
 
 	process
@@ -53,17 +56,18 @@ begin
 			ge : std_logic_vector(5 downto 0);
 			se : std_logic_vector(5 downto 0);
 			mo  : std_logic_vector(31 downto 0);
+			rb : std_logic;
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
-			("00000000000000000000000000000000",'0','0',"000000","000000","00000000000000000000000000000000"),
-			("11000000000000000000000000000000",'0','0',"000001","000000","01100000000000000000000000000000"),
-			("11000000000000000000000000000000",'1','0',"000001","000000","11100000000000000000000000000000"),
-			("11000000000000000000000000000000",'1','1',"000001","000000","01100000000000000000000000000000"),
-			("11000000000000000000000000000000",'0','1',"000001","000000","11100000000000000000000000000000"),
-			("11000000000000000000000000000000",'0','0',"111111","000000","00000000000000000000000000000000"),
-			("11000000000000000000000000000000",'0','1',"111111","000000","11111111111111111111111111111111")
+			("00000000000000000000000000000000",'0','0',"000000","000000","00000000000000000000000000000000",'0'),
+			("11000000000000000000000000000000",'0','0',"000001","000000","01100000000000000000000000000000",'0'),
+			("11000000000000000000000000000000",'1','0',"000001","000000","11100000000000000000000000000000",'0'),
+			("11000000000000000000000000000000",'1','1',"000001","000000","01100000000000000000000000000000",'0'),
+			("11000000000000000000000000000000",'0','1',"000001","000000","11100000000000000000000000000000",'0'),
+			("11000000000000000000000000000000",'0','0',"111111","000000","00000000000000000000000000000000",'0'),
+			("11000000000000000000000000000000",'0','1',"111111","000000","11111111111111111111111111111111",'1')
 		);
 
 	begin
@@ -78,6 +82,7 @@ begin
 			wait for 1 ns;
 
 			assert patterns(i).mo = man_out report "BAD SHIFTING, GOT: " & integer'image(to_integer(unsigned(man_out)));
+			assert patterns(i).rb = rounding_bit report "BAD ROUNDING BIT, GOT " & std_logic'image(rounding_bit);
 			--  Check the outputs.
 		end loop;
 		assert false report "end of test" severity note;

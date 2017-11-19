@@ -35,18 +35,19 @@ architecture floating_point_adder_arq of floating_point_adder is
 	signal exp_greater : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 	signal exp_smaller : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 
-	signal complemented_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	signal expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	signal expanded_man_greater : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	
+	signal complemented_expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 
-	signal expanded_man_greater : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
-	signal expanded_complemented_man_smaller : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
+	signal shifted_complemented_expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	signal rounding_bit : std_logic := '0';
 
-	signal shifted_expanded_complemented_man_smaller : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
-
-	signal expanded_man_result : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
+	signal expanded_man_result : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 	signal addition_cout : std_logic := '0';
 	signal diff_signs : std_logic := '0';
 
-	signal complemented_expanded_man_result : std_logic_vector((TOTAL_BITS - EXP_BITS - 1) * 2 - 1 downto 0) := (others => '0');
+	signal complemented_expanded_man_result : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 
 	signal man_result : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 	signal exp_result : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
@@ -85,6 +86,18 @@ architecture floating_point_adder_arq of floating_point_adder is
 		);
 	end component;
 
+--Component used to expand the operands and work with double precision. It also adds the implicit 1
+	component number_expander is
+		generic(
+			BITS : natural := 16
+		);
+
+		port(
+			number_in   : in  std_logic_vector(BITS - 1 downto 0);
+			number_out  : out  std_logic_vector(BITS downto 0)
+		);
+	end component;
+
  --Component used to complement the smaller mantissa to add the absolute values properly
 	component sign_based_complementer is
 		generic(
@@ -96,18 +109,6 @@ architecture floating_point_adder_arq of floating_point_adder is
 			sign_2_in   : in  std_logic;
 			man_in   : in  std_logic_vector(BITS - 1 downto 0);
 			man_out : out std_logic_vector(BITS -1 downto 0)
-		);
-	end component;
-
-	--Component used to expand the operands and work with double precision. It also adds the implicit 1
-	component number_expander is
-		generic(
-			BITS : natural := 16
-		);
-
-		port(
-			number_in   : in  std_logic_vector(BITS - 1 downto 0);
-			number_out  : out  std_logic_vector(BITS * 2 - 1  downto 0)
 		);
 	end component;
 
@@ -124,7 +125,8 @@ architecture floating_point_adder_arq of floating_point_adder is
 			greater_exp : in std_logic_vector(EXP_BITS - 1 downto 0);
 			smaller_exp : in std_logic_vector(EXP_BITS - 1 downto 0);
 			man_in  : in  std_logic_vector(BITS - 1 downto 0);
-			man_out : out std_logic_vector(BITS - 1 downto 0)
+			man_out : out std_logic_vector(BITS - 1 downto 0);
+			rounding_bit : out std_logic
 		);
 	end component;
 
@@ -165,10 +167,11 @@ architecture floating_point_adder_arq of floating_point_adder is
 		);
 
 		port(
-			man_in : in std_logic_vector((TOTAL_BITS - EXP_BITS - 1)*2 - 1 downto 0); --number enters in double precision
+			man_in : in std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0);
 			exp_in : in std_logic_vector(EXP_BITS - 1 downto 0);
 			cin : in std_logic; --To check if the sum had a carry
 			diff_signs : in std_logic;
+			rounding_bit : in std_logic;
 			man_out : out std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0);
 			exp_out : out std_logic_vector(EXP_BITS - 1 downto 0)
 		);
@@ -186,8 +189,8 @@ architecture floating_point_adder_arq of floating_point_adder is
       sign_1_in: in std_logic := '0';
       sign_2_in: in std_logic := '0';
       man_greater_in: in std_logic_vector(BITS - 1 downto 0) := (others => '0');
-      pre_complemented_result: in std_logic_vector(BITS*2 - 1 downto 0) := (others => '0');
-      complemented_result: in std_logic_vector(BITS*2 - 1 downto 0) := (others => '0');
+      pre_complemented_result: in std_logic_vector(BITS downto 0) := (others => '0');
+      complemented_result: in std_logic_vector(BITS downto 0) := (others => '0');
       sign_out: out std_logic := '0'
     );
  	end component;
@@ -197,9 +200,9 @@ architecture floating_point_adder_arq of floating_point_adder is
 	for result_complementer_0 : result_complementer use entity work.result_complementer;
 	for expanded_mantissa_adder_0 : expanded_mantissa_adder use entity work.expanded_mantissa_adder;
 	for number_shifter_0 : number_shifter use entity work.number_shifter;
+	for sign_based_complementer_0 : sign_based_complementer use entity work.sign_based_complementer;
 	for number_expander_1 : number_expander use entity work.number_expander;
 	for number_expander_2 : number_expander use entity work.number_expander;
-	for sign_based_complementer_0 : sign_based_complementer use entity work.sign_based_complementer;
 	for number_swapper_0 : number_swapper use entity work.number_swapper;
 	for number_splitter_1: number_splitter use entity work.number_splitter;
 	for number_splitter_2: number_splitter use entity work.number_splitter;
@@ -238,15 +241,6 @@ begin
 			man_smaller_out  => man_smaller
 	);
 
-	sign_based_complementer_0 : sign_based_complementer
-		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
-		port map(
-			sign_1_in => sign_1,
-			sign_2_in => sign_2,
-			man_in => man_smaller,
-			man_out => complemented_man_smaller
-	);
-
 	number_expander_1 : number_expander
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
@@ -257,32 +251,42 @@ begin
 	number_expander_2 : number_expander
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
-			number_in   => complemented_man_smaller,
-			number_out  => expanded_complemented_man_smaller
+			number_in   => man_smaller,
+			number_out  => expanded_man_smaller
+	);
+
+	sign_based_complementer_0 : sign_based_complementer
+		generic map(BITS => TOTAL_BITS - EXP_BITS)
+		port map(
+			sign_1_in => sign_1,
+			sign_2_in => sign_2,
+			man_in => expanded_man_smaller,
+			man_out => complemented_expanded_man_smaller
 	);
 
 	number_shifter_0 : number_shifter
-		generic map(BITS => (TOTAL_BITS - EXP_BITS - 1)*2, EXP_BITS => EXP_BITS)
+		generic map(BITS => TOTAL_BITS - EXP_BITS, EXP_BITS => EXP_BITS)
 		port map(
-			man_in => expanded_complemented_man_smaller,
+			man_in => complemented_expanded_man_smaller,
 			sign_1_in => sign_1,
 			sign_2_in => sign_2,
 			greater_exp => exp_greater,
 			smaller_exp => exp_smaller,
-			man_out => shifted_expanded_complemented_man_smaller
+			man_out => shifted_complemented_expanded_man_smaller,
+			rounding_bit => rounding_bit
 	);
 
 	expanded_mantissa_adder_0 : expanded_mantissa_adder
-		generic map(BITS => (TOTAL_BITS - EXP_BITS - 1) * 2)
+		generic map(BITS => (TOTAL_BITS - EXP_BITS))
 		port map(
 			man_1_in => expanded_man_greater,
-			man_2_in => shifted_expanded_complemented_man_smaller,
+			man_2_in => shifted_complemented_expanded_man_smaller,
 			result => expanded_man_result,
 			cout => addition_cout
 		);
 
 	result_complementer_0 : result_complementer
-		generic map(BITS => (TOTAL_BITS - EXP_BITS - 1)*2)
+		generic map(BITS => (TOTAL_BITS - EXP_BITS))
 		port map(
 			in_result => expanded_man_result,
 			sign_1_in => sign_1,
@@ -298,6 +302,7 @@ begin
 			exp_in => exp_greater,
 			cin => addition_cout,
 			diff_signs => diff_signs,
+			rounding_bit => rounding_bit,
 			man_out => man_result,
 			exp_out => exp_result
 	);
@@ -329,10 +334,11 @@ begin
 					man_smaller,
 					exp_greater,
 					exp_smaller,
-					complemented_man_smaller,
+					expanded_man_smaller,
 					expanded_man_greater,
-					expanded_complemented_man_smaller,
-					shifted_expanded_complemented_man_smaller,
+					complemented_expanded_man_smaller,
+					shifted_complemented_expanded_man_smaller,
+					rounding_bit,
 					expanded_man_result,
 					complemented_expanded_man_result,
 					addition_cout,
@@ -346,9 +352,6 @@ begin
 	 	diff_signs <= sign_1 xor sign_2;
 		number_1 <= number_1_in;
 		number_2 <= number_2_in;
-	
-		--report "AN MAN: " & integer'image(to_integer(unsigned(man_result)));
-		--report "AN EXP: " & integer'image(to_integer(unsigned(exp_result)));
 		result <= sign_result & exp_result & man_result;
 	end process;
 
