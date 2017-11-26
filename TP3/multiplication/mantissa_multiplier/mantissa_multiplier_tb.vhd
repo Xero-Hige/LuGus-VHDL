@@ -46,7 +46,7 @@ begin
 		type pattern_array is array (natural range<>) of pattern_type;
 		constant patterns : pattern_array := (
 			("000000","000000","01000000"),
-			("111111","111111","01111100")
+			("111111","111111","11111100")
 		);
 
 		begin

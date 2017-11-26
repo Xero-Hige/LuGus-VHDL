@@ -1,97 +1,97 @@
 v 3
-file . "floating_point_adder/floating_point_adder_tb.vhd" "20171105204051.000" "20171109190432.180":
-  entity floating_point_adder_tb at 1( 0) + 0 on 1105;
-  architecture floating_point_adder_tb_arq of floating_point_adder_tb at 8( 117) + 0 on 1106;
-file . "adder_tester/adder_tester_tb.vhd" "20171109213951.000" "20171109190432.104":
-  entity adder_tester_tb at 1( 0) + 0 on 1091;
-  architecture adder_tester_tb_arq of adder_tester_tb at 12( 285) + 0 on 1092;
-file . "sign_computer/sign_computer_tb.vhd" "20171105143535.000" "20171109190432.265":
-  entity sign_computer_tb at 1( 0) + 0 on 1121;
-  architecture sign_computer_tb_arq of sign_computer_tb at 8( 110) + 0 on 1122;
-file . "result_complementer/result_complementer_tb.vhd" "20171105141751.000" "20171109190432.243":
-  entity result_complementer_tb at 1( 0) + 0 on 1117;
-  architecture result_complementer_tb_arq of result_complementer_tb at 8( 116) + 0 on 1118;
-file . "number_splitter/number_splitter_tb.vhd" "20171107221336.000" "20171109190432.222":
-  entity number_splitter_tb at 1( 0) + 0 on 1113;
-  architecture number_splitter_tb_arq of number_splitter_tb at 8( 112) + 0 on 1114;
-file . "number_expander/number_expander_tb.vhd" "20171016195021.000" "20171109190432.200":
-  entity number_expander_tb at 1( 0) + 0 on 1109;
-  architecture number_expander_tb_arq of number_expander_tb at 8( 112) + 0 on 1110;
-file . "exp_equalizer/exp_equalizer_tb.vhd" "20171005103326.000" "20171109190432.159":
-  entity exp_equalizer_tb at 1( 0) + 0 on 1101;
-  architecture exp_equalizer_tb_arq of exp_equalizer_tb at 8( 110) + 0 on 1102;
-file . "class_adder/class_adder_tb.vhd" "20171107223758.000" "20171109190432.137":
-  entity class_adder_tb at 1( 0) + 0 on 1097;
-  architecture class_adder_tb_arq of class_adder_tb at 8( 108) + 0 on 1098;
-file . "base_complementer/base_complementer_tb.vhd" "20171005103326.000" "20171109190432.116":
-  entity base_complementer_tb at 1( 0) + 0 on 1093;
-  architecture base_complementer_tb_arq of base_complementer_tb at 8( 114) + 0 on 1094;
-file . "floating_point_adder/floating_point_adder.vhd" "20171105204013.000" "20171109190432.092":
-  entity floating_point_adder at 1( 0) + 0 on 1089;
-  architecture floating_point_adder_arq of floating_point_adder at 21( 512) + 0 on 1090;
-file . "number_swapper/number_swapper.vhd" "20171015224130.000" "20171109190432.067":
-  entity number_swapper at 1( 0) + 0 on 1085;
-  architecture number_swapper_arq of number_swapper at 29( 933) + 0 on 1086;
-file . "result_complementer/result_complementer.vhd" "20171105141737.000" "20171109190432.044":
-  entity result_complementer at 1( 0) + 0 on 1081;
-  architecture result_complementer_arq of result_complementer at 22( 528) + 0 on 1082;
-file . "sign_computer/sign_computer.vhd" "20171105143314.000" "20171109190432.025":
-  entity sign_computer at 1( 0) + 0 on 1077;
-  architecture sign_computer_arq of sign_computer at 24( 701) + 0 on 1078;
-file . "binary_multiplexer/binary_multiplexer.vhd" "20171005103326.000" "20171109190432.006":
-  entity binary_multiplexer at 1( 0) + 0 on 1073;
-  architecture binary_multiplexer_arq of binary_multiplexer at 20( 450) + 0 on 1074;
-file . "normalizer/normalizer.vhd" "20171105194738.000" "20171109190431.986":
-  entity normalizer at 1( 0) + 0 on 1069;
-  architecture normalizer_arq of normalizer at 25( 683) + 0 on 1070;
-file . "adder/adder.vhd" "20171004130011.000" "20171109190431.967":
-  entity adder at 1( 0) + 0 on 1065;
-  architecture adder_arq of adder at 18( 351) + 0 on 1066;
-file . "number_expander/number_expander.vhd" "20171105202804.000" "20171109190431.946":
-  entity number_expander at 1( 0) + 0 on 1061;
-  architecture number_expander_arq of number_expander at 22( 482) + 0 on 1062;
-file . "number_shifter/number_shifter.vhd" "20171105202956.000" "20171109190431.936":
-  entity number_shifter at 1( 0) + 0 on 1059;
-  architecture number_shifter_arq of number_shifter at 26( 606) + 0 on 1060;
-file . "comparer/comparer.vhd" "20171029223941.000" "20171109190431.956":
-  entity comparer at 1( 0) + 0 on 1063;
-  architecture comparer_arq of comparer at 20( 339) + 0 on 1064;
-file . "class_adder/class_adder.vhd" "20171105200948.000" "20171109190431.976":
-  entity class_adder at 1( 0) + 0 on 1067;
-  architecture class_adder_arq of class_adder at 17( 392) + 0 on 1068;
-file . "base_complementer/base_complementer.vhd" "20171005103326.000" "20171109190431.996":
-  entity base_complementer at 1( 0) + 0 on 1071;
-  architecture base_complementer_arq of base_complementer at 18( 356) + 0 on 1072;
-file . "number_splitter/number_splitter.vhd" "20171105173538.000" "20171109190432.016":
-  entity number_splitter at 1( 0) + 0 on 1075;
-  architecture number_splitter_arq of number_splitter at 19( 388) + 0 on 1076;
-file . "expanded_mantissa_adder/expanded_mantissa_adder.vhd" "20171105201608.000" "20171109190432.034":
-  entity expanded_mantissa_adder at 1( 0) + 0 on 1079;
-  architecture expanded_mantissa_adder_arq of expanded_mantissa_adder at 22( 452) + 0 on 1080;
-file . "sign_based_complementer/sign_based_complementer.vhd" "20171015213409.000" "20171109190432.054":
-  entity sign_based_complementer at 1( 0) + 0 on 1083;
-  architecture sign_based_complementer_arq of sign_based_complementer at 24( 515) + 0 on 1084;
-file . "exp_equalizer/exp_equalizer.vhd" "20171005103326.000" "20171109190432.077":
-  entity exp_equalizer at 1( 0) + 0 on 1087;
-  architecture exp_equalizer_arq of exp_equalizer at 26( 892) + 0 on 1088;
-file . "binary_multiplexer/binary_multiplexer_tb.vhd" "20171005103326.000" "20171109190432.127":
-  entity binary_multiplexer_tb at 1( 0) + 0 on 1095;
-  architecture binary_multiplexer_tb_arq of binary_multiplexer_tb at 8( 115) + 0 on 1096;
-file . "comparer/comparer_tb.vhd" "20171005103326.000" "20171109190432.147":
-  entity comparer_tb at 1( 0) + 0 on 1099;
-  architecture comparer_tb_arq of comparer_tb at 8( 105) + 0 on 1100;
-file . "expanded_mantissa_adder/expanded_mantissa_adder_tb.vhd" "20171105142443.000" "20171109190432.170":
-  entity expanded_mantissa_adder_tb at 1( 0) + 0 on 1103;
-  architecture expanded_mantissa_adder_tb_arq of expanded_mantissa_adder_tb at 8( 120) + 0 on 1104;
-file . "normalizer/normalizer_tb.vhd" "20171105180725.000" "20171109190432.190":
-  entity normalizer_tb at 1( 0) + 0 on 1107;
-  architecture normalizer_tb_arq of normalizer_tb at 8( 107) + 0 on 1108;
-file . "number_shifter/number_shifter_tb.vhd" "20171015232823.000" "20171109190432.212":
-  entity number_shifter_tb at 1( 0) + 0 on 1111;
-  architecture number_shifter_tb_arq of number_shifter_tb at 8( 111) + 0 on 1112;
-file . "number_swapper/number_swapper_tb.vhd" "20171005113224.000" "20171109190432.232":
-  entity number_swapper_tb at 1( 0) + 0 on 1115;
-  architecture number_swapper_tb_arq of number_swapper_tb at 8( 111) + 0 on 1116;
-file . "sign_based_complementer/sign_based_complementer_tb.vhd" "20171015213928.000" "20171109190432.253":
-  entity sign_based_complementer_tb at 1( 0) + 0 on 1119;
-  architecture sign_based_complementer_arq of sign_based_complementer_tb at 8( 120) + 0 on 1120;
+file . "adder_tester/adder_tester_tb.vhd" "20171126160331.000" "20171126131005.091":
+  entity adder_tester_tb at 1( 0) + 0 on 5407;
+  architecture adder_tester_tb_arq of adder_tester_tb at 12( 285) + 0 on 5408;
+file . "sign_based_complementer/sign_based_complementer_tb.vhd" "20171015213928.000" "20171126131005.235":
+  entity sign_based_complementer_tb at 1( 0) + 0 on 5433;
+  architecture sign_based_complementer_arq of sign_based_complementer_tb at 8( 120) + 0 on 5434;
+file . "number_swapper/number_swapper_tb.vhd" "20171005113224.000" "20171126131005.215":
+  entity number_swapper_tb at 1( 0) + 0 on 5429;
+  architecture number_swapper_tb_arq of number_swapper_tb at 8( 111) + 0 on 5430;
+file . "number_shifter/number_shifter_tb.vhd" "20171119190052.000" "20171126131005.189":
+  entity number_shifter_tb at 1( 0) + 0 on 5425;
+  architecture number_shifter_tb_arq of number_shifter_tb at 8( 111) + 0 on 5426;
+file . "normalizer/normalizer_tb.vhd" "20171126160444.000" "20171126131005.165":
+  entity normalizer_tb at 1( 0) + 0 on 5421;
+  architecture normalizer_tb_arq of normalizer_tb at 8( 107) + 0 on 5422;
+file . "expanded_mantissa_adder/expanded_mantissa_adder_tb.vhd" "20171105142443.000" "20171126131005.155":
+  entity expanded_mantissa_adder_tb at 1( 0) + 0 on 5419;
+  architecture expanded_mantissa_adder_tb_arq of expanded_mantissa_adder_tb at 8( 120) + 0 on 5420;
+file . "comparer/comparer_tb.vhd" "20171005103326.000" "20171126131005.132":
+  entity comparer_tb at 1( 0) + 0 on 5415;
+  architecture comparer_tb_arq of comparer_tb at 8( 105) + 0 on 5416;
+file . "binary_multiplexer/binary_multiplexer_tb.vhd" "20171005103326.000" "20171126131005.111":
+  entity binary_multiplexer_tb at 1( 0) + 0 on 5411;
+  architecture binary_multiplexer_tb_arq of binary_multiplexer_tb at 8( 115) + 0 on 5412;
+file . "exp_equalizer/exp_equalizer.vhd" "20171005103326.000" "20171126131005.061":
+  entity exp_equalizer at 1( 0) + 0 on 5403;
+  architecture exp_equalizer_arq of exp_equalizer at 26( 892) + 0 on 5404;
+file . "sign_based_complementer/sign_based_complementer.vhd" "20171118224039.000" "20171126131005.051":
+  entity sign_based_complementer at 1( 0) + 0 on 5401;
+  architecture sign_based_complementer_arq of sign_based_complementer at 24( 516) + 0 on 5402;
+file . "expanded_mantissa_adder/expanded_mantissa_adder.vhd" "20171105201608.000" "20171126131005.029":
+  entity expanded_mantissa_adder at 1( 0) + 0 on 5397;
+  architecture expanded_mantissa_adder_arq of expanded_mantissa_adder at 22( 452) + 0 on 5398;
+file . "number_splitter/number_splitter.vhd" "20171105173538.000" "20171126131005.008":
+  entity number_splitter at 1( 0) + 0 on 5393;
+  architecture number_splitter_arq of number_splitter at 19( 388) + 0 on 5394;
+file . "base_complementer/base_complementer.vhd" "20171005103326.000" "20171126131004.976":
+  entity base_complementer at 1( 0) + 0 on 5387;
+  architecture base_complementer_arq of base_complementer at 18( 356) + 0 on 5388;
+file . "class_adder/class_adder.vhd" "20171105200948.000" "20171126131004.955":
+  entity class_adder at 1( 0) + 0 on 5383;
+  architecture class_adder_arq of class_adder at 17( 392) + 0 on 5384;
+file . "comparer/comparer.vhd" "20171029223941.000" "20171126131004.932":
+  entity comparer at 1( 0) + 0 on 5379;
+  architecture comparer_arq of comparer at 20( 339) + 0 on 5380;
+file . "number_shifter/number_shifter.vhd" "20171119185956.000" "20171126131004.910":
+  entity number_shifter at 1( 0) + 0 on 5375;
+  architecture number_shifter_arq of number_shifter at 27( 638) + 0 on 5376;
+file . "number_expander/number_expander.vhd" "20171118221502.000" "20171126131004.921":
+  entity number_expander at 1( 0) + 0 on 5377;
+  architecture number_expander_arq of number_expander at 22( 470) + 0 on 5378;
+file . "adder/adder.vhd" "20171004130011.000" "20171126131004.945":
+  entity adder at 1( 0) + 0 on 5381;
+  architecture adder_arq of adder at 18( 351) + 0 on 5382;
+file . "normalizer/normalizer.vhd" "20171119200821.000" "20171126131004.965":
+  entity normalizer at 1( 0) + 0 on 5385;
+  architecture normalizer_arq of normalizer at 26( 706) + 0 on 5386;
+file . "binary_multiplexer/binary_multiplexer.vhd" "20171005103326.000" "20171126131004.998":
+  entity binary_multiplexer at 1( 0) + 0 on 5391;
+  architecture binary_multiplexer_arq of binary_multiplexer at 20( 450) + 0 on 5392;
+file . "sign_computer/sign_computer.vhd" "20171118223132.000" "20171126131005.018":
+  entity sign_computer at 1( 0) + 0 on 5395;
+  architecture sign_computer_arq of sign_computer at 24( 689) + 0 on 5396;
+file . "result_complementer/result_complementer.vhd" "20171105141737.000" "20171126131005.042":
+  entity result_complementer at 1( 0) + 0 on 5399;
+  architecture result_complementer_arq of result_complementer at 22( 528) + 0 on 5400;
+file . "number_swapper/number_swapper.vhd" "20171119195848.000" "20171126131004.987":
+  entity number_swapper at 1( 0) + 0 on 5389;
+  architecture number_swapper_arq of number_swapper at 29( 933) + 0 on 5390;
+file . "floating_point_adder/floating_point_adder.vhd" "20171119191046.000" "20171126131005.078":
+  entity floating_point_adder at 1( 0) + 0 on 5405;
+  architecture floating_point_adder_arq of floating_point_adder at 21( 512) + 0 on 5406;
+file . "base_complementer/base_complementer_tb.vhd" "20171005103326.000" "20171126131005.101":
+  entity base_complementer_tb at 1( 0) + 0 on 5409;
+  architecture base_complementer_tb_arq of base_complementer_tb at 8( 114) + 0 on 5410;
+file . "class_adder/class_adder_tb.vhd" "20171107223758.000" "20171126131005.122":
+  entity class_adder_tb at 1( 0) + 0 on 5413;
+  architecture class_adder_tb_arq of class_adder_tb at 8( 108) + 0 on 5414;
+file . "exp_equalizer/exp_equalizer_tb.vhd" "20171005103326.000" "20171126131005.145":
+  entity exp_equalizer_tb at 1( 0) + 0 on 5417;
+  architecture exp_equalizer_tb_arq of exp_equalizer_tb at 8( 110) + 0 on 5418;
+file . "number_expander/number_expander_tb.vhd" "20171118221547.000" "20171126131005.176":
+  entity number_expander_tb at 1( 0) + 0 on 5423;
+  architecture number_expander_tb_arq of number_expander_tb at 8( 112) + 0 on 5424;
+file . "number_splitter/number_splitter_tb.vhd" "20171107221336.000" "20171126131005.202":
+  entity number_splitter_tb at 1( 0) + 0 on 5427;
+  architecture number_splitter_tb_arq of number_splitter_tb at 8( 112) + 0 on 5428;
+file . "result_complementer/result_complementer_tb.vhd" "20171105141751.000" "20171126131005.225":
+  entity result_complementer_tb at 1( 0) + 0 on 5431;
+  architecture result_complementer_tb_arq of result_complementer_tb at 8( 116) + 0 on 5432;
+file . "sign_computer/sign_computer_tb.vhd" "20171118223333.000" "20171126131005.245":
+  entity sign_computer_tb at 1( 0) + 0 on 5435;
+  architecture sign_computer_tb_arq of sign_computer_tb at 8( 110) + 0 on 5436;
+file . "floating_point_adder/floating_point_adder_tb.vhd" "20171105204051.000" "20171126130450.301":
+  entity floating_point_adder_tb at 1( 0) + 0 on 5233;
+  architecture floating_point_adder_tb_arq of floating_point_adder_tb at 8( 117) + 0 on 5234;

@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 use std.textio.all; 
 
 entity multiplier_tester_tb is
-	file TEST_FILE : text open READ_MODE is "testing_files/test_mul_float_32_8.txt";
-	constant TOTAL_BITS : integer := 32;
+	file TEST_FILE : text open READ_MODE is "testing_files/test_mul_float_30_8.txt";
+	constant TOTAL_BITS : integer := 30;
 	constant EXP_BITS : integer := 8;
 end entity;
 
@@ -57,9 +57,6 @@ begin
 	 		read(in_line, number1_in);
 	 		read(in_line, number2_in);
 	 		read(in_line, precomputed_result);
-
-	 		--report "NUMBER 1: " & integer'image(number1_in);
-	 		--report "NUMBER 2: " & integer'image(number2_in);
 
 	 		number_1_in <= std_logic_vector(to_unsigned(number1_in, TOTAL_BITS));
 	 		number_2_in <= std_logic_vector(to_unsigned(number2_in, TOTAL_BITS));
