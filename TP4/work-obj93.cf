@@ -1,0 +1,13 @@
+v 3
+file . "arctg_lut/arctg_lut.vhd" "20171203200333.000" "20171203172041.086":
+  entity arctg_lut at 1( 0) + 0 on 219;
+  architecture arctg_lut_arq of arctg_lut at 16( 358) + 0 on 220;
+file . "angle_step_applier/angle_step_applier.vhd" "20171203201249.000" "20171203172041.096":
+  entity angle_step_applier at 1( 0) + 0 on 221;
+  architecture angle_step_applier_arq of angle_step_applier at 21( 777) + 0 on 222;
+file . "arctg_lut/arctg_lut_tb.vhd" "20171203202039.000" "20171203172041.118":
+  entity arctg_lut_tb at 1( 0) + 0 on 225;
+  architecture arctg_lut_tb_arq of arctg_lut_tb at 8( 106) + 0 on 226;
+file . "angle_step_applier/angle_step_applier_tb.vhd" "20171203201828.000" "20171203172041.107":
+  entity angle_step_applier_tb at 1( 0) + 0 on 223;
+  architecture angle_step_applier_tb_arq of angle_step_applier_tb at 8( 115) + 0 on 224;
