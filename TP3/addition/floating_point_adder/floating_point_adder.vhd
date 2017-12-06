@@ -58,13 +58,18 @@ architecture floating_point_adder_arq of floating_point_adder is
 	signal man_greater_s2 : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
 	signal sign_1_s2 : std_logic := '0';
 	signal sign_2_s2 : std_logic := '0';
+	signal expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	signal expanded_man_greater : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	signal complemented_expanded_man_smaller_s2 : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 
 	--STEP 3
 
-	signal expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
-	signal expanded_man_greater : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
+	signal sign_1_s3 : std_logic := '0';
+	signal sign_2_s3 : std_logic := '0';
+	signal exp_greater_s3 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal exp_smaller_s3 : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal complemented_expanded_man_smaller_s3 : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 	
-	signal complemented_expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 
 	signal shifted_complemented_expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 	signal rounding_bit : std_logic := '0';
@@ -241,6 +246,14 @@ architecture floating_point_adder_arq of floating_point_adder is
  	for step1_to_step2_sign1: shift_register use entity work.shift_register;
  	for step1_to_step2_sign2: shift_register use entity work.shift_register;
 
+ 	for step1_to_step3_sign1: shift_register use entity work.shift_register;
+ 	for step1_to_step3_sign2: shift_register use entity work.shift_register;
+ 	for step1_to_step3_exp_greater: shift_register use entity work.shift_register;
+ 	for step1_to_step3_exp_smaller: shift_register use entity work.shift_register;
+
+ 	for step2_to_step3_complemented_expanded_man_smaller: shift_register use entity work.shift_register;
+
+
 
 	for sign_computer_0 : sign_computer use entity work.sign_computer;
 	for normalizer_0 : normalizer use entity work.normalizer;
@@ -356,19 +369,70 @@ begin
 			sign_1_in => sign_1_s2,
 			sign_2_in => sign_2_s2,
 			man_in => expanded_man_smaller,
-			man_out => complemented_expanded_man_smaller
+			man_out => complemented_expanded_man_smaller_s2
+	);
+
+	step2_to_step3_complemented_expanded_man_smaller: shift_register
+		generic map(REGISTRY_BITS => TOTAL_BITS - EXP_BITS, STEPS => 1)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => complemented_expanded_man_smaller_s2,
+			Q => complemented_expanded_man_smaller_s3
 	);
 
 	--################ STEP 3: EQUALIZE EXPONENTS #############################################
 
+	step1_to_step3_sign1: shift_register
+		generic map(REGISTRY_BITS => 1, STEPS => 2)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D(0) => sign_1_s1,
+			Q(0) => sign_1_s3
+	);
+
+	step1_to_step3_sign2: shift_register
+		generic map(REGISTRY_BITS => 1, STEPS => 2)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D(0) => sign_2_s1,
+			Q(0) => sign_2_s3
+	);
+
+	step1_to_step3_exp_smaller: shift_register
+		generic map(REGISTRY_BITS => EXP_BITS, STEPS => 2)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => exp_smaller_s1,
+			Q => exp_smaller_s3
+	);
+
+	step1_to_step3_exp_greater: shift_register
+		generic map(REGISTRY_BITS => EXP_BITS, STEPS => 2)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => exp_greater_s1,
+			Q => exp_greater_s3
+	);
+
+
 	number_shifter_0 : number_shifter
 		generic map(BITS => TOTAL_BITS - EXP_BITS, EXP_BITS => EXP_BITS)
 		port map(
-			man_in => complemented_expanded_man_smaller,
-			sign_1_in => sign_1_s1,
-			sign_2_in => sign_2_s1,
-			greater_exp => exp_greater_s1,
-			smaller_exp => exp_smaller_s1,
+			man_in => complemented_expanded_man_smaller_s3,
+			sign_1_in => sign_1_s3,
+			sign_2_in => sign_2_s3,
+			greater_exp => exp_greater_s3,
+			smaller_exp => exp_smaller_s3,
 			man_out => shifted_complemented_expanded_man_smaller,
 			rounding_bit => rounding_bit
 	);
@@ -444,7 +508,7 @@ begin
 					exp_smaller_s1,
 					expanded_man_smaller,
 					expanded_man_greater,
-					complemented_expanded_man_smaller,
+					complemented_expanded_man_smaller_s2,
 					shifted_complemented_expanded_man_smaller,
 					rounding_bit,
 					expanded_man_result,
