@@ -52,10 +52,17 @@ architecture floating_point_adder_arq of floating_point_adder is
 	signal sign_2_br : std_logic := '0';
 	signal sign_2_ar : std_logic := '0';
 
-	signal man_greater : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
-	signal man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
-	signal exp_greater : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
-	signal exp_smaller : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal man_greater_br : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	signal man_greater_ar : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	
+	signal man_smaller_br : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	signal man_smaller_ar : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+	
+	signal exp_greater_br : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal exp_greater_ar : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	
+	signal exp_smaller_br : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
+	signal exp_smaller_ar : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 
 	signal expanded_man_smaller : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
 	signal expanded_man_greater : std_logic_vector(TOTAL_BITS - EXP_BITS - 1 downto 0) := (others => '0');
@@ -239,6 +246,13 @@ architecture floating_point_adder_arq of floating_point_adder is
  	for step1_sign_1 : registry use entity work.registry;
  	for step1_sign_2 : registry use entity work.registry;
 
+ 	for step2_mantissa_greater : registry use entity work.registry;
+ 	for step2_mantissa_smaller : registry use entity work.registry;
+ 	for step2_exponent_greater : registry use entity work.registry;
+ 	for step2_exponent_smaller : registry use entity work.registry;
+ 	for step2_sign_1 : registry use entity work.registry;
+ 	for step2_sign_2 : registry use entity work.registry;
+
 
 	for sign_computer_0 : sign_computer use entity work.sign_computer;
 	for normalizer_0 : normalizer use entity work.normalizer;
@@ -336,6 +350,8 @@ begin
 			Q(0) => sign_2_ar --one is vector the other is std_logic
 	);
 
+	--##################### STEP 2 ##########################
+
 	number_swapper_0 : number_swapper
 		generic map(TOTAL_BITS => TOTAL_BITS, EXP_BITS => EXP_BITS)
 		port map(
@@ -343,23 +359,87 @@ begin
 			exp_2_in   => exp_2_ar,
 			man_1_in   => man_1_ar,
 			man_2_in   => man_2_ar,
-			exp_greater_out  => exp_greater,
-			exp_smaller_out => exp_smaller,
-			man_greater_out  => man_greater,
-			man_smaller_out  => man_smaller
+			exp_greater_out  => exp_greater_br,
+			exp_smaller_out => exp_smaller_br,
+			man_greater_out  => man_greater_br,
+			man_smaller_out  => man_smaller_br
 	);
+
+	step2_mantissa_greater : registry
+		generic map(TOTAL_BITS => TOTAL_BITS - EXP_BITS - 1)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => man_greater_br,
+			Q => man_greater_ar
+	);
+
+
+	step2_mantissa_smaller : registry
+		generic map(TOTAL_BITS => TOTAL_BITS - EXP_BITS - 1)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => man_smaller_br,
+			Q => man_smaller_ar
+	);
+
+	step2_exponent_greater : registry
+		generic map(TOTAL_BITS => EXP_BITS)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => exp_greater_br,
+			Q => exp_greater_ar
+	);
+
+	step2_exponent_smaller : registry
+		generic map(TOTAL_BITS => EXP_BITS)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D => exp_smaller_br,
+			Q => exp_smaller_ar
+	);
+
+	step2_sign_1 : registry
+		generic map(TOTAL_BITS => 1)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D(0) => sign_1_br, --one is vector the other is std_logic
+			Q(0) => sign_1_ar --one is vector the other is std_logic
+	);
+
+	step2_sign_2 : registry
+		generic map(TOTAL_BITS => 1)
+		port map(
+			enable => enable_in,
+			reset => reset_in,
+			clk => clk_in,
+			D(0) => sign_2_br, --one is vector the other is std_logic
+			Q(0) => sign_2_ar --one is vector the other is std_logic
+	);
+
+
+
 
 	number_expander_1 : number_expander
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
-			number_in   => man_greater,
+			number_in   => man_greater_ar,
 			number_out  => expanded_man_greater
 	);
 
 	number_expander_2 : number_expander
 		generic map(BITS => TOTAL_BITS - EXP_BITS - 1)
 		port map(
-			number_in   => man_smaller,
+			number_in   => man_smaller_ar,
 			number_out  => expanded_man_smaller
 	);
 
@@ -378,8 +458,8 @@ begin
 			man_in => complemented_expanded_man_smaller,
 			sign_1_in => sign_1_ar,
 			sign_2_in => sign_2_ar,
-			greater_exp => exp_greater,
-			smaller_exp => exp_smaller,
+			greater_exp => exp_greater_ar,
+			smaller_exp => exp_smaller_ar,
 			man_out => shifted_complemented_expanded_man_smaller,
 			rounding_bit => rounding_bit
 	);
@@ -407,7 +487,7 @@ begin
 		generic map(TOTAL_BITS => TOTAL_BITS, EXP_BITS => EXP_BITS)
 		port map(
 			man_in => complemented_expanded_man_result,
-			exp_in => exp_greater,
+			exp_in => exp_greater_ar,
 			cin => addition_cout,
 			diff_signs => diff_signs,
 			rounding_bit => rounding_bit,
@@ -422,7 +502,7 @@ begin
 			man_2_in => man_2_ar,
 			sign_1_in => sign_1_ar,
 			sign_2_in => sign_2_ar,
-			man_greater_in => man_greater,
+			man_greater_in => man_greater_ar,
 			pre_complemented_result => expanded_man_result,
 			complemented_result => complemented_expanded_man_result,
 			sign_out => sign_result
@@ -441,10 +521,10 @@ begin
 					exp_2_ar,
 					sign_1_ar,
 					sign_2_ar,
-					man_greater,
-					man_smaller,
-					exp_greater,
-					exp_smaller,
+					man_greater_ar,
+					man_smaller_ar,
+					exp_greater_ar,
+					exp_smaller_ar,
 					expanded_man_smaller,
 					expanded_man_greater,
 					complemented_expanded_man_smaller,
