@@ -4,9 +4,10 @@ use ieee.numeric_std.all;
 use std.textio.all; 
 
 entity adder_tester_tb is
-	file TEST_FILE : text open READ_MODE is "testing_files/test_sum_float_23_6.txt";
-	constant TOTAL_BITS : integer := 23;
+	file TEST_FILE : text open READ_MODE is "testing_files/test_sum_float_24_6.txt";
+	constant TOTAL_BITS : integer := 24;
 	constant EXP_BITS : integer := 6;
+	constant PIPELINE_STEPS : integer := 6;
 end entity;
 
 architecture adder_tester_tb_arq of adder_tester_tb is
@@ -57,7 +58,7 @@ for shift_register_0 : shift_register use entity work.shift_register;
 begin
 
 	shift_register_0 : shift_register
-		generic map(REGISTRY_BITS => TOTAL_BITS, STEPS => 7)
+		generic map(REGISTRY_BITS => TOTAL_BITS, STEPS => PIPELINE_STEPS + 1)
 		port map(
 			enable => enable_in,
 			reset => reset_in,
@@ -84,6 +85,7 @@ begin
 		variable precomputed_result_before : integer;
 		variable precomputed_result_after : integer;
 		variable to_integer_result : integer;
+		variable i : integer := 0;
 
 		begin
 
@@ -111,15 +113,35 @@ begin
 	 		to_integer_result := to_integer(unsigned(result));
 	 		precomputed_result_after := to_integer(unsigned(expected_result_after));
 
-	 		report "REGISTRY RESULT: " & integer'image(precomputed_result_after) & " ADDER RESULT: " & integer'image(to_integer_result);
-
-			--assert precomputed_result_after = to_integer_result report "EXPECTED: " & integer'image(precomputed_result_after) & " ACTUAL: " & integer'image(to_integer_result);
+	 		--report "REGISTRY RESULT: " & integer'image(precomputed_result_after) & " ADDER RESULT: " & integer'image(to_integer_result);
+	 		if(i > PIPELINE_STEPS) then --dont compare in the first iterations because garbage leaves the registers
+				assert precomputed_result_after = to_integer_result report "EXPECTED: " & integer'image(precomputed_result_after) & " ACTUAL: " & integer'image(to_integer_result);
+			end if;
 
 			clk_in <= '0';
 
 			wait for 100 ms;
+			i := i + 1;
+		
+		end loop;
+
+		--Compare remainder values
+		for i in 0 to PIPELINE_STEPS loop
+			clk_in <= '1';
+			wait for 100 ms;
+			
+			to_integer_result := to_integer(unsigned(result));
+	 		precomputed_result_after := to_integer(unsigned(expected_result_after));
+	 		--report "REGISTRY RESULT: " & integer'image(precomputed_result_after) & " ADDER RESULT: " & integer'image(to_integer_result);
+	 		assert precomputed_result_after = to_integer_result report "EXPECTED: " & integer'image(precomputed_result_after) & " ACTUAL: " & integer'image(to_integer_result);
+
+	 		clk_in <= '0';
+
+			wait for 100 ms;
 
 	 	end loop;
+
+
 		assert false report "end of test" severity note;
 		wait;
 	end process;
