@@ -29,10 +29,16 @@ begin
 		variable tmp_mantissa : std_logic_vector(TOTAL_BITS - EXP_BITS downto 0) := (others => '0');
 		variable tmp_exp : unsigned(EXP_BITS - 1 downto 0) := (others => '0');
 		variable zero_mant : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+		variable all_ones_mant : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '1');
+		variable max_exp : unsigned(EXP_BITS - 1 downto 0) := (others => '1');
+
+		variable internal_man_out : std_logic_vector(TOTAL_BITS - EXP_BITS - 2 downto 0) := (others => '0');
+		variable internal_exp_out : std_logic_vector(EXP_BITS - 1 downto 0) := (others => '0');
 		begin
 			if(cin = '1' and diff_signs = '0') then
-				man_out <= man_in(TOTAL_BITS - EXP_BITS - 1 downto 1);
-				exp_out <= std_logic_vector(unsigned(exp_in) + 1);
+				internal_man_out := man_in(TOTAL_BITS - EXP_BITS - 1 downto 1);
+
+				internal_exp_out := std_logic_vector(unsigned(exp_in) + 1);
 			else
 				tmp_mantissa := man_in & rounding_bit;
 				tmp_exp := unsigned(exp_in);
@@ -40,12 +46,19 @@ begin
 					tmp_mantissa := std_logic_vector(shift_left(unsigned(tmp_mantissa), 1));
 					tmp_exp := tmp_exp - 1;
 				end loop;
-				if(tmp_exp = 0) then
-					man_out <= zero_mant;
-				else
-					man_out <= tmp_mantissa((TOTAL_BITS - EXP_BITS - 1) downto 1);
-				end if;
-				exp_out <= std_logic_vector(tmp_exp);
+				internal_man_out := tmp_mantissa((TOTAL_BITS - EXP_BITS - 1) downto 1);
+				internal_exp_out := std_logic_vector(tmp_exp);
+			end if;
+			tmp_exp := unsigned(internal_exp_out);
+			if(tmp_exp = 0) then
+				man_out <= zero_mant;
+				exp_out <= internal_exp_out;
+			elsif (tmp_exp = max_exp) then
+				man_out <= zero_mant;
+				exp_out <=  std_logic_vector(max_exp);
+			else
+				man_out <= internal_man_out;
+				exp_out <= internal_exp_out;		
 			end if;
 	end process;
 end;
