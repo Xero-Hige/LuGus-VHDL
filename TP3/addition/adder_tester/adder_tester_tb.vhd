@@ -4,8 +4,8 @@ use ieee.numeric_std.all;
 use std.textio.all; 
 
 entity adder_tester_tb is
-	file TEST_FILE : text open READ_MODE is "testing_files/test_sum_float_24_6.txt";
-	constant TOTAL_BITS : integer := 24;
+	file TEST_FILE : text open READ_MODE is "testing_files/test_sum_float_23_6.txt";
+	constant TOTAL_BITS : integer := 23;
 	constant EXP_BITS : integer := 6;
 	constant PIPELINE_STEPS : integer := 6;
 end entity;
@@ -108,7 +108,7 @@ begin
 	 		--One clock cycle
 	 		clk_in <= '1';
 
-	 		wait for 100 ms;
+	 		wait for 1 ns;
 			
 	 		to_integer_result := to_integer(unsigned(result));
 	 		precomputed_result_after := to_integer(unsigned(expected_result_after));
@@ -120,7 +120,7 @@ begin
 
 			clk_in <= '0';
 
-			wait for 100 ms;
+			wait for 1 ns;
 			i := i + 1;
 		
 		end loop;
@@ -137,7 +137,7 @@ begin
 
 	 		clk_in <= '0';
 
-			wait for 100 ms;
+			wait for 1 ns;
 
 	 	end loop;
 

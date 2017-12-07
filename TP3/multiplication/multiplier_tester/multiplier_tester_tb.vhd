@@ -61,7 +61,7 @@ begin
 	 		number_1_in <= std_logic_vector(to_unsigned(number1_in, TOTAL_BITS));
 	 		number_2_in <= std_logic_vector(to_unsigned(number2_in, TOTAL_BITS));
 
-	 		wait for 100 ms;
+	 		wait for 1 ns;
 			
 	 		to_integer_result := to_integer(unsigned(result));
 			assert precomputed_result = to_integer_result report "EXPECTED: " & integer'image(precomputed_result) & " ACTUAL: " & integer'image(to_integer_result);
