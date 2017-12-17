@@ -86,12 +86,16 @@ architecture cordic_arq of cordic is
             y_out => normalized_y
         );
 
-    	--if(STEPS > MAX_STEPS) then
-     --       report integer'image(STEPS) & " STEPS are not allowed, max is: " & integer'image(MAX_STEPS) severity failure;
-     --   end if;
-
         x_out <= normalized_x;
         y_out <= normalized_y;
+
+        process(x_in, y_in, angle)
+        begin
+          if(STEPS > MAX_STEPS) then
+            report integer'image(STEPS) & " STEPS are not allowed, max is: " & integer'image(MAX_STEPS) severity failure;
+          end if;
+        end process;
+
 
 
 end architecture;
