@@ -57,7 +57,12 @@ begin
 			 "00000000000000010000000000000000",
 			 "00000000001011010000000000000000",
 			 "00000000000000000000000000000000",
-			 "00000000000000010110101000001010")
+			 "00000000000000010110101000001010"),
+			("00000000000000010000000000000000",
+			 "00000000000000010000000000000000",
+			 "00000000010110100000000000000000",
+			 "11111111111111110000000000000001",
+			 "00000000000000001111111111111100")
 		);
 
 	begin
@@ -67,9 +72,9 @@ begin
 			y_in <= patterns(i).yi;
 			angle <= patterns(i).a;
 			
-			wait for 1 ns;
+			wait for 1 ns; 
 
-			assert patterns(i).xo = x_out report "BAD X, GOT: " & integer'image(to_integer(signed(x_out)));
+			assert patterns(i).xo = x_out report "BAD X, EXPECTED: " & integer'image(to_integer(signed(patterns(i).xo))) & " GOT: " & integer'image(to_integer(signed(x_out)));
 			assert patterns(i).yo = y_out report "BAD Y, GOT: " & integer'image(to_integer(signed(y_out)));
 	
 			--  Check the outputs.

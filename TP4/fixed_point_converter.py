@@ -57,9 +57,12 @@ def write_scaling_values_table():
 
 def int_to_bin(number, integer_bits):
 	binary_number = bin(number)
-	if(len(binary_number) - 2 > total_bits):
+	unused = 2
+	if(binary_number[0] == '-'):
+		unused = 3
+	if(len(binary_number) - unused > total_bits):
 		print "\n\n\nERROR: NOT ENOUGH BITS\n\n\n"
-	sanitized_binary_number = binary_number[2:]
+	sanitized_binary_number = binary_number[unused:]
 	missing_zeros = integer_bits - len(sanitized_binary_number)
 	binary_to_return = ""
 	for i in xrange(missing_zeros):
