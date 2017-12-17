@@ -8,9 +8,10 @@ ANALISIS_ERRROR = 1
 COMPILE_ERROR = 2
 RUN_ERROR = 3
 
-
-ANALYZER = 'ghdl -a '
-COMPILER = 'ghdl -e '
+GHDL = '../ghdl/bin/ghdl'
+ANALYZER =  GHDL + ' -a '
+COMPILER = GHDL + ' -e '
+RUNNER = GHDL + ' -r '
 VALID_EXTENSIONS = ['vhd','vhdl']
 
 def analyze_file(filepath):
@@ -97,7 +98,7 @@ def main():
     for f in entities:
         name = get_name(f)
         print "\n\n\n\n####### RUNING TEST FOR: " +  name + ' ######'
-        end_status += os.system("ghdl -r " + name)
+        end_status += os.system(RUNNER + name)
     if end_status:
         sys.exit(RUN_ERROR)
 

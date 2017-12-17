@@ -1,13 +1,31 @@
-v 3
-file . "arctg_lut/arctg_lut.vhd" "20171203200333.000" "20171203172041.086":
-  entity arctg_lut at 1( 0) + 0 on 219;
-  architecture arctg_lut_arq of arctg_lut at 16( 358) + 0 on 220;
-file . "angle_step_applier/angle_step_applier.vhd" "20171203201249.000" "20171203172041.096":
-  entity angle_step_applier at 1( 0) + 0 on 221;
-  architecture angle_step_applier_arq of angle_step_applier at 21( 777) + 0 on 222;
-file . "arctg_lut/arctg_lut_tb.vhd" "20171203202039.000" "20171203172041.118":
-  entity arctg_lut_tb at 1( 0) + 0 on 225;
-  architecture arctg_lut_tb_arq of arctg_lut_tb at 8( 106) + 0 on 226;
-file . "angle_step_applier/angle_step_applier_tb.vhd" "20171203201828.000" "20171203172041.107":
-  entity angle_step_applier_tb at 1( 0) + 0 on 223;
-  architecture angle_step_applier_tb_arq of angle_step_applier_tb at 8( 115) + 0 on 224;
+v 4
+file . "normalizer/normalizer.vhd" "b89c1f902dc1d13bd55f788bd4337d9cd72bfd16" "20171217213818.874":
+  entity normalizer at 1( 0) + 0 on 1011;
+  architecture normalizer_arq of normalizer at 19( 647) + 0 on 1012;
+file . "scaling_values_lut/scaling_values_lut_tb.vhd" "4891e98847f0b0a129376d416830ee47546e2e33" "20171217213818.942":
+  entity scaling_values_lut_tb at 1( 0) + 0 on 1025;
+  architecture scaling_values_lut_tb_arq of scaling_values_lut_tb at 8( 115) + 0 on 1026;
+file . "arctg_lut/arctg_lut_tb.vhd" "fb56568f7bbdccf9261d51f82cd9460e48d0d0f9" "20171217213818.911":
+  entity arctg_lut_tb at 1( 0) + 0 on 1019;
+  architecture arctg_lut_tb_arq of arctg_lut_tb at 8( 106) + 0 on 1020;
+file . "cordic/cordic.vhd" "730d9f3a1e9a2ef789e46a1fd34d410ddd5a67dc" "20171217213818.893":
+  entity cordic at 1( 0) + 0 on 1015;
+  architecture cordic_arq of cordic at 20( 798) + 0 on 1016;
+file . "arctg_lut/arctg_lut.vhd" "bdc15bc54b603f7a2cb916ce7bcecbc2c21be21f" "20171217213818.863":
+  entity arctg_lut at 1( 0) + 0 on 1009;
+  architecture arctg_lut_arq of arctg_lut at 16( 358) + 0 on 1010;
+file . "scaling_values_lut/scaling_values_lut.vhd" "4d91746b36d2e0afea2501c38d661a22b6582791" "20171217213818.854":
+  entity scaling_values_lut at 1( 0) + 0 on 1007;
+  architecture scaling_values_lut_arq of scaling_values_lut at 16( 414) + 0 on 1008;
+file . "angle_step_applier/angle_step_applier.vhd" "3e68e74934cad1cff4b542c8fcecd5a0d0ea16a8" "20171217213818.884":
+  entity angle_step_applier at 1( 0) + 0 on 1013;
+  architecture angle_step_applier_arq of angle_step_applier at 21( 777) + 0 on 1014;
+file . "angle_step_applier/angle_step_applier_tb.vhd" "2821f6e53af26d1874c28d7b0d35ad43a51f5186" "20171217213818.903":
+  entity angle_step_applier_tb at 1( 0) + 0 on 1017;
+  architecture angle_step_applier_tb_arq of angle_step_applier_tb at 8( 115) + 0 on 1018;
+file . "cordic/cordic_tb.vhd" "87a7f22e7b8fd5cece7bbd7eec878ebf73c54f1d" "20171217213818.922":
+  entity cordic_tb at 1( 0) + 0 on 1021;
+  architecture cordic_tb_arq of cordic_tb at 8( 103) + 0 on 1022;
+file . "normalizer/normalizer_tb.vhd" "fe602a447c52a7db410023ac7c47d61604784e96" "20171217213818.933":
+  entity normalizer_tb at 1( 0) + 0 on 1023;
+  architecture normalizer_tb_arq of normalizer_tb at 8( 107) + 0 on 1024;

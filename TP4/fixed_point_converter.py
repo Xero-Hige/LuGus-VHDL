@@ -3,6 +3,57 @@
 
 import sys
 
+ARCTG_TABLE = [	45.0,
+				26.565051177078,
+				14.0362434679265,
+				7.1250163489018,
+				3.57633437499735,
+				1.78991060824607,
+				0.895173710211074,
+				0.447614170860553,
+				0.223810500368538,
+				0.111905677066207,
+				0.0559528918938037,
+				0.0279764526170037,
+				0.013988227142265,
+				0.0069941136753529,
+				0.00349705685070401,
+				0.00174852842698045]
+
+SCALING_VALUES_TABLE = [1.4142135623731,
+						1.58113883008419,
+						1.62980060130066,
+						1.64248406575224,
+						1.64568891575725,
+						1.64649227871248,
+						1.64669325427364,
+						1.6467435065969,
+						1.64675607020488,
+						1.64675921113982,
+						1.64675999637562,
+						1.64676019268469,
+						1.64676024176197,
+						1.64676025403129,
+						1.64676025709862,
+						1.6467602579,
+						1.6467602581]
+
+INT_BITS = 16
+FRACTION_BITS = 9
+
+def write_arctg_table():
+	for value in ARCTG_TABLE:
+		integer_part = int_to_bin(int(value), INT_BITS)
+		fractional_part = fraction_to_bin(get_fractional_part(value), FRACTION_BITS)
+		print '"' + integer_part + fractional_part + '", ---' + str(bin_to_float(integer_part + fractional_part))
+
+def write_scaling_values_table():
+	for value in SCALING_VALUES_TABLE:
+		value = 1/value
+		integer_part = int_to_bin(int(value), INT_BITS)
+		fractional_part = fraction_to_bin(get_fractional_part(value), FRACTION_BITS)
+		print '"' + integer_part + fractional_part + '", ---' + str(bin_to_float(integer_part + fractional_part))
+
 def int_to_bin(number, integer_bits):
 	binary_number = bin(number)
 	if(len(binary_number) - 2 > total_bits):
@@ -42,44 +93,32 @@ def bin_to_fraction(bin):
 def bin_to_float(binary_number):
 	length = len(binary_number)
 	fractional_part = ""
-	integer_part = binary_number[:length/2]
+	integer_part = binary_number[:INT_BITS]
 	if(length % 2 == 0): #no point
-		fractional_part = binary_number[length/2:]
+		fractional_part = binary_number[INT_BITS:]
 	else:
-		fractional_part = binary_number[length/2 + 1:]
+		fractional_part = binary_number[INT_BITS + 1:]
 	return int(integer_part, 2) + bin_to_fraction(fractional_part)
 
-
 args = sys.argv
-total_bits = int(args[1])
-number = args[2]
-number = float(number)
+option = args[1]
+total_bits = int(args[2])
+number = args[3]
 
-integer_part = int_to_bin(int(number), total_bits/2)
-fractional_part = fraction_to_bin(get_fractional_part(number), total_bits/2)
+if(option == '-f'):
+	number = float(number)
+	integer_part = int_to_bin(int(number), INT_BITS)
+	fractional_part = fraction_to_bin(get_fractional_part(number), FRACTION_BITS)
+	print "FIXED POINT BINARY VALUE: "
+	print integer_part + "." + fractional_part
+elif (option == '-b'):
+	print "FRACTIONAL VALUE: "
+	print bin_to_float(number)
+elif (option == "-i"):
+	number = int(number)
+	print bin_to_float(int_to_bin(number, total_bits))
+elif (option == "-arctg"):
+	write_arctg_table()
+elif (option == "-scaling"):
+	write_scaling_values_table()
 
-binary_number = integer_part + "." + fractional_part
-
-print "IN BINARY:"
-print binary_number
-print "BACK TO DECIMAL: "
-print bin_to_float(binary_number)
-
-for element in [45.0,
-    26.565051177078,
-    14.0362434679265,
-    7.1250163489018,
-    3.57633437499735,
-    1.78991060824607,
-    0.895173710211074,
-    0.447614170860553,
-    0.223810500368538,
-    0.111905677066207,
-    0.0559528918938037,
-    0.0279764526170037,
-    0.013988227142265,
-    0.0069941136753529,
-    0.00349705685070401,
-    0.00174852842698045 ]:
-    binary = int_to_bin(int(element), 16) + fraction_to_bin(get_fractional_part(element), 16)
-    print "\"" + binary + "\,      --- " + str(bin_to_float(binary))
