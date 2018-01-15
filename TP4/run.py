@@ -8,15 +8,33 @@ ANALISIS_ERRROR = 1
 COMPILE_ERROR = 2
 RUN_ERROR = 3
 
-GHDL = '../ghdl/bin/ghdl'
+GHDL_HOME = '../ghdl'
+GHDL = GHDL_HOME + '/bin/ghdl'
+
+IMPORTER = GHDL + ' -i '
 ANALYZER =  GHDL + ' -a '
 COMPILER = GHDL + ' -e '
 RUNNER = GHDL + ' -r '
+
+IMPORTED_LIBRARIES = {
+        'unisim':[GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/*.vhd',GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/primitive/*.vhd'],
+        'unimacro':[GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unimacro/*.vhd']
+    }
+
+#------FLAGS-------
+LIBRARIES_FLAGS = [' -P' + key + ' ' for key in IMPORTED_LIBRARIES.keys()]
+EXECUTION_FLAGS = [' --ieee=synopsys ']
+FLAGS = EXECUTION_FLAGS + LIBRARIES_FLAGS
+
 VALID_EXTENSIONS = ['vhd','vhdl']
+
+
+def execute(command, flags, param):
+    return os.system(command + ' '.join(flags) + param)
 
 def analyze_file(filepath):
     print '\n\n###### ANALYSING ' + get_name(filepath) + ' ######'
-    rvalue = os.system(ANALYZER + filepath)
+    rvalue = execute(ANALYZER, FLAGS, filepath)
     if not rvalue:
         print "OK"
     else:
@@ -24,11 +42,18 @@ def analyze_file(filepath):
 
 def compile_file(filepath):
     print '\n\n###### COMPILING ' + get_name(filepath) + ' ######'
-    rvalue = os.system(COMPILER + filepath)
+    rvalue = execute(COMPILER, FLAGS, filepath)
     if not rvalue:
         print "OK"
     else:
         sys.exit(COMPILE_ERROR)
+
+def import_libraries():
+    for key in IMPORTED_LIBRARIES.keys():
+        print '\n\n###### IMPORTING: ' +  key + ' ######\n\n'
+        work_flag = '--work=' + key + ' '
+        for path in IMPORTED_LIBRARIES[key]:
+            execute(IMPORTER, [work_flag] ,path)
 
 def get_extension(filepath):
     return filepath.split('.')[-1]
@@ -79,6 +104,9 @@ def get_components(filelist):
 
 
 def main():
+
+    import_libraries()
+
     files = get_files_recursively()
     components = get_components(files)
     components.sort(key=lambda elem: get_file_level(elem))
@@ -98,7 +126,7 @@ def main():
     for f in entities:
         name = get_name(f)
         print "\n\n\n\n####### RUNING TEST FOR: " +  name + ' ######'
-        end_status += os.system(RUNNER + name)
+        end_status += execute(RUNNER, FLAGS, name)
     if end_status:
         sys.exit(RUN_ERROR)
 
