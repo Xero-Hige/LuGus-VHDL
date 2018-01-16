@@ -13,11 +13,11 @@ GHDL = GHDL_HOME + '/bin/ghdl'
 
 IMPORTER = GHDL + ' -i '
 ANALYZER =  GHDL + ' -a '
-COMPILER = GHDL + ' -e '
+COMPILER = GHDL + ' -m '
 RUNNER = GHDL + ' -r '
 
 IMPORTED_LIBRARIES = {
-        'unisim':[GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/*.vhd',GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/primitive/*.vhd'],
+        'unisim':[GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/unisim_vcomp.vhd',GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/unisim_vpkg.vhd',GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unisims/primitive/*.vhd'],
         'unimacro':[GHDL_HOME + '/lib/ghdl/vendors/vhdl/src/unimacro/*.vhd']
     }
 

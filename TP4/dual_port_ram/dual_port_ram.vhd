@@ -27,56 +27,48 @@ entity dual_port_ram is
 end dual_port_ram;
 --
 architecture dual_port_ram_arq of dual_port_ram is
-  --
-  -- Components Declarations:
-  --
-  --component BUFG
-  --  port (
-  --    O : out std_ulogic;
+  
+   --Syntax for Synopsys FPGA Express
+  component RAMB16_S36
+   --pragma translate_off
+    generic (
+      -- "Read during Write" attribute for functional simulation
+      WRITE_MODE : string := "READ_FIRST" ; -- WRITE_FIRST(default)/ READ_FIRST/ NO_CHANGE
+      -- Output value after configuration
+      INIT : bit_vector(35 downto 0) := X"000000001";
+      -- Output value if SSR active
+      SRVAL : bit_vector(35 downto 0) := X"000000001";
+      -- Initialize parity memory content
+      INITP_00 : bit_vector(255 downto 0) :=
+      X"0000000000000000000000000000000000000000000000000000000000000000";
+      INITP_01 : bit_vector(255 downto 0) :=
+      X"0000000000000000000000000000000000000000000000000000000000000000";
 
-  --    I : in std_ulogic
-  --  );
-  --end component;
-  --
-  -- Syntax for Synopsys FPGA Express
-  --component RAMB16_S36
-  -- --pragma translate_off
-  --  generic (
-  --    -- "Read during Write" attribute for functional simulation
-  --    WRITE_MODE : string := "READ_FIRST" ; -- WRITE_FIRST(default)/ READ_FIRST/ NO_CHANGE
-  --    -- Output value after configuration
-  --    INIT : bit_vector(35 downto 0) := X"000000000";
-  --    -- Output value if SSR active
-  --    SRVAL : bit_vector(35 downto 0) := X"012345678";
-  --    -- Initialize parity memory content
-  --    INITP_00 : bit_vector(255 downto 0) :=
-  --    X"000000000000000000000000000000000000000000000000FEDCBA9876543210";
-  --    INITP_01 : bit_vector(255 downto 0) :=
-  --    X"0000000000000000000000000000000000000000000000000000000000000000";
+      INITP_07 : bit_vector(255 downto 0) :=
+      X"0000000000000000000000000000000000000000000000000000000000000000";
+      -- Initialize data memory content
+      INIT_00 : bit_vector(255 downto 0) :=
+      X"0000000000000000000000000000000000000000000000000000000000000000";
+      INIT_01 : bit_vector(255 downto 0) :=
+      X"0000000000000000000000000000000000000000000000000000000000000000";
+      INIT_3F : bit_vector(255 downto 0) :=
+      X"0000000000000000000000000000000000000000000000000000000000000000"
+    );
+    -- pragma translate_on
+    port (
+      DI : in std_logic_vector (31 downto 0);
+      DIP : in std_logic_vector (3 downto 0);
+      ADDR : in std_logic_vector (8 downto 0);
+      EN : in STD_LOGIC;
+      WE : in STD_LOGIC;
+      SSR : in STD_LOGIC;
+      CLK : in STD_LOGIC;
+      DO : out std_logic_vector (31 downto 0);
+      DOP : out std_logic_vector (3 downto 0)
+    );
+  end component;
 
-  --    INITP_07 : bit_vector(255 downto 0) :=
-  --    X"0000000000000000000000000000000000000000000000000000000000000000";
-  --    -- Initialize data memory content
-  --    INIT_00 : bit_vector(255 downto 0) :=
-  --    X"000000000000000000000000000000000000000000000000FEDCBA9876543210";
-  --    INIT_01 : bit_vector(255 downto 0) :=
-  --    X"0000000000000000000000000000000000000000000000000000000000000000";
-  --    INIT_3F : bit_vector(255 downto 0) :=
-  --    X"0000000000000000000000000000000000000000000000000000000000000000"
-  --  );
-  --  -- pragma translate_on
-  --  port (
-  --    DI : in std_logic_vector (31 downto 0);
-  --    DIP : in std_logic_vector (3 downto 0);
-  --    ADDR : in std_logic_vector (8 downto 0);
-  --    EN : in STD_LOGIC;
-  --    WE : in STD_LOGIC;
-  --    SSR : in STD_LOGIC;
-  --    CLK : in STD_LOGIC;
-  --    DO : out std_logic_vector (31 downto 0);
-  --    DOP : out std_logic_vector (3 downto 0)
-  --  );
-  --end component;
+  for U_RAMB16_S36 : RAMB16_S36 use entity unisim.RAMB16_S36;
   --
   -- Attribute Declarations:
   attribute WRITE_MODE : string;
@@ -101,16 +93,16 @@ architecture dual_port_ram_arq of dual_port_ram is
   -- RAMB16 memory initialization for Alliance
   -- Default value is "0" / Partial initialization strings are padded
   -- with zeros to the left
-  --attribute INITP_00 of U_RAMB16_S36: label is
-  --"000000000000000000000000000000000000000000000000FEDCBA9876543210";
+  attribute INITP_00 of U_RAMB16_S36: label is
+  "000000000000000000000000000000000000000000000000FEDCBA9876543210";
   --attribute INITP_01 of U_RAMB16_S36: label is
   --"0000000000000000000000000000000000000000000000000000000000000000";
   
   --attribute INITP_07 of U_RAMB16_S36: label is
   --"0000000000000000000000000000000000000000000000000000000000000000";
   ----
-  --attribute INIT_00 of U_RAMB16_S36: label is
-  --"000000000000000000000000000000000000000000000000FEDCBA9876543210";
+  attribute INIT_00 of U_RAMB16_S36: label is
+  "000000000000000000000000000000000000000000000000FEDCBA9876543210";
   --attribute INIT_01 of U_RAMB16_S36: label is
   --"0000000000000000000000000000000000000000000000000000000000000000";
   
@@ -121,22 +113,14 @@ architecture dual_port_ram_arq of dual_port_ram is
   --
   -- signal VCC : std_logic;
   -- signal GND : std_logic;
-  signal CLK_BUFG: std_logic;
-  signal INV_SET_RESET : std_logic;
+
+
   --
   begin
   -- VCC <= '1';
   -- GND <= '0';
   --
-  -- Instantiate the clock Buffer
-    U_BUFG: BUFG
-    port map (
-      I => CLK,
-      O => CLK_BUFG
-    );
-  --
-  -- Use of the free inverter on SSR pin
-  INV_SET_RESET <= NOT SET_RESET;
+
   -- Block SelectRAM Instantiation
   U_RAMB16_S36: RAMB16_S36
   port map (
@@ -146,8 +130,8 @@ architecture dual_port_ram_arq of dual_port_ram is
     ADDR => ADDRESS (8 downto 0), -- insert 9 bits address bus
     EN => ENABLE, -- insert enable signal
     WE => WRITE_EN, -- insert write enable signal
-    SSR => INV_SET_RESET, -- insert set/reset signal
-    CLK => CLK_BUFG, -- insert clock signal
+    SSR => SET_RESET, -- insert set/reset signal
+    CLK => CLK, -- insert clock signal
     DO => DATA_OUT (31 downto 0), -- insert 32 bits data-out bus (<31 downto 0>)
     DOP => DATA_OUT (35 downto 32) -- insert 4 bits parity data-out bus (or <35
   -- downto 32>)

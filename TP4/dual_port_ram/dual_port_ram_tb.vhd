@@ -41,10 +41,10 @@ begin
 		);
 
 	process
+
 		type pattern_type is record
 			din : std_logic_vector(35 downto 0);
 			add : std_logic_vector(8 downto 0);
-			ena : std_logic;
 			wen : std_logic;
 			dot : std_logic_vector(35 downto 0);
 		end record;
@@ -52,32 +52,36 @@ begin
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
 			("000000000000000000000000000000000011",
-			 "000000010",
-			 '1',
+			 "000000000",
 			 '1',
 			 "000000000000000000000000000000000000"),
-			("000000000000000000000000000000000000",
-			 "000000010",
+			("000000000000000000000000000000000001",
+			 "000000000",
 			 '1',
+			 "000000000000000000000000000000000011"),
+			("000000000000000000000000000000000001",
+			 "000000000",
 			 '0',
-			 "000000000000000000000000000000000000")
+			 "000000000000000000000000000000000011")
 		);
 
 
 	begin
 		CLK <= '0';
+		ENABLE <= '1';
+		SET_RESET <= '0';
 
 		for i in patterns'range loop
 			--  Set the inputs.
 			DATA_IN <= patterns(i).din;
 			ADDRESS <= patterns(i).add;
-			ENABLE <= patterns(i).ena;
 			WRITE_EN <= patterns(i).wen;
-			CLK <= '1';
+			
+			CLK	<= '1';
 			
 			wait for 1 ns; 
 
-			assert patterns(i).dot = DATA_OUT report "BAD SAVED VALUE, EXPECTED: " & integer'image(to_integer(signed(patterns(i).dot))) & " GOT: " & integer'image(to_integer(signed(DATA_OUT)));
+			assert patterns(i).dot = DATA_OUT report "BAD SAVED VALUE, EXPECTED: " & integer'image(to_integer(unsigned(patterns(i).dot))) & " GOT: " & integer'image(to_integer(unsigned(DATA_OUT(31 downto 0))));
 
 			CLK <= '0';
 	
