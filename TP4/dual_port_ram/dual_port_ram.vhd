@@ -18,13 +18,18 @@ use UNISIM.VCOMPONENTS.ALL;
 entity dual_port_ram is
   port (
     data_in : in std_logic_vector (0 downto 0) := (others => '0');
-    sub_ram : in std_logic_vector(7 downto 0) := (others => '0');
-    address : in std_logic_vector (13 downto 0) := (others => '0');
+    write_address : in std_logic_vector (13 downto 0) := (others => '0');
+    write_enable : in std_logic := '0';
+    ram_write_mask : in std_logic_vector(7 downto 0) := (others => '0');
+    
     enable : in std_logic := '0';
     clk : in std_logic := '0';
-    write_enable : in std_logic := '0';
     reset : in std_logic := '0';
+
+    ram_read_mask : in std_logic_vector(7 downto 0) := (others => '0');
+    read_address : in std_logic_vector(13 downto 0) := (others => '0');
     data_out : out std_logic_vector (0 downto 0) := (others => '0')
+
   );
 end dual_port_ram;
 --
@@ -32,15 +37,23 @@ architecture dual_port_ram_arq of dual_port_ram is
   
   signal clk_signal : std_logic := '0';
 
-  signal enable_0 : std_logic := '0';
-  signal enable_1 : std_logic := '0';
-  signal enable_2 : std_logic := '0';
-  signal enable_3 : std_logic := '0';
-  signal enable_4 : std_logic := '0';
-  signal enable_5 : std_logic := '0';
-  signal enable_6 : std_logic := '0';
-  signal enable_7 : std_logic := '0';
-
+  signal read_enable_0 : std_logic := '0';
+  signal write_enable_0 : std_logic := '0';
+  signal read_enable_1 : std_logic := '0';
+  signal write_enable_1 : std_logic := '0';
+  signal read_enable_2 : std_logic := '0';
+  signal write_enable_2 : std_logic := '0';
+  signal read_enable_3 : std_logic := '0';
+  signal write_enable_3 : std_logic := '0';
+  signal read_enable_4 : std_logic := '0';
+  signal write_enable_4 : std_logic := '0';
+  signal read_enable_5 : std_logic := '0';
+  signal write_enable_5 : std_logic := '0';
+  signal read_enable_6 : std_logic := '0';
+  signal write_enable_6 : std_logic := '0';
+  signal read_enable_7 : std_logic := '0';
+  signal write_enable_7 : std_logic := '0';
+ 
   signal data_out_0 : std_logic_vector(0 downto 0) := (others => '0'); 
   signal data_out_1 : std_logic_vector(0 downto 0) := (others => '0'); 
   signal data_out_2 : std_logic_vector(0 downto 0) := (others => '0'); 
@@ -52,147 +65,211 @@ architecture dual_port_ram_arq of dual_port_ram is
   
 
    --Syntax for Synopsys FPGA Express
-  component RAMB16_S1
+  component RAMB16_S1_S1
    --pragma translate_off
-    generic (
-      -- "Read during Write" attribute for functional simulation
-      WRITE_MODE : string := "READ_FIRST" -- WRITE_FIRST(default)/ READ_FIRST/ NO_CHANGE
-    );
     -- pragma translate_on
     port(
-      DO : out STD_LOGIC_VECTOR (0 downto 0);
-      ADDR : in STD_LOGIC_VECTOR (13 downto 0);
-      CLK : in STD_ULOGIC;
-      DI : in STD_LOGIC_VECTOR (0 downto 0);
-      EN : in STD_ULOGIC;
-      SSR : in STD_ULOGIC;
-      WE : in STD_ULOGIC
+      DOA  : out std_logic_vector(0 downto 0);
+      DOB  : out std_logic_vector(0 downto 0);
+      ADDRA : in std_logic_vector(13 downto 0);
+      ADDRB : in std_logic_vector(13 downto 0);
+      CLKA  : in std_ulogic;
+      CLKB  : in std_ulogic;
+      DIA   : in std_logic_vector(0 downto 0);
+      DIB   : in std_logic_vector(0 downto 0);
+      ENA   : in std_ulogic;
+      ENB   : in std_ulogic;
+      SSRA  : in std_ulogic;
+      SSRB  : in std_ulogic;
+      WEA   : in std_ulogic;
+      WEB   : in std_ulogic
     );
   end component;
 
-  for ram_0 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_1 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_2 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_3 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_4 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_5 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_6 : RAMB16_S1 use entity unisim.RAMB16_S1;
-  for ram_7 : RAMB16_S1 use entity unisim.RAMB16_S1;
+  for ram_0 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_1 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_2 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_3 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_4 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_5 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_6 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
+  for ram_7 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
 
   --
   begin
 
-    -- Block SelectRAM Instantiation
-    ram_0: RAMB16_S1
-    port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_0,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_0
-    );
+    --WRITE ON A READ ON B
+    --WRITE ON A READ ON B
+    --WRITE ON A READ ON B
+    --WRITE ON A READ ON B
 
     -- Block SelectRAM Instantiation
-    ram_1: RAMB16_S1
+    ram_0: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_1,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_1
+      DOA  => open,
+      DOB  => data_out_0,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_0,
+      ENB  => read_enable_0,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
-    -- Block SelectRAM Instantiation
-    ram_2: RAMB16_S1
+    ram_1: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_2,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_2
+      DOA  => open,
+      DOB  => data_out_1,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_1,
+      ENB  => read_enable_1,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
-    -- Block SelectRAM Instantiation
-    ram_3: RAMB16_S1
+    ram_2: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_3,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_3
+      DOA  => open,
+      DOB  => data_out_2,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_2,
+      ENB  => read_enable_2,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
-    -- Block SelectRAM Instantiation
-    ram_4: RAMB16_S1
+    ram_3: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_4,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_4
+      DOA  => open,
+      DOB  => data_out_3,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_3,
+      ENB  => read_enable_3,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
+    );
+
+    ram_4: RAMB16_S1_S1
+    port map (
+      DOA  => open,
+      DOB  => data_out_4,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_4,
+      ENB  => read_enable_4,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
 
-    -- Block SelectRAM Instantiation
-    ram_5: RAMB16_S1
+    ram_5: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_5,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_5
+      DOA  => open,
+      DOB  => data_out_5,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_5,
+      ENB  => read_enable_5,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
-
-    -- Block SelectRAM Instantiation
-    ram_6: RAMB16_S1
+    ram_6: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_6,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_6
+      DOA  => open,
+      DOB  => data_out_6,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_6,
+      ENB  => read_enable_6,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
-
-    -- Block SelectRAM Instantiation
-    ram_7: RAMB16_S1
+    ram_7: RAMB16_S1_S1
     port map (
-      DI => data_in,
-      ADDR => address,
-      EN => enable_7,
-      WE => write_enable,
-      SSR => reset,
-      CLK => clk_signal,
-      DO => data_out_7
+      DOA  => open,
+      DOB  => data_out_7,
+      ADDRA => write_address,
+      ADDRB => read_address,
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => data_in,
+      DIB  => "0",
+      ENA  => write_enable_7,
+      ENB  => read_enable_7,
+      SSRA  => reset,
+      SSRB => reset,
+      WEA  => write_enable,
+      WEB  => '0'
     );
 
-    enable_0 <= enable and sub_ram(0);
-    enable_1 <= enable and sub_ram(1);
-    enable_2 <= enable and sub_ram(2);
-    enable_3 <= enable and sub_ram(3);
-    enable_4 <= enable and sub_ram(4);
-    enable_5 <= enable and sub_ram(5);
-    enable_6 <= enable and sub_ram(6);
-    enable_7 <= enable and sub_ram(7);
-    data_out(0) <= (data_out_0(0) and sub_ram(0)) or (data_out_1(0) and sub_ram(1)) or (data_out_2(0) and sub_ram(2)) or (data_out_3(0) and sub_ram(3)) or (data_out_4(0) and sub_ram(4)) or (data_out_5(0) and sub_ram(5)) or (data_out_6(0) and sub_ram(6)) or (data_out_7(0) and sub_ram(7));
+    read_enable_0 <= enable and ram_read_mask(0);
+    write_enable_0 <= enable and ram_write_mask(0);
+    read_enable_1 <= enable and ram_read_mask(1);
+    write_enable_1 <= enable and ram_write_mask(1);
+    read_enable_2 <= enable and ram_read_mask(2);
+    write_enable_2 <= enable and ram_write_mask(2);
+    read_enable_3 <= enable and ram_read_mask(3);
+    write_enable_3 <= enable and ram_write_mask(3);
+    read_enable_4 <= enable and ram_read_mask(4);
+    write_enable_4 <= enable and ram_write_mask(4);
+    read_enable_5 <= enable and ram_read_mask(5);
+    write_enable_5 <= enable and ram_write_mask(5);
+    read_enable_6 <= enable and ram_read_mask(6);
+    write_enable_6 <= enable and ram_write_mask(6);
+    read_enable_7 <= enable and ram_read_mask(7);
+    write_enable_7 <= enable and ram_write_mask(7);
+
+    data_out(0) <= (data_out_0(0) and ram_read_mask(0)) or (data_out_1(0) and ram_read_mask(1)) or (data_out_2(0) and ram_read_mask(2)) or (data_out_3(0) and ram_read_mask(3)) or (data_out_4(0) and ram_read_mask(4)) or (data_out_5(0) and ram_read_mask(5)) or (data_out_6(0) and ram_read_mask(6)) or (data_out_7(0) and ram_read_mask(7));
 
 
-    process(data_in, clk, enable, address)
+    process(data_in, clk, enable,read_address, write_address, write_enable)
     begin
       clk_signal <= clk;
     end process;
