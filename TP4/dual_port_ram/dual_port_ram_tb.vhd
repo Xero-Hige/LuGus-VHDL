@@ -7,23 +7,25 @@ end entity;
 
 architecture dual_port_ram_tb_arq of dual_port_ram_tb is
 
-	signal DATA_IN : std_logic_vector (35 downto 0) := (others => '0');
-  signal ADDRESS : std_logic_vector (8 downto 0) := (others	=> '0');
-  signal ENABLE : std_logic := '0';
-  signal WRITE_EN : std_logic := '0';
-  signal SET_RESET : std_logic := '0';
-  signal CLK : std_logic := '0';
-  signal DATA_OUT : std_logic_vector (35 downto 0) := (others => '0');
+	signal data_in : std_logic_vector (0 downto 0) := (others => '0');
+  signal address : std_logic_vector (13 downto 0) := (others	=> '0');
+  signal enable : std_logic := '0';
+  signal sub_ram : std_logic_vector(7 downto 0) := (others => '0');
+  signal write_enable : std_logic := '0';
+  signal reset : std_logic := '0';
+  signal clk : std_logic := '0';
+  signal data_out : std_logic_vector (0 downto 0) := (others => '0');
 
 	component dual_port_ram is
-  port (
-    DATA_IN : in std_logic_vector (35 downto 0);
-    ADDRESS : in std_logic_vector (8 downto 0);
-    ENABLE : in std_logic;
-    WRITE_EN : in std_logic;
-    SET_RESET : in std_logic;
-    CLK : in std_logic;
-    DATA_OUT : out std_logic_vector (35 downto 0)
+	port (
+    data_in : in std_logic_vector (0 downto 0) := (others => '0');
+    address : in std_logic_vector (13 downto 0) := (others => '0');
+    sub_ram : in std_logic_vector(7 downto 0) := (others => '0');
+    enable : in std_logic := '0';
+    clk : in std_logic := '0';
+    write_enable : in std_logic := '0';
+    reset : in std_logic := '0';
+    data_out : out std_logic_vector (0 downto 0) := (others => '0')
   );
 	end component;
 
@@ -31,59 +33,114 @@ begin
 
 	dual_port_ram_0 : dual_port_ram
 		port map(
-			DATA_IN => DATA_IN,
-	    ADDRESS => ADDRESS,
-	    ENABLE => ENABLE, 
-	    WRITE_EN => WRITE_EN,
-	    SET_RESET => SET_RESET,
-	    CLK => CLK,
-	    DATA_OUT => DATA_OUT
+			data_in => data_in,
+	    address => address,
+	    enable => enable,
+	    sub_ram => sub_ram, 
+	    write_enable => write_enable,
+	    reset => reset,
+	    clk => clk,
+	    data_out => data_out
 		);
 
 	process
 
 		type pattern_type is record
-			din : std_logic_vector(35 downto 0);
-			add : std_logic_vector(8 downto 0);
+			din : std_logic_vector(0 downto 0);
+			sr : std_logic_vector(7 downto 0);
+			add : std_logic_vector(13 downto 0);
 			wen : std_logic;
-			dot : std_logic_vector(35 downto 0);
+			dot : std_logic_vector(0 downto 0);
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
-			("000000000000000000000000000000000011",
-			 "000000000",
-			 '1',
-			 "000000000000000000000000000000000000"),
-			("000000000000000000000000000000000001",
-			 "000000000",
-			 '1',
-			 "000000000000000000000000000000000011"),
-			("000000000000000000000000000000000001",
-			 "000000000",
+			("0",
+				"00000000",
+			 "00000000000000",
 			 '0',
-			 "000000000000000000000000000000000011")
+			 "0"),
+			("1",
+				"00000001",
+			 "00000000000000",
+			 '1',
+			 "0"),
+			("1",
+				"00000010",
+			 "00000000000000",
+			 '1',
+			 "0"),
+			("1",
+				"00000100",
+			 "00000000000000",
+			 '1',
+			 "0"),
+			("1",
+				"10000000",
+			 "00000000000000",
+			 '1',
+			 "0"),
+			("0",
+				"00000001",
+			 "00000000000000",
+			 '0',
+			 "1"),
+			("0",
+				"00000010",
+			 "00000000000000",
+			 '0',
+			 "1"),
+			("0",
+				"00000100",
+			 "00000000000000",
+			 '0',
+			 "1"),
+			("0",
+				"10000000",
+			 "00000000000000",
+			 '0',
+			 "1"),
+			("0",
+				"00000001",
+			 "00000000000000",
+			 '0',
+			 "1"),
+			("1",
+				"00000001",
+			 "00000000010000",
+			 '1',
+			 "0"),
+			("0",
+				"00000001",
+			 "00000000010000",
+			 '0',
+			 "1")
+			
 		);
 
 
 	begin
-		CLK <= '0';
-		ENABLE <= '1';
-		SET_RESET <= '0';
+		clk <= '0';
+		enable <= '1';
+		reset <= '0';
 
 		for i in patterns'range loop
+
+			clk <= '0';
+			wait for 1 ns;
+
 			--  Set the inputs.
-			DATA_IN <= patterns(i).din;
-			ADDRESS <= patterns(i).add;
-			WRITE_EN <= patterns(i).wen;
-			
-			CLK	<= '1';
+			data_in <= patterns(i).din;
+			address <= patterns(i).add;
+			sub_ram <= patterns(i).sr;
+			write_enable <= patterns(i).wen;
+
+			clk	<= '1';
 			
 			wait for 1 ns; 
 
-			assert patterns(i).dot = DATA_OUT report "BAD SAVED VALUE, EXPECTED: " & integer'image(to_integer(unsigned(patterns(i).dot))) & " GOT: " & integer'image(to_integer(unsigned(DATA_OUT(31 downto 0))));
+			assert patterns(i).dot = data_out report "BAD SAVED VALUE, EXPECTED: " & std_logic'image(patterns(i).dot(0)) & " GOT: " & std_logic'image(data_out(0));
 
-			CLK <= '0';
 	
 			--  Check the outputs.
 		end loop;
