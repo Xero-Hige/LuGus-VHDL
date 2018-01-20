@@ -66,8 +66,7 @@ architecture dual_port_ram_arq of dual_port_ram is
 
    --Syntax for Synopsys FPGA Express
   component RAMB16_S1_S1
-   --pragma translate_off
-    -- pragma translate_on
+    generic(WRITE_MODE_B : string := "WRITE_FIRST");
     port(
       DOA  : out std_logic_vector(0 downto 0);
       DOB  : out std_logic_vector(0 downto 0);
@@ -105,6 +104,7 @@ architecture dual_port_ram_arq of dual_port_ram is
 
     -- Block SelectRAM Instantiation
     ram_0: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_0,
@@ -119,10 +119,11 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_0 --will write 0 after read
     );
 
     ram_1: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_1,
@@ -137,10 +138,11 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_1 --will write 0 after read
     );
 
     ram_2: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_2,
@@ -155,10 +157,11 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_2 --will write 0 after read
     );
 
     ram_3: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_3,
@@ -173,10 +176,11 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_3 --will write 0 after read
     );
 
     ram_4: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_4,
@@ -191,11 +195,12 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_4 --will write 0 after read
     );
 
 
     ram_5: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_5,
@@ -210,10 +215,11 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_5 --will write 0 after read
     );
 
     ram_6: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_6,
@@ -228,10 +234,11 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_6 --will write 0 after read
     );
 
     ram_7: RAMB16_S1_S1
+    generic map(WRITE_MODE_B => "READ_FIRST")
     port map (
       DOA  => open,
       DOB  => data_out_7,
@@ -246,7 +253,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0'
+      WEB  => read_enable_7 --will write 0 after read
     );
 
     read_enable_0 <= enable and ram_read_mask(0);

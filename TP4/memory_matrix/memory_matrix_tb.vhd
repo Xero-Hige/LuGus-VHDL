@@ -129,7 +129,7 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
 			
 			enable <= '1'; 
 
-			wait for 40 ns;
+			wait for 20 ns;
 
 			assert patterns(i).dot = read_data report "BAD SAVED VALUE, EXPECTED: " & std_logic'image(patterns(i).dot(0)) & " GOT: " & std_logic'image(read_data(0));
 

@@ -87,7 +87,7 @@ architecture memory_matrix_arq of memory_matrix is
       );
 
       enable_generator_0 : enable_generator
-      generic map(CYCLE_COUNT => 10)
+      generic map(CYCLE_COUNT => 9)
       port map(
         clk => clk,
         enable_in => enable,
