@@ -271,10 +271,7 @@ architecture dual_port_ram_arq of dual_port_ram is
     data_out(0) <= (data_out_0(0) and ram_read_mask(0)) or (data_out_1(0) and ram_read_mask(1)) or (data_out_2(0) and ram_read_mask(2)) or (data_out_3(0) and ram_read_mask(3)) or (data_out_4(0) and ram_read_mask(4)) or (data_out_5(0) and ram_read_mask(5)) or (data_out_6(0) and ram_read_mask(6)) or (data_out_7(0) and ram_read_mask(7));
 
 
-    --process(data_in, clk, enable,read_address, write_address, write_enable)
-    --begin
-    --  clk_signal <= clk;
-    --end process;
+        --end process;
 
 --
 end dual_port_ram_arq;
