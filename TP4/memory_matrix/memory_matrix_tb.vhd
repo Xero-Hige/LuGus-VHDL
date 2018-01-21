@@ -8,8 +8,8 @@ end entity;
 architecture memory_matrix_tb_arq of memory_matrix_tb is
 
 	signal finished : boolean := false;
-	signal x_write: std_logic_vector(8 downto 0) := (others => '0');
-  signal y_write: std_logic_vector(8 downto 0) := (others => '0');
+	signal x_write: std_logic_vector(9 downto 0) := (others => '0');
+  signal y_write: std_logic_vector(9 downto 0) := (others => '0');
   signal write_data: std_logic_vector(0 downto 0) := (others => '0');
   signal write_enable: std_logic := '0';
       
@@ -17,15 +17,15 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
   signal enable: std_logic := '0';
  	signal reset: std_logic := '0';
 
-  signal x_read: std_logic_vector(8 downto 0) := (others => '0');
-  signal y_read: std_logic_vector(8 downto 0) := (others => '0');
+  signal x_read: std_logic_vector(9 downto 0) := (others => '0');
+  signal y_read: std_logic_vector(9 downto 0) := (others => '0');
   signal read_data : std_logic_vector(0 downto 0) := (others => '0');
 
 	component memory_matrix is
-    generic(ROWS: integer := 350; COLUMNS: integer := 350);
+    generic(ROWS: integer := 350; COLUMNS: integer := 350; CLK_DELAY_COUNT: integer := 9);
     port(
-      x_write: in std_logic_vector(8 downto 0) := (others => '0');
-      y_write: in std_logic_vector(8 downto 0) := (others => '0');
+      x_write: in std_logic_vector(9 downto 0) := (others => '0');
+      y_write: in std_logic_vector(9 downto 0) := (others => '0');
       write_data: in std_logic_vector(0 downto 0) := (others => '0');
       write_enable: in std_logic := '0';
       
@@ -33,8 +33,8 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
       enable: in std_logic := '0';
       reset: in std_logic := '0';
 
-      x_read: in std_logic_vector(8 downto 0) := (others => '0');
-      y_read: in std_logic_vector(8 downto 0) := (others => '0');
+      x_read: in std_logic_vector(9 downto 0) := (others => '0');
+      y_read: in std_logic_vector(9 downto 0) := (others => '0');
       read_data : out std_logic_vector(0 downto 0) := (others => '0')
     );
 	end component;
@@ -43,6 +43,7 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
 	begin
 
 	memory_matrix_0 : memory_matrix
+		generic map(CLK_DELAY_COUNT => 9)
 		port map(
 			x_write => x_write,
       y_write => y_write,
@@ -67,47 +68,54 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
 	process
 
 		type pattern_type is record
-			xin : std_logic_vector(8 downto 0);
-			yin : std_logic_vector(8 downto 0);
+			xin : std_logic_vector(9 downto 0);
+			yin : std_logic_vector(9 downto 0);
 			wd : std_logic_vector(0 downto 0);
 			wen : std_logic;
 
-			xo : std_logic_vector(8 downto 0);
-			yo : std_logic_vector(8 downto 0);
+			xo : std_logic_vector(9 downto 0);
+			yo : std_logic_vector(9 downto 0);
 
 			dot : std_logic_vector(0 downto 0);
 		end record;
 		--  The patterns to apply.
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
-			("000000100",
-			 "000000001",
+			("0000000100",
+			 "0000000001",
 			 "1",
 			 '1',
-			 "000000000",
-			 "000000000",
+			 "0000000000",
+			 "0000000000",
 			 "0"),
-			("000000000",
-			 "000000000",
+			("0000000000",
+			 "0000000000",
 			 "0",
 			 '0',
-			 "000000100",
-			 "000000001",
+			 "0000000100",
+			 "0000000001",
 			 "1"),
-			("011111111",
-			 "011111111",
+			("0011111111",
+			 "0011111111",
 			 "1",
 			 '1',
-			 "000000000",
-			 "000000000",
+			 "0000000000",
+			 "0000000000",
 			 "0"),
-			("000000000",
-			 "000000000",
+			("0000000000",
+			 "0000000000",
 			 "0",
 			 '0',
-			 "011111111",
-			 "011111111",
-			 "1")
+			 "0011111111",
+			 "0011111111",
+			 "1"),
+			("0000000000",
+			 "0000000000",
+			 "0",
+			 '0',
+			 "0011111111",
+			 "0011111111",
+			 "0")
 			);
 
 

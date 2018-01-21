@@ -20,11 +20,11 @@ begin
 	begin
 		if(enable_in = '1') then
 			if(rising_edge(clk)) then
-				tmp_count := tmp_count + 1;
 				if(tmp_count = CYCLE_COUNT) then
 					tmp_count := 0;
 					enable_out <= '1';
 				else
+					tmp_count := tmp_count + 1;
 					enable_out <= '0';					
 				end if;
 			end if;
