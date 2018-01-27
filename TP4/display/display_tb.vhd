@@ -58,35 +58,45 @@ architecture display_tb_arq of display_tb is
     process (clk)
     file file_pointer: text is out "write.txt";
     variable line_el: line;
+    variable logger : boolean := false;
         begin
 
     if rising_edge(clk) then
 
-        -- Write the time
-        write(line_el, now); -- write the line.
-        write(line_el, string'(":")); -- write the line.
+        --if(logger =  false) then
+        --    logger := true;
 
-        -- Write the hsync
-        write(line_el, string'(" "));
-        write(line_el, h); -- write the line.
+        --else
 
-        -- Write the vsync
-        write(line_el, string'(" "));
-        write(line_el, v); -- write the line.
+            -- Write the time
+            write(line_el, now); -- write the line.
+            write(line_el, string'(":")); -- write the line.
 
-        -- Write the red
-        write(line_el, string'(" "));
-        write(line_el, r); -- write the line.
+            -- Write the hsync
+            write(line_el, string'(" "));
+            write(line_el, h); -- write the line.
 
-        -- Write the green
-        write(line_el, string'(" "));
-        write(line_el, g); -- write the line.
+            -- Write the vsync
+            write(line_el, string'(" "));
+            write(line_el, v); -- write the line.
 
-        -- Write the blue
-        write(line_el, string'(" "));
-        write(line_el, b); -- write the line.
+            -- Write the red
+            write(line_el, string'(" "));
+            write(line_el, r); -- write the line.
 
-        writeline(file_pointer, line_el); -- write the contents into the file.
+            -- Write the green
+            write(line_el, string'(" "));
+            write(line_el, g); -- write the line.
+
+            -- Write the blue
+            write(line_el, string'(" "));
+            write(line_el, b); -- write the line.
+
+            writeline(file_pointer, line_el); -- write the contents into the file.
+
+            logger := false;
+
+        --end if;
 
     end if;
 end process;
