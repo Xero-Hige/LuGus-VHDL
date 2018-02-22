@@ -119,7 +119,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     ram_1: RAMB16_S1_S1
@@ -138,7 +138,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     ram_2: RAMB16_S1_S1
@@ -157,7 +157,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     ram_3: RAMB16_S1_S1
@@ -176,7 +176,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     ram_4: RAMB16_S1_S1
@@ -195,7 +195,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
 
@@ -215,7 +215,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     ram_6: RAMB16_S1_S1
@@ -234,7 +234,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     ram_7: RAMB16_S1_S1
@@ -253,7 +253,7 @@ architecture dual_port_ram_arq of dual_port_ram is
       SSRA  => reset,
       SSRB => reset,
       WEA  => write_enable,
-      WEB  => '0' --will write 0 after read
+      WEB  => write_enable --will write 0 after read
     );
 
     read_enable_0 <= enable and ram_read_mask(0);

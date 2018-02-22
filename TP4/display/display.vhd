@@ -60,8 +60,6 @@ architecture display_arq of display is
       clk : in std_logic := '0';
       enable : in std_logic := '0';
       rst : in std_logic := '0';
-      real_x_in : in std_logic_vector(BITS - 1 downto 0) := (others => '0');
-      real_y_in : in std_logic_vector(BITS - 1 downto 0) := (others => '0');
       pixel_x : out std_logic_vector(9 downto 0) := (others => '0');
       pixel_y : out std_logic_vector(9 downto 0) := (others => '0');
       pixel_on : out std_logic_vector(0 downto 0) := (others => '0')
@@ -81,17 +79,6 @@ architecture display_arq of display is
     );
   end component;
 
-  component cordic is
-    generic(TOTAL_BITS: integer := 32; STEPS: integer := 16);
-    port(
-      x_in: in std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
-      y_in: in std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
-      angle: in std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
-      x_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
-      y_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0')
-    );
-  end component;
-
   signal x_vga_to_proxy : std_logic_vector(9 downto 0) := (others => '0');
   signal y_vga_to_proxy : std_logic_vector(9 downto 0) := (others => '0');
 
@@ -108,13 +95,11 @@ architecture display_arq of display is
   signal pixel_to_proxy : std_logic_vector(0 downto 0) := (others => '0');
   signal pixel_to_matrix : std_logic_vector(0 downto 0) := (others => '0');
 
-  --For cordic--
+  signal red : std_logic := '0';
+  signal green : std_logic := '0';
+  signal blue : std_logic := '0';
 
-  signal unrotated_x : std_logic_vector(31 downto 0) := (others => '0');
-  signal unrotated_y : std_logic_vector(31 downto 0) := (others => '0');
-  signal cordic_to_writer_x : std_logic_vector(31 downto 0) := (others => '0');
-  signal cordic_to_writer_y : std_logic_vector(31 downto 0) := (others => '0');
-  signal rotation_angle : std_logic_vector(31 downto 0) := (others => '0');
+  --For cordic--
 
   signal vsync : std_logic := '0';
   signal memory_writer_rst : std_logic := '0';
@@ -143,12 +128,12 @@ architecture display_arq of display is
         mclk => clk,
         red_i => pixel_to_vga(0),
         grn_i => pixel_to_vga(0),
-        blu_i => '0',
+        blu_i => pixel_to_vga(0),
         hs => hs,
         vs => vsync,
-        red_o => red_o(0),
-        grn_o => grn_o(0),
-        blu_o => blu_o(0),
+        red_o => red,
+        grn_o => green,
+        blu_o => blue,
         pixel_row => y_vga_to_proxy,
         pixel_col => x_vga_to_proxy
     );
@@ -158,8 +143,6 @@ architecture display_arq of display is
       clk => clk,
       enable => ena,
       rst => vsync,
-      real_x_in => cordic_to_writer_x,
-      real_y_in => cordic_to_writer_y,
       pixel_x => writer_to_memory_x,
       pixel_y => writer_to_memory_y,
       pixel_on => pixel_to_matrix
@@ -176,19 +159,11 @@ architecture display_arq of display is
       proxy_value => pixel_to_vga
     );
 
-    cordic_0 : cordic
-    port map(
-      x_in => unrotated_x,
-      y_in => unrotated_y,
-      angle => rotation_angle,
-      x_out => cordic_to_writer_x,
-      y_out => cordic_to_writer_y
-    );
-
-
     vs <= vsync;
 
-    rotation_angle <= "00000000000000001011010000000000"; --0.703125 degrees
+    red_o <= red&red&red;
+    grn_o <= green&green&green;
+    blu_o <= blue&blue;
 
     process(vsync,clk)
       variable resetting : boolean := false;
@@ -197,30 +172,20 @@ architecture display_arq of display is
       variable y_i : integer := 0;
       variable rotated_x : std_logic_vector(31 downto 0) := (others => '0');
       variable rotated_y : std_logic_vector(31 downto 0) := (others => '0');
+
     begin
-
-      if(first_time = true) then
-        unrotated_x <= "00000000000000001000000000000000";
-        unrotated_y <= "00000000000000001000000000000000";
-        first_time := false;
-      end if;
-
-      rotated_x := cordic_to_writer_x;
-      rotated_y := cordic_to_writer_y;
 
       if(falling_edge(vsync)) then --display write is done, rotate and update values
         resetting := true;
         memory_writer_rst <= '1';
-        --memory_values_rst <= '1';
-        unrotated_x <= rotated_x;
-        unrotated_y <= rotated_y;
+        memory_values_rst <= '1';
       end if;
 
       if(rising_edge(clk)) then
         if(resetting = true) then
           resetting := false;
           memory_writer_rst <= '0';
-          --memory_values_rst <= '0';
+          memory_values_rst <= '0';
         end if; 
       end if;
 

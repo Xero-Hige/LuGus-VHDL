@@ -82,7 +82,14 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns : pattern_array := (
 			("0000000100",
-			 "0000000001",
+			 "0000000100",
+			 "1",
+			 '1',
+			 "0000000000",
+			 "0000000000",
+			 "0"),
+			("0000000011",
+			 "0000000011",
 			 "1",
 			 '1',
 			 "0000000000",
@@ -93,29 +100,30 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
 			 "0",
 			 '0',
 			 "0000000100",
-			 "0000000001",
-			 "1"),
-			("0011111111",
-			 "0011111111",
-			 "1",
-			 '1',
-			 "0000000000",
-			 "0000000000",
-			 "0"),
-			("0000000000",
-			 "0000000000",
-			 "0",
-			 '0',
-			 "0011111111",
-			 "0011111111",
+			 "0000000100",
 			 "1"),
 			("0000000000",
 			 "0000000000",
 			 "0",
 			 '0',
-			 "0011111111",
-			 "0011111111",
-			 "0")
+			 "0000000011",
+			 "0000000011",
+			 "1"),
+			("0000000000",
+			 "0000000000",
+			 "0",
+			 '0',
+			 "0000000011",
+			 "0000000011",
+			 "1"),
+			("0000000000",
+			 "0000000000",
+			 "0",
+			 '0',
+			 "0000000011",
+			 "0000000011",
+			 "1")
+
 			);
 
 
@@ -144,6 +152,14 @@ architecture memory_matrix_tb_arq of memory_matrix_tb is
 	
 			--  Check the outputs.
 		end loop;
+
+		reset <= '1';
+
+		wait for 20 ns;
+
+		assert read_data = "0" report "BAD SAVED VALUE, EXPECTED: " & std_logic'image('0') & " GOT: " & std_logic'image(read_data(0));
+
+
 		finished <= true;
 		assert false report "end of test" severity note;
 		wait;

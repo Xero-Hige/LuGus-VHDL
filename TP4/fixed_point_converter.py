@@ -55,6 +55,15 @@ def write_scaling_values_table():
 		fractional_part = fraction_to_bin(get_fractional_part(value), FRACTION_BITS)
 		print '"' + integer_part + fractional_part + '", ---' + str(bin_to_float(integer_part + fractional_part))
 
+def write_initial_values():
+	initial_pos = 1.0/175;
+	x_pos = initial_pos
+	for i in range(175):
+		x_pos = initial_pos * (i + 1)
+		integer_part = int_to_bin(int(x_pos), INT_BITS)
+		fractional_part = fraction_to_bin(get_fractional_part(x_pos), FRACTION_BITS)
+		print "(\"" + integer_part + fractional_part + '\",\"00000000000000000000000000000000\"),' 
+
 def int_to_bin(number, integer_bits):
 	binary_number = bin(number)
 	unused = 2
@@ -122,8 +131,10 @@ elif (option == "-i"):
 	number = int(number)
 	binary = int_to_bin(number, total_bits)
 	print str(bin_to_float(binary)) + " (" + binary + ")"
-elif (option == "-arctg"):
+elif (option == "--arctg"):
 	write_arctg_table()
-elif (option == "-scaling"):
+elif (option == "--scaling"):
 	write_scaling_values_table()
+elif (option == "--initial_values"):
+	write_initial_values()
 
