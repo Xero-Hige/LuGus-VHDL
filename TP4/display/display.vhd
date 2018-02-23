@@ -102,7 +102,6 @@ architecture display_arq of display is
   --For cordic--
 
   signal vsync : std_logic := '0';
-  signal memory_writer_rst : std_logic := '0';
   signal memory_values_rst : std_logic := '0';
 
   
@@ -164,31 +163,5 @@ architecture display_arq of display is
     red_o <= red&red&red;
     grn_o <= green&green&green;
     blu_o <= blue&blue;
-
-    process(vsync,clk)
-      variable resetting : boolean := false;
-      variable first_time : boolean := true;
-      variable x_i : integer := 0;
-      variable y_i : integer := 0;
-      variable rotated_x : std_logic_vector(31 downto 0) := (others => '0');
-      variable rotated_y : std_logic_vector(31 downto 0) := (others => '0');
-
-    begin
-
-      if(falling_edge(vsync)) then --display write is done, rotate and update values
-        resetting := true;
-        memory_writer_rst <= '1';
-        memory_values_rst <= '1';
-      end if;
-
-      if(rising_edge(clk)) then
-        if(resetting = true) then
-          resetting := false;
-          memory_writer_rst <= '0';
-          memory_values_rst <= '0';
-        end if; 
-      end if;
-
-    end process;
 
 end architecture;
