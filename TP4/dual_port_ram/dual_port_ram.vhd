@@ -62,37 +62,6 @@ architecture dual_port_ram_arq of dual_port_ram is
   signal data_out_5 : std_logic_vector(0 downto 0) := (others => '0'); 
   signal data_out_6 : std_logic_vector(0 downto 0) := (others => '0'); 
   signal data_out_7 : std_logic_vector(0 downto 0) := (others => '0'); 
-  
-
-   --Syntax for Synopsys FPGA Express
-  component RAMB16_S1_S1
-    generic(WRITE_MODE_B : string := "WRITE_FIRST");
-    port(
-      DOA  : out std_logic_vector(0 downto 0);
-      DOB  : out std_logic_vector(0 downto 0);
-      ADDRA : in std_logic_vector(13 downto 0);
-      ADDRB : in std_logic_vector(13 downto 0);
-      CLKA  : in std_ulogic;
-      CLKB  : in std_ulogic;
-      DIA   : in std_logic_vector(0 downto 0);
-      DIB   : in std_logic_vector(0 downto 0);
-      ENA   : in std_ulogic;
-      ENB   : in std_ulogic;
-      SSRA  : in std_ulogic;
-      SSRB  : in std_ulogic;
-      WEA   : in std_ulogic;
-      WEB   : in std_ulogic
-    );
-  end component;
-
-  for ram_0 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_1 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_2 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_3 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_4 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_5 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_6 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
-  for ram_7 : RAMB16_S1_S1 use entity unisim.RAMB16_S1_S1;
 
   --
   begin

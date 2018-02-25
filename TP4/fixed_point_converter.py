@@ -2,6 +2,7 @@
 #!/usr/local/bin/python
 
 import sys
+import binascii
 
 ARCTG_TABLE = [	45.0,
 26.565051177078,
@@ -39,7 +40,7 @@ SCALING_VALUES_TABLE = [1.4142135623731,
 1.6467602581]
 
 
-INT_BITS = 16
+INT_BITS = 0
 FRACTION_BITS = 16
 
 def write_arctg_table():
@@ -56,13 +57,24 @@ def write_scaling_values_table():
 		print '"' + integer_part + fractional_part + '", ---' + str(bin_to_float(integer_part + fractional_part))
 
 def write_initial_values():
-	initial_pos = 1.0/175;
+	initial_pos = 1.0/175
 	x_pos = initial_pos
+	hex_pos = 0
+	accum_values = ""
+	inner_pos = 0
 	for i in range(175):
-		x_pos = initial_pos * (i + 1)
+		x_pos = initial_pos * (i + 1) - 0.0000000001 #so that we don't get to 1
 		integer_part = int_to_bin(int(x_pos), INT_BITS)
 		fractional_part = fraction_to_bin(get_fractional_part(x_pos), FRACTION_BITS)
-		print "(\"" + integer_part + fractional_part + '\",\"00000000000000000000000000000000\"),' 
+		accum_values = accum_values + str('%0*X' % ((len(fractional_part) + 3) // 4, int(fractional_part, 2)))
+		inner_pos = inner_pos + 1
+		if(inner_pos == 16):
+			print "INIT_" + "{:02x}".format(hex_pos) + " => X\"" + accum_values + "\","
+			accum_values = ""
+			hex_pos = hex_pos + 1
+			inner_pos = 0
+	print "INIT_" + "{:02x}".format(hex_pos) + " => X\"" + accum_values + "\","
+
 
 def int_to_bin(number, integer_bits):
 	binary_number = bin(number)

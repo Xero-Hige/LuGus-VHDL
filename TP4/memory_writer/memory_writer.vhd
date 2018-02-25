@@ -2,6 +2,9 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library UNISIM;
+use UNISIM.VCOMPONENTS.ALL;
+
 --This component receives the real value of the tip of the vector. Then, for every bit value, it checks if it should be painted or not according to the real value.
 
 entity memory_writer is
@@ -25,9 +28,22 @@ architecture memory_writer_arq of memory_writer is
 	constant ONE : unsigned(BITS - 1 downto 0) := "00000000000000010000000000000000"; --1.0
 	constant PIXEL_COEF : unsigned(BITS - 1 downto 0) := "00000000101011110000000000000000"; --350/2 to account for the displacement by 1
 
-	constant POINTS_LENGTH : integer := 176;
+	constant MAX_POSITION : integer := 176;
 
 	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
+
+	signal clk_signal : std_logic := '0';
+
+	signal x_input_to_memory : std_logic_vector(15 downto 0) := (others => '0');
+	signal y_input_to_memory : std_logic_vector(15 downto 0) := (others => '0');
+	signal x_input_address_to_memory : std_logic_vector(9 downto 0) := (others => '0');
+	signal y_input_address_to_memory : std_logic_vector(9 downto 0) := (others => '0');
+
+
+	signal x_output_from_memory : std_logic_vector(15 downto 0) := (others => '0');
+	signal y_output_from_memory : std_logic_vector(15 downto 0) := (others => '0');
+	signal x_output_address_from_memory : std_logic_vector(9 downto 0) := (others => '0');
+	signal y_output_address_from_memory : std_logic_vector(9 downto 0) := (others => '0');
 
 	signal unrotated_x : std_logic_vector(31 downto 0) := (others => '0');
 	signal unrotated_y : std_logic_vector(31 downto 0) := (others => '0');
@@ -50,6 +66,8 @@ architecture memory_writer_arq of memory_writer is
 
 begin
 
+	clk_signal <= clk;
+
 	cordic_0 : cordic
     port map(
       x_in => unrotated_x,
@@ -57,6 +75,60 @@ begin
       angle => rotation_angle_signal,
       x_out => cordic_to_writer_x,
       y_out => cordic_to_writer_y
+    );
+
+   x_values_ram: RAMB16_S18_S18
+    generic map(WRITE_MODE_B => "READ_FIRST",
+    	INIT_00 => X"017602EC046305D9075008C60A3D0BB30D2A0EA01017118D1304147A15F11767",
+			INIT_01 => X"18DE1A541BCB1D411EB8202E21A5231B24922608277F28F52A6C2BE22D592ECF",
+			INIT_02 => X"304631BC333334A936203796390D3A833BFA3D703EE7405D41D4434A44C14637",
+			INIT_03 => X"47AE49244A9B4C114D884EFE507551EB536254D8564E57C5593B5AB25C285D9F",
+			INIT_04 => X"5F15608C6202637964EF666667DC69536AC96C406DB66F2D70A3721A73907507",
+			INIT_05 => X"767D77F4796A7AE17C577DCE7F4480BB823183A8851E8695880B89828AF88C6F",
+			INIT_06 => X"8DE58F5C90D2924993BF953696AC982399999B109C869DFD9F73A0EAA260A3D7",
+			INIT_07 => X"A54DA6C4A83AA9B1AB27AC9DAE14AF8AB101B277B3EEB564B6DBB851B9C8BB3E",
+			INIT_08 => X"BCB5BE2BBFA2C118C28FC405C57CC6F2C869C9DFCB56CCCCCE43CFB9D130D2A6",
+			INIT_09 => X"D41DD593D70AD880D9F7DB6DDCE4DE5ADFD1E147E2BEE434E5ABE721E898EA0E",
+			INIT_0a => X"EB85ECFBEE72EFE8F15FF2D5F44CF5C2F739F8AFFA26FB9CFD13FE89FFFF0000"
+    )
+    port map (
+      DOA  => open,
+      DOB  => x_output_from_memory,
+      ADDRA => x_input_address_to_memory,
+      ADDRB => x_output_address_from_memory,
+      DIPA => (others => '0'),
+      DIPB => (others => '0'),
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => x_input_to_memory,
+      DIB  => (others => '0'),
+      ENA  => enable,
+      ENB  => enable,
+      SSRA  => '0',
+      SSRB => '0',
+      WEA  => enable,
+      WEB  => '0'
+    );
+
+   y_values_ram: RAMB16_S18_S18
+    generic map(WRITE_MODE_B => "READ_FIRST")
+    port map (
+      DOA  => open,
+      DOB  => y_output_from_memory,
+      ADDRA => y_input_address_to_memory,
+      ADDRB => y_output_address_from_memory,
+      DIPA => (others => '0'),
+      DIPB => (others => '0'),
+      CLKA  => clk_signal,
+      CLKB => clk_signal,
+      DIA  => y_input_to_memory,
+      DIB  => (others => '0'),
+      ENA  => enable,
+      ENB  => enable,
+      SSRA  => '0',
+      SSRB => '0',
+      WEA  => enable,
+      WEB  => '0'
     );
 
   rotation_angle_signal <= ROTATION_ANGLE;
@@ -83,210 +155,20 @@ begin
 
 		variable point_position : integer := 0;
 
-		type real_point is record
-			x : std_logic_vector(9 downto 0);
-			y : std_logic_vector(9 downto 0);
-		end record;
-		--  The patterns to apply.
-		type on_points_array is array (natural range <>) of real_point;
-
-		variable points_to_draw : on_points_array(0 to 175) := (
-					("0000000000","0000000000"),
-					("0000000101","0000000000"),
-("0000001011","0000000000"),
-("0000010001","0000000000"),
-("0000010111","0000000000"),
-("0000011101","0000000000"),
-("0000100011","0000000000"),
-("0000101000","0000000000"),
-("0000101110","0000000000"),
-("0000110100","0000000000"),
-("0000111010","0000000000"),
-("0001000000","0000000000"),
-("0001000110","0000000000"),
-("0001001100","0000000000"),
-("0001010001","0000000000"),
-("0001010111","0000000000"),
-("0001011101","0000000000"),
-("0001100011","0000000000"),
-("0001101001","0000000000"),
-("0001101111","0000000000"),
-("0001110101","0000000000"),
-("0001111010","0000000000"),
-("0010000000","0000000000"),
-("0010000110","0000000000"),
-("0010001100","0000000000"),
-("0010010010","0000000000"),
-("0010011000","0000000000"),
-("0010011101","0000000000"),
-("0010100011","0000000000"),
-("0010101001","0000000000"),
-("0010101111","0000000000"),
-("0010110101","0000000000"),
-("0010111011","0000000000"),
-("0011000001","0000000000"),
-("0011000110","0000000000"),
-("0011001100","0000000000"),
-("0011010010","0000000000"),
-("0011011000","0000000000"),
-("0011011110","0000000000"),
-("0011100100","0000000000"),
-("0011101010","0000000000"),
-("0011101111","0000000000"),
-("0011110101","0000000000"),
-("0011111011","0000000000"),
-("0100000001","0000000000"),
-("0100000111","0000000000"),
-("0100001101","0000000000"),
-("0100010011","0000000000"),
-("0100011000","0000000000"),
-("0100011110","0000000000"),
-("0100100100","0000000000"),
-("0100101010","0000000000"),
-("0100110000","0000000000"),
-("0100110110","0000000000"),
-("0100111011","0000000000"),
-("0101000001","0000000000"),
-("0101000111","0000000000"),
-("0101001101","0000000000"),
-("0101010011","0000000000"),
-("0101011001","0000000000"),
-("0101011111","0000000000"),
-("0101100100","0000000000"),
-("0101101010","0000000000"),
-("0101110000","0000000000"),
-("0101110110","0000000000"),
-("0101111100","0000000000"),
-("0110000010","0000000000"),
-("0110001000","0000000000"),
-("0110001101","0000000000"),
-("0110010011","0000000000"),
-("0110011001","0000000000"),
-("0110011111","0000000000"),
-("0110100101","0000000000"),
-("0110101011","0000000000"),
-("0110110001","0000000000"),
-("0110110110","0000000000"),
-("0110111100","0000000000"),
-("0111000010","0000000000"),
-("0111001000","0000000000"),
-("0111001110","0000000000"),
-("0111010100","0000000000"),
-("0111011001","0000000000"),
-("0111011111","0000000000"),
-("0111100101","0000000000"),
-("0111101011","0000000000"),
-("0111110001","0000000000"),
-("0111110111","0000000000"),
-("0111111101","0000000000"),
-("1000000010","0000000000"),
-("1000001000","0000000000"),
-("1000001110","0000000000"),
-("1000010100","0000000000"),
-("1000011010","0000000000"),
-("1000100000","0000000000"),
-("1000100110","0000000000"),
-("1000101011","0000000000"),
-("1000110001","0000000000"),
-("1000110111","0000000000"),
-("1000111101","0000000000"),
-("1001000011","0000000000"),
-("1001001001","0000000000"),
-("1001001110","0000000000"),
-("1001010100","0000000000"),
-("1001011010","0000000000"),
-("1001100000","0000000000"),
-("1001100110","0000000000"),
-("1001101100","0000000000"),
-("1001110010","0000000000"),
-("1001110111","0000000000"),
-("1001111101","0000000000"),
-("1010000011","0000000000"),
-("1010001001","0000000000"),
-("1010001111","0000000000"),
-("1010010101","0000000000"),
-("1010011011","0000000000"),
-("1010100000","0000000000"),
-("1010100110","0000000000"),
-("1010101100","0000000000"),
-("1010110010","0000000000"),
-("1010111000","0000000000"),
-("1010111110","0000000000"),
-("1011000100","0000000000"),
-("1011001001","0000000000"),
-("1011001111","0000000000"),
-("1011010101","0000000000"),
-("1011011011","0000000000"),
-("1011100001","0000000000"),
-("1011100111","0000000000"),
-("1011101100","0000000000"),
-("1011110010","0000000000"),
-("1011111000","0000000000"),
-("1011111110","0000000000"),
-("1100000100","0000000000"),
-("1100001010","0000000000"),
-("1100010000","0000000000"),
-("1100010101","0000000000"),
-("1100011011","0000000000"),
-("1100100001","0000000000"),
-("1100100111","0000000000"),
-("1100101101","0000000000"),
-("1100110011","0000000000"),
-("1100111001","0000000000"),
-("1100111110","0000000000"),
-("1101000100","0000000000"),
-("1101001010","0000000000"),
-("1101010000","0000000000"),
-("1101010110","0000000000"),
-("1101011100","0000000000"),
-("1101100010","0000000000"),
-("1101100111","0000000000"),
-("1101101101","0000000000"),
-("1101110011","0000000000"),
-("1101111001","0000000000"),
-("1101111111","0000000000"),
-("1110000101","0000000000"),
-("1110001010","0000000000"),
-("1110010000","0000000000"),
-("1110010110","0000000000"),
-("1110011100","0000000000"),
-("1110100010","0000000000"),
-("1110101000","0000000000"),
-("1110101110","0000000000"),
-("1110110011","0000000000"),
-("1110111001","0000000000"),
-("1110111111","0000000000"),
-("1111000101","0000000000"),
-("1111001011","0000000000"),
-("1111010001","0000000000"),
-("1111010111","0000000000"),
-("1111011100","0000000000"),
-("1111100010","0000000000"),
-("1111101000","0000000000"),
-("1111101110","0000000000"),
-("1111110100","0000000000"),
-("1111111010","0000000000"),
-("1111111111","0000000000")
-				);
-
-			variable rotated_points : on_points_array(0 to 175);
-	
-
 	begin
 
-		if(rising_edge(rst)) then --reset values
+		if(rst = '0') then --reset values
 			point_position := 0;
 			pixel_on <= (others => '0');
-		end if;
-		if(rising_edge(clk)) then
+		elsif(rising_edge(clk) and rst = '1') then
 
 			if(enable = '1') then
 
-				if(point_position < POINTS_LENGTH) then
+				if(point_position < MAX_POSITION) then
 
 					--To give time to the cordic to process the data, we shall draw the previous point and in the end set the next point to be processed
-					moved_x := unsigned("0000000000000000" & points_to_draw(point_position).x & "000000") + ONE; --Move the x value to the right so that all it's posible locations are a positive number
-					moved_y := unsigned("0000000000000000" & points_to_draw(point_position).y & "000000") + ONE; --Move the y value up so that all it's possible locations are a positive number
+					moved_x := unsigned("0000000000000000" & x_output_from_memory) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
+					moved_y := unsigned("0000000000000000" & y_output_from_memory) + ONE; --Move the y value up so that all it's possible locations are a positive number
 
 					extended_moved_x_bit := std_logic_vector(moved_x * PIXEL_COEF); --Compute the pixel location
 					moved_x_bit := extended_moved_x_bit(32 + 9 downto 32); --Truncate to integer value
@@ -296,30 +178,34 @@ begin
 					inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
 					moved_y_bit := std_logic_vector(inverted_y_bit);
 
+					--report "POS: " & integer'image(point_position);
+					--report "X:" & integer'image(to_integer(unsigned(moved_x_bit)));
+					--report "Y:" & integer'image(to_integer(unsigned(moved_y_bit)));
+
 					pixel_x <= moved_x_bit;
 					pixel_y <= moved_y_bit;
 					pixel_on <= "1";
 
+					unrotated_x <= "0000000000000000" & x_output_from_memory;
+					unrotated_y <= "0000000000000000" & y_output_from_memory;
+
 					--Save the last rotated point and set current to be rotated
 					if(point_position > 0) then
-						rotated_points(point_position - 1).x := cordic_to_writer_x(15 downto 6);
-						rotated_points(point_position - 1).y := cordic_to_writer_y(15 downto 6);
-						unrotated_x <= "0000000000000000" & points_to_draw(point_position).x & "000000";
-						unrotated_y <= "0000000000000000" & points_to_draw(point_position).y & "000000";
+						x_input_to_memory <= cordic_to_writer_x(15 downto 0);
+						y_input_to_memory <= cordic_to_writer_y(15 downto 0);
+
+						x_input_address_to_memory <= std_logic_vector(to_unsigned(point_position - 1,10));
+						y_input_address_to_memory <= std_logic_vector(to_unsigned(point_position - 1,10));
+
+						x_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
+						y_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
+
 					end if;
 					
 					point_position := point_position + 1;
 
 				else
 					pixel_on <= "0";
-
-					--Move the last point to the rotated points
-					rotated_points(point_position - 1).x := cordic_to_writer_x(15 downto 6);
-					rotated_points(point_position - 1).y := cordic_to_writer_y(15 downto 6);
-
-					--Switch vectors
-					points_to_draw := rotated_points;
-
 				end if;
 
 
