@@ -23,8 +23,6 @@ architecture memory_writer_tb_arq of memory_writer_tb is
 			clk : in std_logic := '0';
 			enable : in std_logic := '0';
 			rst : in std_logic := '0';
-			real_x_in : in std_logic_vector(BITS - 1 downto 0) := (others => '0');
-			real_y_in : in std_logic_vector(BITS - 1 downto 0) := (others => '0');
 			pixel_x : out std_logic_vector(9 downto 0) := (others => '0');
 			pixel_y : out std_logic_vector(9 downto 0) := (others => '0');
 			pixel_on : out std_logic_vector(0 downto 0) := (others => '0')
@@ -38,18 +36,13 @@ begin
 			clk => clk,
 			enable => enable,
 			rst => rst,
-			real_x_in => real_x,
-			real_y_in => real_y,
-			pixel_x => pixel_x,
-			pixel_y => pixel_y,
 			pixel_on => pixel_out
 		);
 
 	process(clk)
 	begin
 		enable <= '1';
-		real_x <= "00000000000000010000000000000000";
-		real_y <= "00000000000000010000000000000000";
+		rst <= not(rst) after 5000 ns;
 		clk <=  not(clk) after 10 ns;
 
 	end process;

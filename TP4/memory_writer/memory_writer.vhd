@@ -28,7 +28,7 @@ architecture memory_writer_arq of memory_writer is
 	constant ONE : unsigned(BITS - 1 downto 0) := "00000000000000010000000000000000"; --1.0
 	constant PIXEL_COEF : unsigned(BITS - 1 downto 0) := "00000000101011110000000000000000"; --350/2 to account for the displacement by 1
 
-	constant MAX_POSITION : integer := 176;
+	constant MAX_POSITION : integer := 177;
 
 --	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
 	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000000000000000000000"; --0.703125 degrees
@@ -165,7 +165,7 @@ begin
 
 			if(enable = '1') then
 
-				if(point_position < MAX_POSITION) then
+				if(point_position > 0  and point_position < MAX_POSITION) then
 
 					--To give time to the cordic to process the data, we shall draw the previous point and in the end set the next point to be processed
 					moved_x := unsigned("0000000000000000" & x_output_from_memory) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
@@ -179,9 +179,9 @@ begin
 					inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
 					moved_y_bit := std_logic_vector(inverted_y_bit);
 
-					--report "POS: " & integer'image(point_position);
-					--report "X:" & integer'image(to_integer(unsigned(moved_x_bit)));
-					--report "Y:" & integer'image(to_integer(unsigned(moved_y_bit)));
+					report "POS: " & integer'image(point_position-1);
+					report "X:" & integer'image(to_integer(unsigned(moved_x_bit)));
+					report "Y:" & integer'image(to_integer(unsigned(moved_y_bit)));
 
 					pixel_x <= moved_x_bit;
 					pixel_y <= moved_y_bit;
@@ -190,22 +190,24 @@ begin
 					unrotated_x <= "0000000000000000" & x_output_from_memory;
 					unrotated_y <= "0000000000000000" & y_output_from_memory;
 
-					--Save the last rotated point and set current to be rotated
-					if(point_position > 0) then
-						x_input_to_memory <= cordic_to_writer_x(15 downto 0);
-						y_input_to_memory <= cordic_to_writer_y(15 downto 0);
-
-						x_input_address_to_memory <= std_logic_vector(to_unsigned(point_position - 1,10));
-						y_input_address_to_memory <= std_logic_vector(to_unsigned(point_position - 1,10));
-
-						x_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
-						y_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
-
-					end if;
 					
+					x_input_to_memory <= cordic_to_writer_x(15 downto 0);
+					y_input_to_memory <= cordic_to_writer_y(15 downto 0);
+
+					x_input_address_to_memory <= std_logic_vector(to_unsigned(point_position-1,10));
+					y_input_address_to_memory <= std_logic_vector(to_unsigned(point_position-1,10));
+
 					point_position := point_position + 1;
 
-				else
+					x_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
+					y_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
+
+				elsif (point_position = 0) then
+
+					x_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
+					y_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
+					point_position := point_position + 1;
+					
 					pixel_on <= "0";
 				end if;
 
