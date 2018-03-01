@@ -10,10 +10,22 @@ entity display is
 
       hs: out std_logic := '0';
       vs: out std_logic := '0';
-      red_o: out std_logic_vector(2 downto 0) := (others => '0');
-      grn_o: out std_logic_vector(2 downto 0) := (others => '0');
-      blu_o: out std_logic_vector(1 downto 0) := (others => '0')
+      red_o: out std_logic;
+      grn_o: out std_logic;
+      blu_o: out std_logic
     );
+	 
+	 attribute loc : string;
+	 
+	attribute loc of clk: signal is "C9";
+	attribute loc of rst: signal is "H13";
+	attribute loc of ena: signal is "D18";
+
+	attribute loc of hs: signal is "F15";
+	attribute loc of vs: signal is "F14";
+	attribute loc of red_o: signal is "H14";
+	attribute loc of grn_o: signal is "H15";
+	attribute loc of blu_o: signal is "G15";
 
 end display;
 
@@ -115,8 +127,8 @@ architecture display_arq of display is
       write_data => pixel_to_matrix,
       write_enable => '1',
       clk => clk,
-      enable => ena,
-      reset => rst,
+      enable => '1',
+      reset => '0',
       x_read => x_proxy_to_ram,
       y_read => y_proxy_to_ram,
       read_data => pixel_to_proxy
@@ -127,7 +139,7 @@ architecture display_arq of display is
         mclk => clk,
         red_i => pixel_to_vga(0),
         grn_i => pixel_to_vga(0),
-        blu_i => pixel_to_vga(0),
+        blu_i => '1',
         hs => hs,
         vs => vsync,
         red_o => red,
@@ -140,7 +152,7 @@ architecture display_arq of display is
     memory_writer_0 : memory_writer
     port map(
       clk => clk,
-      enable => ena,
+      enable => '1',
       rst => vsync,
       pixel_x => writer_to_memory_x,
       pixel_y => writer_to_memory_y,
@@ -160,8 +172,8 @@ architecture display_arq of display is
 
     vs <= vsync;
 
-    red_o <= red&red&red;
-    grn_o <= green&green&green;
-    blu_o <= blue&blue;
+    red_o <= red;
+    grn_o <= green;
+    blu_o <= blue;
 
 end architecture;

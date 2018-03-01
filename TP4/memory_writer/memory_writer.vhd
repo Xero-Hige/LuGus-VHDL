@@ -30,7 +30,8 @@ architecture memory_writer_arq of memory_writer is
 
 	constant MAX_POSITION : integer := 176;
 
-	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
+--	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
+	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000000000000000000000"; --0.703125 degrees
 
 	signal clk_signal : std_logic := '0';
 
@@ -79,7 +80,7 @@ begin
 
    x_values_ram: RAMB16_S18_S18
     generic map(WRITE_MODE_B => "READ_FIRST",
-    	INIT_00 => X"017602EC046305D9075008C60A3D0BB30D2A0EA01017118D1304147A15F11767",
+			INIT_00 => X"017602EC046305D9075008C60A3D0BB30D2A0EA01017118D1304147A15F11767",
 			INIT_01 => X"18DE1A541BCB1D411EB8202E21A5231B24922608277F28F52A6C2BE22D592ECF",
 			INIT_02 => X"304631BC333334A936203796390D3A833BFA3D703EE7405D41D4434A44C14637",
 			INIT_03 => X"47AE49244A9B4C114D884EFE507551EB536254D8564E57C5593B5AB25C285D9F",
@@ -127,7 +128,7 @@ begin
       ENB  => enable,
       SSRA  => '0',
       SSRB => '0',
-      WEA  => enable,
+      WEA  => '0',
       WEB  => '0'
     );
 
@@ -157,10 +158,10 @@ begin
 
 	begin
 
-		if(rst = '0') then --reset values
+		if(rst = '1') then --reset values
 			point_position := 0;
 			pixel_on <= (others => '0');
-		elsif(rising_edge(clk) and rst = '1') then
+		elsif(rising_edge(clk)) then
 
 			if(enable = '1') then
 

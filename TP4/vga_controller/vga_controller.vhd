@@ -1,7 +1,6 @@
-Library IEEE;
-use IEEE.STD_Logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
 entity vga_ctrl is
   port( mclk            : in std_logic;  -- 25.175 Mhz mclk
@@ -39,50 +38,73 @@ architecture behaviour1 of vga_ctrl is
   constant R : natural := 480; -- vertical rows: 15.25 ms
   constant S : natural := 11;  -- rear guard: 0.35 ms
   constant O : natural := P + Q + R + S;  -- one vertical sync cycle: 16.6 ms
+  
+  signal vidon, hor, ver : std_logic := '0';
+  signal vertical, horizontal : unsigned(9 downto 0) := (others => '0');  -- define counters
    
 begin
 
-  red_o <= red_i;
-  grn_o <= grn_i;
-  blu_o <= blu_i;
-
   process
-    variable vertical, horizontal : counter;  -- define counters
+    
+	 variable clk_div : std_logic := '0';
   begin
     wait until mclk = '1';
+	 
+	 if(clk_div = '1') then
+		clk_div := '0';
 
   -- increment counters
       if  horizontal < A - 1  then
-        horizontal := horizontal + 1;
+        horizontal <= horizontal + 1;
       else
-        horizontal := (others => '0');
+        horizontal <= (others => '0');
 
         if  vertical < O - 1  then -- less than oh
-          vertical := vertical + 1;
+          vertical <= vertical + 1;
         else
-          vertical := (others => '0');       -- is set to zero
+          vertical <= (others => '0');       -- is set to zero
         end if;
       end if;
 
   -- define hs pulse
       if  horizontal >= (D + E)  and  horizontal < (D + E + B)  then
-        hs <= '0';
+			hor <= '1';
       else
-        hs <= '1';
+			hor <= '0';
       end if;
 
   -- define vs pulse
       if  vertical >= (R + S)  and  vertical < (R + S + P)  then
-        vs <= '0';
+			ver <= '1';
       else
-        vs <= '1';
+			ver <= '0';
       end if;
+		
+		if(ver = '0' and hor = '0') then
+			vidon <= '1';
+		else
+			vidon <= '0';
+		end if;
+		
+		
+	else
+		clk_div := '1';
+	end if;
+
+  end process;
+  
+	vs <= ver;
+	hs <= hor;
+		
 
     -- mapping of the variable to the signals
      -- negative signs are because the conversion bits are reversed
-    pixel_row <= vertical;
-    pixel_col <= horizontal;
-
-  end process;
+    pixel_row <= std_logic_vector(vertical);
+    pixel_col <= std_logic_vector(horizontal);
+  
+	red_o <= '1' when (red_i = '1' and vidon = '1') else '0';
+	grn_o <= '1' when (grn_i = '1' and vidon = '1') else '0';
+	blu_o <= '1' when (blu_i = '1' and vidon = '1') else '0';
+		
 
 end architecture;

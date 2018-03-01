@@ -13,9 +13,7 @@ end entity;
 architecture display_tb_arq of display_tb is
 
     signal clk: std_logic := '0';
-    signal r: std_logic_vector(2 downto 0) := (others => '0');
-    signal g: std_logic_vector(2 downto 0) := (others => '0');
-    signal b : std_logic_vector(1 downto 0) := (others => '0');
+    signal r,g,b: std_logic :=  '0';
     signal v : std_logic := '0';
     signal h : std_logic := '0';
 
@@ -27,9 +25,9 @@ architecture display_tb_arq of display_tb is
 
               hs: out std_logic := '0';
               vs: out std_logic := '0';
-              red_o: out std_logic_vector(2 downto 0) := (others => '0');
-              grn_o: out std_logic_vector(2 downto 0) := (others => '0');
-              blu_o: out std_logic_vector(1 downto 0) := (others => '0')
+              red_o: out std_logic := '0';
+              grn_o: out std_logic := '0';
+              blu_o: out std_logic := '0'
         );
     end component;
 
@@ -55,49 +53,49 @@ architecture display_tb_arq of display_tb is
         wait for 10 ns;
     end process;
 
-    process (clk)
-    file file_pointer: text is out "write.txt";
-    variable line_el: line;
-    variable logger : boolean := false;
-        begin
-
-    if rising_edge(clk) then
-
-        --if(logger =  false) then
-        --    logger := true;
-
-        --else
-
-            -- Write the time
-            write(line_el, now); -- write the line.
-            write(line_el, string'(":")); -- write the line.
-
-            -- Write the hsync
-            write(line_el, string'(" "));
-            write(line_el, h); -- write the line.
-
-            -- Write the vsync
-            write(line_el, string'(" "));
-            write(line_el, v); -- write the line.
-
-            -- Write the red
-            write(line_el, string'(" "));
-            write(line_el, r); -- write the line.
-
-            -- Write the green
-            write(line_el, string'(" "));
-            write(line_el, g); -- write the line.
-
-            -- Write the blue
-            write(line_el, string'(" "));
-            write(line_el, b); -- write the line.
-
-            writeline(file_pointer, line_el); -- write the contents into the file.
-
-            logger := false;
-
-        --end if;
-
-    end if;
-end process;
+--    process (clk)
+--    file file_pointer: text is out "write.txt";
+--    variable line_el: line;
+--    variable logger : boolean := false;
+--        begin
+--
+--    if rising_edge(clk) then
+--
+--        --if(logger =  false) then
+--        --    logger := true;
+--
+--        --else
+--
+--            -- Write the time
+--            write(line_el, now); -- write the line.
+--            write(line_el, string'(":")); -- write the line.
+--
+--            -- Write the hsync
+--            write(line_el, string'(" "));
+--            write(line_el, h); -- write the line.
+--
+--            -- Write the vsync
+--            write(line_el, string'(" "));
+--            write(line_el, v); -- write the line.
+--
+--            -- Write the red
+--            write(line_el, string'(" "));
+--            write(line_el, r); -- write the line.
+--
+--            -- Write the green
+--            write(line_el, string'(" "));
+--            write(line_el, g); -- write the line.
+--
+--            -- Write the blue
+--            write(line_el, string'(" "));
+--            write(line_el, b); -- write the line.
+--
+--            writeline(file_pointer, line_el); -- write the contents into the file.
+--
+--            logger := false;
+--
+--        --end if;
+--
+--    end if;
+--end process;
 end;
