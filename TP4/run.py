@@ -102,8 +102,13 @@ def get_components(filelist):
     testbenches = get_testbenches(filelist)
     return list(set(filelist) - set(testbenches))
 
+def filter_by_name(module_name, component_list):
+    if(module != None):
+        return filter(lambda name : module_name in name, component_list)
+    return component_list
 
-def main():
+
+def main(module):
 
     import_libraries()
 
@@ -111,11 +116,15 @@ def main():
     components = get_components(files)
     components.sort(key=lambda elem: get_file_level(elem))
 
+    components = filter_by_name(module, components)
+
     '''Components should be analyzed before test benches always to prevent compilation errors '''
     map(analyze_file,components)
 
 
-    test_benches = get_testbenches(files)
+    test_benches = filter_by_name(module, get_testbenches(files))
+
+
     map(analyze_file,test_benches)
     entities = []
     for tb in test_benches:
@@ -130,4 +139,9 @@ def main():
     if end_status:
         sys.exit(RUN_ERROR)
 
-main()
+module = None
+args = sys.argv
+if(len(args) > 1):
+    module = args[1]
+
+main(module)
