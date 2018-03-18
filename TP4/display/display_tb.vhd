@@ -1,6 +1,5 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
 use ieee.std_logic_textio.all;
 use std.textio.all;
 
@@ -10,7 +9,10 @@ use UNISIM.vcomponents.all;
 entity display_tb is
 end entity;
 
-architecture display_tb_arq of display_tb is
+architecture display_tb_arq of display_tb is 
+
+    constant FRONT_PORT_HORIZONTAL : natural := 45;  -- front guard: 1.89 us
+    constant FRONT_PORT_VERTICAL : natural := 32;  -- front guard: 1.02 ms
 
     signal clk: std_logic := '0';
     signal r,g,b: std_logic :=  '0';
@@ -53,49 +55,65 @@ architecture display_tb_arq of display_tb is
         wait for 10 ns;
     end process;
 
---    process (clk)
---    file file_pointer: text is out "write.txt";
---    variable line_el: line;
---    variable logger : boolean := false;
---        begin
---
---    if rising_edge(clk) then
---
---        --if(logger =  false) then
---        --    logger := true;
---
---        --else
---
---            -- Write the time
---            write(line_el, now); -- write the line.
---            write(line_el, string'(":")); -- write the line.
---
---            -- Write the hsync
---            write(line_el, string'(" "));
---            write(line_el, h); -- write the line.
---
---            -- Write the vsync
---            write(line_el, string'(" "));
---            write(line_el, v); -- write the line.
---
---            -- Write the red
---            write(line_el, string'(" "));
---            write(line_el, r); -- write the line.
---
---            -- Write the green
---            write(line_el, string'(" "));
---            write(line_el, g); -- write the line.
---
---            -- Write the blue
---            write(line_el, string'(" "));
---            write(line_el, b); -- write the line.
---
---            writeline(file_pointer, line_el); -- write the contents into the file.
---
---            logger := false;
---
---        --end if;
---
---    end if;
---end process;
+    process (clk)
+    file file_pointer: text is out "../VGASimulator/tmplink";
+    --file file_pointer: text open WRITE_MODE is out "write.txt";
+    variable line_el: line;
+    variable last_h,last_v,last_r,last_g,last_b : std_logic;
+    variable x,y,last_y,h_changes,v_changes : integer := 0;
+    variable enter,updated_y,logger : boolean := false;
+    begin
+    
+    if rising_edge(clk) then
+        
+        if (enter = true) then
+            enter := false;
+
+            if( h = '0' and v = '0') then
+
+                if(x >= FRONT_PORT_HORIZONTAL and x < 640 + FRONT_PORT_HORIZONTAL and y >= FRONT_PORT_VERTICAL and y < 480 + FRONT_PORT_VERTICAL) then
+
+                    --if(last_r /= r or last_g /= g or last_b /= b or y /= last_y) then
+                
+                        --report integer'image(x - FRONT_PORT_HORIZONTAL) & ":" & integer'image(y - FRONT_PORT_VERTICAL) & " " & std_logic'image(r) & std_logic'image(g) & std_logic'image(b);
+
+                        write(line_el, integer'image(x - FRONT_PORT_HORIZONTAL));
+                        write(line_el, string'(" "));
+                        write(line_el, integer'image(y - FRONT_PORT_VERTICAL));
+                        write(line_el, string'(" "));  
+                        write(line_el, std_logic'image(r));
+                        write(line_el, string'(" "));  
+                        write(line_el, std_logic'image(g));
+                        write(line_el, string'(" "));  
+                        write(line_el, std_logic'image(b));
+                        writeline(file_pointer, line_el); -- write the contents into the file.
+
+                    --end if;
+                    last_r := r;
+                    last_g := g;
+                    last_b := b;
+                    last_y := y;
+                end if;
+                x := x + 1;
+                updated_y := false;
+            else
+                if(h /= '0') then
+                    if(not updated_y) then
+                        y := y + 1;
+                        x := 0;
+                        updated_y := true;
+                    end if;
+                end if;
+                if(v /= '0') then
+                    x := 0;
+                    y := 0;
+                end if;
+
+            end if;
+
+        else
+            enter := true;
+        end if;
+    end if;
+end process;
 end;

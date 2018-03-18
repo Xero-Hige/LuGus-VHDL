@@ -48,6 +48,7 @@ begin
     
 	 variable clk_div : std_logic := '0';
   begin
+    --report integer'image(to_integer(horizontal)) & " : " & integer'image(to_integer(vertical));
     wait until mclk = '1';
 	 
 	 if(clk_div = '1') then
@@ -68,16 +69,16 @@ begin
 
   -- define hs pulse
       if  horizontal >= (D + E)  and  horizontal < (D + E + B)  then
-			hor <= '1';
+			 hor <= '1';
       else
-			hor <= '0';
+			 hor <= '0';
       end if;
 
   -- define vs pulse
       if  vertical >= (R + S)  and  vertical < (R + S + P)  then
-			ver <= '1';
+			 ver <= '1';
       else
-			ver <= '0';
+			 ver <= '0';
       end if;
 		
 		if(ver = '0' and hor = '0') then
@@ -96,9 +97,6 @@ begin
 	vs <= ver;
 	hs <= hor;
 		
-
-    -- mapping of the variable to the signals
-     -- negative signs are because the conversion bits are reversed
     pixel_row <= std_logic_vector(vertical);
     pixel_col <= std_logic_vector(horizontal);
   

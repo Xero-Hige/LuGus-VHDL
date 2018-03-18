@@ -19,9 +19,6 @@ end preprocessor;
 
 architecture preprocessor_arq of preprocessor is
 
-    constant MAX_ANGLE : integer := 90;
-    constant MIN_ANGLE : integer := -90;
-
     begin
 
     	process (x_in, y_in, angle_in) is
@@ -34,16 +31,23 @@ architecture preprocessor_arq of preprocessor is
             x_int := to_integer(signed(x_in)); 
             y_int := to_integer(signed(y_in));
 
-            if(angle_int > MAX_ANGLE) then
+            if(angle_int > 180) then
+                angle_int := angle_int - 360;
+            elsif (angle_int < -180) then
+                angle_int := 360 + angle_int;
+            end if;
+                
+
+            if(angle_int > 90) then
                 tmp_int := x_int;
                 x_int := -y_int;
                 y_int := tmp_int;
-                angle_int := angle_int - MAX_ANGLE;
-            elsif(angle_int < MIN_ANGLE) then
+                angle_int := angle_int - 90;
+            elsif(angle_int < -90) then
                 tmp_int := y_int;
                 y_int := -x_int;
                 x_int := tmp_int;
-                angle_int := angle_int - MIN_ANGLE;
+                angle_int := angle_int + 90;
 
             end if;
 

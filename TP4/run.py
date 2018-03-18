@@ -23,7 +23,7 @@ IMPORTED_LIBRARIES = {
 
 #------FLAGS-------
 LIBRARIES_FLAGS = [' -P' + key + ' ' for key in IMPORTED_LIBRARIES.keys()]
-EXECUTION_FLAGS = [' --ieee=synopsys ']
+EXECUTION_FLAGS = [' --ieee=synopsys']
 FLAGS = EXECUTION_FLAGS + LIBRARIES_FLAGS
 
 VALID_EXTENSIONS = ['vhd','vhdl']

@@ -17,11 +17,11 @@ entity memory_writer is
 		pixel_y : out std_logic_vector(9 downto 0) := (others => '0');
 		pixel_on : out std_logic_vector(0 downto 0) := (others => '0')
 	);
-
 end entity;
 
 
 architecture memory_writer_arq of memory_writer is
+
 	constant AXIS_X_BIT : std_logic_vector(9 downto 0) := std_logic_vector(shift_right(to_unsigned(COLUMNS,10),1));
 	constant AXIS_Y_BIT : std_logic_vector(9 downto 0) := std_logic_vector(shift_right(to_unsigned(ROWS,10),1));
 
@@ -30,29 +30,30 @@ architecture memory_writer_arq of memory_writer is
 
 	constant MAX_POSITION : integer := 177;
 
---	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
-	constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000000000000000000000"; --0.703125 degrees
+	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
+	--constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000000000000000000000";
 
 	signal clk_signal : std_logic := '0';
 
-	signal x_input_to_memory : std_logic_vector(15 downto 0) := (others => '0');
-	signal y_input_to_memory : std_logic_vector(15 downto 0) := (others => '0');
-	signal x_input_address_to_memory : std_logic_vector(9 downto 0) := (others => '0');
-	signal y_input_address_to_memory : std_logic_vector(9 downto 0) := (others => '0');
+	--Signals to memory
+	signal x_read_address_to_memory : std_logic_vector(9 downto 0) := (others => '0');
 
+	--Signals from memory
+	signal memory_read_x : std_logic_vector(15 downto 0) := (others => '0');
 
-	signal x_output_from_memory : std_logic_vector(15 downto 0) := (others => '0');
-	signal y_output_from_memory : std_logic_vector(15 downto 0) := (others => '0');
-	signal x_output_address_from_memory : std_logic_vector(9 downto 0) := (others => '0');
-	signal y_output_address_from_memory : std_logic_vector(9 downto 0) := (others => '0');
+	--Signals to preprocessor
+	signal preprocessor_x_input : std_logic_vector(BITS-1  downto 0) := (others => '0');
+	signal preprocessor_y_input : std_logic_vector(BITS-1  downto 0) := (others => '0');
+	signal preprocessor_angle_input : std_logic_vector(BITS-1  downto 0) := (others => '0');
 
-	signal unrotated_x : std_logic_vector(31 downto 0) := (others => '0');
-	signal unrotated_y : std_logic_vector(31 downto 0) := (others => '0');
-	
-	signal cordic_to_writer_x : std_logic_vector(31 downto 0) := (others => '0');
-	signal cordic_to_writer_y : std_logic_vector(31 downto 0) := (others => '0');
+	--Signals to cordic
+	signal preprocessor_x_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
+	signal preprocessor_y_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
+	signal preprocessor_angle_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 
-	signal rotation_angle_signal : std_logic_vector(31 downto 0) := (others => '0');
+	--Output signals
+	signal output_x_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
+	signal output_y_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
 
 	component cordic is
     generic(TOTAL_BITS: integer := 32; STEPS: integer := 16);
@@ -65,17 +66,39 @@ architecture memory_writer_arq of memory_writer is
     );
   end component;
 
+  component preprocessor is
+		generic(TOTAL_BITS: integer := 32);
+    port(
+      x_in: in std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
+      y_in: in std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
+      angle_in : in std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
+      x_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
+      y_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
+      angle_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0')
+    );
+	end component;
+
 begin
 
 	clk_signal <= clk;
 
+	preprocessor_0 : preprocessor
+		port map(
+			x_in => preprocessor_x_input,
+			y_in => preprocessor_y_input,
+			angle_in => preprocessor_angle_input,
+			x_out => preprocessor_x_output_to_cordic,
+			y_out => preprocessor_y_output_to_cordic,
+			angle_out => preprocessor_angle_output_to_cordic
+		);
+
 	cordic_0 : cordic
     port map(
-      x_in => unrotated_x,
-      y_in => unrotated_y,
-      angle => rotation_angle_signal,
-      x_out => cordic_to_writer_x,
-      y_out => cordic_to_writer_y
+      x_in => preprocessor_x_output_to_cordic,
+      y_in => preprocessor_y_output_to_cordic,
+      angle => preprocessor_angle_output_to_cordic,
+      x_out => output_x_from_cordic,
+      y_out => output_y_from_cordic
     );
 
    x_values_ram: RAMB16_S18_S18
@@ -90,41 +113,20 @@ begin
 			INIT_07 => X"BB3EB9C8B851B6DBB564B3EEB277B101AF8AAE14AC9DAB27A9B1A83AA6C4A54D",
 			INIT_08 => X"D2A6D130CFB9CE43CCCCCB56C9DFC869C6F2C57CC405C28FC118BFA2BE2BBCB5",
 			INIT_09 => X"EA0EE898E721E5ABE434E2BEE147DFD1DE5ADCE4DB6DD9F7D880D70AD593D41D",
-			INIT_0a => X"0000FFFFFE89FD13FB9CFA26F8AFF739F5C2F44CF2D5F15FEFE8EE72ECFBEB85"
+			INIT_0a => X"FFFFFFFFFE89FD13FB9CFA26F8AFF739F5C2F44CF2D5F15FEFE8EE72ECFBEB85"
     )
     port map (
       DOA  => open,
-      DOB  => x_output_from_memory,
-      ADDRA => x_input_address_to_memory,
-      ADDRB => x_output_address_from_memory,
+      DOB  => memory_read_x,
+      ADDRA => (others => '0'),
+      ADDRB => x_read_address_to_memory,
       DIPA => (others => '0'),
       DIPB => (others => '0'),
-      CLKA  => clk_signal,
+      CLKA  => '0',
       CLKB => clk_signal,
-      DIA  => x_input_to_memory,
+      DIA  => (others => '0'),
       DIB  => (others => '0'),
-      ENA  => enable,
-      ENB  => enable,
-      SSRA  => '0',
-      SSRB => '0',
-      WEA  => enable,
-      WEB  => '0'
-    );
-
-   y_values_ram: RAMB16_S18_S18
-    generic map(WRITE_MODE_B => "READ_FIRST")
-    port map (
-      DOA  => open,
-      DOB  => y_output_from_memory,
-      ADDRA => y_input_address_to_memory,
-      ADDRB => y_output_address_from_memory,
-      DIPA => (others => '0'),
-      DIPB => (others => '0'),
-      CLKA  => clk_signal,
-      CLKB => clk_signal,
-      DIA  => y_input_to_memory,
-      DIB  => (others => '0'),
-      ENA  => enable,
+      ENA  => '0',
       ENB  => enable,
       SSRA  => '0',
       SSRB => '0',
@@ -132,13 +134,32 @@ begin
       WEB  => '0'
     );
 
-  rotation_angle_signal <= ROTATION_ANGLE;
 
-	
+   --y_values_ram: RAMB16_S18_S18
+   -- generic map(WRITE_MODE_B => "READ_FIRST")
+   -- port map (
+   --   DOA  => open,
+   --   DOB  => memory_read_y,
+   --   ADDRA => open,
+   --   ADDRB => y_read_address_to_memory,
+   --   DIPA => (others => '0'),
+   --   DIPB => (others => '0'),
+   --   CLKA  => clk_signal,
+   --   CLKB => clk_signal,
+   --   DIA  => y_input_to_memory,
+   --   DIB  => (others => '0'),
+   --   ENA  => enable,
+   --   ENB  => enable,
+   --   SSRA  => '0',
+   --   SSRB => '0',
+   --   WEA  => enable,
+   --   WEB  => '0'
+   -- );
+
+  preprocessor_x_input <= ("0000000000000000" & memory_read_x);
+  preprocessor_y_input <= (others => '0');
+
 	process(clk, rst)
-
-		variable real_x : std_logic_vector(BITS - 1 downto 0) := (others => '0');
-		variable real_y : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 
 		variable moved_x : unsigned(BITS - 1 downto 0) := (others => '0');
 		variable moved_y : unsigned(BITS - 1 downto 0) := (others => '0');
@@ -156,20 +177,46 @@ begin
 
 		variable point_position : integer := 0;
 
+		variable accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
+		variable accumulated_angle_int : integer := 0;
+		variable rotated : boolean := false;
+
+		variable erasing_x : integer := 0;
+		variable erasing_y : integer := 0;
+
 	begin
 
 		if(rst = '1') then --reset values
 			point_position := 0;
+			x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
 			pixel_on <= (others => '0');
+			pixel_x <= std_logic_vector(to_unsigned(erasing_x, 10));
+			pixel_y <= std_logic_vector(to_unsigned(erasing_y, 10));
+			erasing_x := erasing_x + 1;
+			if(erasing_x = COLUMNS) then
+				erasing_x := 0;
+				erasing_y := erasing_y + 1;
+			end if;
+			if(erasing_y = ROWS) then
+				erasing_y := 0;
+			end if;
+
 		elsif(rising_edge(clk)) then
 
 			if(enable = '1') then
 
-				if(point_position > 0  and point_position < MAX_POSITION) then
+				if(point_position >= 0  and point_position < MAX_POSITION) then
+					--While writing points of the line, set pixel on to 1
+					pixel_on <= "1";
+
+					point_position := point_position + 1;
+					
+					--Compute address to set to memory
+					x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
 
 					--To give time to the cordic to process the data, we shall draw the previous point and in the end set the next point to be processed
-					moved_x := unsigned("0000000000000000" & x_output_from_memory) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
-					moved_y := unsigned("0000000000000000" & y_output_from_memory) + ONE; --Move the y value up so that all it's possible locations are a positive number
+					moved_x := unsigned(output_x_from_cordic) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
+					moved_y := unsigned(output_y_from_cordic) + ONE; --Move the y value up so that all it's possible locations are a positive number
 
 					extended_moved_x_bit := std_logic_vector(moved_x * PIXEL_COEF); --Compute the pixel location
 					moved_x_bit := extended_moved_x_bit(32 + 9 downto 32); --Truncate to integer value
@@ -179,36 +226,22 @@ begin
 					inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
 					moved_y_bit := std_logic_vector(inverted_y_bit);
 
-					report "POS: " & integer'image(point_position-1);
-					report "X:" & integer'image(to_integer(unsigned(moved_x_bit)));
-					report "Y:" & integer'image(to_integer(unsigned(moved_y_bit)));
+					--report "WRITER: " & integer'image(to_integer(unsigned(moved_x_bit))) & " : " & integer'image(to_integer(unsigned(moved_y_bit)));
 
 					pixel_x <= moved_x_bit;
 					pixel_y <= moved_y_bit;
-					pixel_on <= "1";
 
-					unrotated_x <= "0000000000000000" & x_output_from_memory;
-					unrotated_y <= "0000000000000000" & y_output_from_memory;
-
-					
-					x_input_to_memory <= cordic_to_writer_x(15 downto 0);
-					y_input_to_memory <= cordic_to_writer_y(15 downto 0);
-
-					x_input_address_to_memory <= std_logic_vector(to_unsigned(point_position-1,10));
-					y_input_address_to_memory <= std_logic_vector(to_unsigned(point_position-1,10));
-
-					point_position := point_position + 1;
-
-					x_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
-					y_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
-
-				elsif (point_position = 0) then
-
-					x_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
-					y_output_address_from_memory <= std_logic_vector(to_unsigned(point_position,10));
-					point_position := point_position + 1;
-					
+				else
 					pixel_on <= "0";
+					erasing_x := 0;
+					erasing_y := 0;
+					accumulated_angle := accumulated_angle + ROTATION_ANGLE;
+					accumulated_angle_int := to_integer(accumulated_angle);
+					if(accumulated_angle_int >= 360) then
+						accumulated_angle_int := accumulated_angle_int - 360;
+					end if;
+					accumulated_angle := to_signed(accumulated_angle_int, BITS);
+					preprocessor_angle_input <= std_logic_vector(accumulated_angle);
 				end if;
 
 

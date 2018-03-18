@@ -66,7 +66,7 @@ def write_initial_values():
 		x_pos = initial_pos * (i + 1) - 0.0000000001 #so that we don't get to 1
 		integer_part = int_to_bin(int(x_pos), INT_BITS)
 		fractional_part = fraction_to_bin(get_fractional_part(x_pos), FRACTION_BITS)
-		accum_values = accum_values + str('%0*X' % ((len(fractional_part) + 3) // 4, int(fractional_part, 2)))
+		accum_values = str('%0*X' % ((len(fractional_part) + 3) // 4, int(fractional_part, 2))) + accum_values
 		inner_pos = inner_pos + 1
 		if(inner_pos == 16):
 			print "INIT_" + "{:02x}".format(hex_pos) + " => X\"" + accum_values + "\","

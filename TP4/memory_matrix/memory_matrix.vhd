@@ -91,6 +91,8 @@ architecture memory_matrix_arq of memory_matrix is
       x_write_int := to_integer(unsigned(x_write));
       y_write_int := to_integer(unsigned(y_write));
 
+      --report "MATRIX-W " & integer'image(x_write_int) & " : " & integer'image(y_write_int)  & "=>" & std_logic'image(write_data(0));
+
       if(x_write_int <= COLUMNS and y_write_int <= ROWS) then
 
         write_bit_position := x_write_int + y_write_int  * ROWS;
@@ -127,6 +129,10 @@ architecture memory_matrix_arq of memory_matrix is
     begin
       x_read_int := to_integer(unsigned(x_read));
       y_read_int := to_integer(unsigned(y_read));
+
+      --if(data(0) = '1') then
+      --  report "MATRIX-R " & integer'image(x_read_int) & " : " & integer'image(y_read_int) & "=>" & std_logic'image(data(0));
+      --end if;
       
 
       if(ROWS > MAX_ROWS) then

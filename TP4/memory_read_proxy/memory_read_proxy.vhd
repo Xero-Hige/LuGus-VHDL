@@ -22,7 +22,7 @@ architecture memory_read_proxy_arq of memory_read_proxy is
 	signal memory_data : std_logic_vector(0 downto 0) := (others => '0');
 
 begin
-	process(x_in,y_in,memory_value,memory_data)
+	process(x_in,y_in)
 		variable x_in_int : integer := 0;
 		variable y_in_int : integer := 0;
 	begin
