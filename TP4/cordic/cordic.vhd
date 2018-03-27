@@ -20,6 +20,7 @@ end cordic;
 architecture cordic_arq of cordic is
 
     constant MAX_STEPS: integer := 16;
+    constant ZERO : std_logic_vector(TOTAL_BITS - 1 downto 0 ) := (others => '0');
 
     type cordic_step is record
         x: std_logic_vector(TOTAL_BITS - 1 downto 0);
@@ -86,15 +87,8 @@ architecture cordic_arq of cordic is
             y_out => normalized_y
         );
 
-        x_out <= normalized_x;
-        y_out <= normalized_y;
-
-        process(x_in, y_in, angle)
-        begin
-          if(STEPS > MAX_STEPS) then
-            report integer'image(STEPS) & " STEPS are not allowed, max is: " & integer'image(MAX_STEPS) severity failure;
-          end if;
-        end process;
+        x_out <= normalized_x when angle /= ZERO else x_in;
+        y_out <= normalized_y when angle /= ZERO else y_in;
 
 
 

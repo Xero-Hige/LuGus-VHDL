@@ -30,7 +30,7 @@ VALID_EXTENSIONS = ['vhd','vhdl']
 
 
 def execute(command, flags, param):
-    return os.system(command + ' '.join(flags) + param)
+    return os.system(command + ' '.join(flags) + param )
 
 def analyze_file(filepath):
     print '\n\n###### ANALYSING ' + get_name(filepath) + ' ######'
@@ -135,7 +135,7 @@ def main(module):
     for f in entities:
         name = get_name(f)
         print "\n\n\n\n####### RUNING TEST FOR: " +  name + ' ######'
-        end_status += execute(RUNNER, FLAGS, name)
+        end_status += execute(RUNNER, FLAGS, name + " --vcd=wave ")
     if end_status:
         sys.exit(RUN_ERROR)
 

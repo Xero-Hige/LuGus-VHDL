@@ -71,11 +71,11 @@ architecture display_tb_arq of display_tb is
 
             if( h = '0' and v = '0') then
 
-                if(x >= FRONT_PORT_HORIZONTAL and x < 640 + FRONT_PORT_HORIZONTAL and y >= FRONT_PORT_VERTICAL and y < 480 + FRONT_PORT_VERTICAL) then
+                if(x >= FRONT_PORT_HORIZONTAL and x < 350 + FRONT_PORT_HORIZONTAL and y >= FRONT_PORT_VERTICAL and y < 350 + FRONT_PORT_VERTICAL) then
 
                     --if(last_r /= r or last_g /= g or last_b /= b or y /= last_y) then
                 
-                        --report integer'image(x - FRONT_PORT_HORIZONTAL) & ":" & integer'image(y - FRONT_PORT_VERTICAL) & " " & std_logic'image(r) & std_logic'image(g) & std_logic'image(b);
+                        report integer'image(x - FRONT_PORT_HORIZONTAL) & ":" & integer'image(y - FRONT_PORT_VERTICAL) & " " & std_logic'image(r) & std_logic'image(g) & std_logic'image(b);
 
                         write(line_el, integer'image(x - FRONT_PORT_HORIZONTAL));
                         write(line_el, string'(" "));
@@ -89,10 +89,10 @@ architecture display_tb_arq of display_tb is
                         writeline(file_pointer, line_el); -- write the contents into the file.
 
                     --end if;
-                    last_r := r;
-                    last_g := g;
-                    last_b := b;
-                    last_y := y;
+                        last_r := r;
+                        last_g := g;
+                        last_b := b;
+                        last_y := y;
                 end if;
                 x := x + 1;
                 updated_y := false;

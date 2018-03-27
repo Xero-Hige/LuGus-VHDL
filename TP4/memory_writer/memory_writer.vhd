@@ -30,8 +30,8 @@ architecture memory_writer_arq of memory_writer is
 
 	constant MAX_POSITION : integer := 177;
 
-	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
-	--constant ROTATION_ANGLE : std_logic_vector(31 downto 0) := "00000000000000000000000000000000";
+	--constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
+	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
 
 	signal clk_signal : std_logic := '0';
 
