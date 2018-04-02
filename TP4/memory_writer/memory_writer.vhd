@@ -30,8 +30,8 @@ architecture memory_writer_arq of memory_writer is
 
 	constant MAX_POSITION : integer := 177;
 
-	--constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
-	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
+	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
+--	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
 
 	signal clk_signal : std_logic := '0';
 
@@ -50,6 +50,9 @@ architecture memory_writer_arq of memory_writer is
 	signal preprocessor_x_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 	signal preprocessor_y_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 	signal preprocessor_angle_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
+	
+	signal should_erase : std_logic := '0';
+	signal accumulated_angle : signed(BITS - 1 downto 0) := "00000000001011010000000000000000";
 
 	--Output signals
 	signal output_x_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
@@ -158,6 +161,23 @@ begin
 
   preprocessor_x_input <= ("0000000000000000" & memory_read_x);
   preprocessor_y_input <= (others => '0');
+  
+	erase : process(clk, rst)
+		variable last_rst : std_logic := '0';
+		variable accumulated_angle_int : integer := 0;
+	begin
+		if(rst = '1' and last_rst = '0') then --switch mode
+			should_erase <= not should_erase;
+			accumulated_angle <= ROTATION_ANGLE;
+			accumulated_angle_int := to_integer(accumulated_angle);
+			if(accumulated_angle_int >= 360) then
+				accumulated_angle_int := accumulated_angle_int - 360;
+			end if;
+--			accumulated_angle <= to_signed(accumulated_angle_int, BITS);
+		end if;
+		last_rst := rst;
+	end process;
+		
 
 	process(clk, rst)
 
@@ -177,77 +197,63 @@ begin
 
 		variable point_position : integer := 0;
 
-		variable accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
-		variable accumulated_angle_int : integer := 0;
-		variable rotated : boolean := false;
-
+--		variable accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
+		
 		variable erasing_x : integer := 0;
 		variable erasing_y : integer := 0;
 
 	begin
 
-		if(rst = '1') then --reset values
-			point_position := 0;
-			x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
-			pixel_on <= (others => '0');
-			pixel_x <= std_logic_vector(to_unsigned(erasing_x, 10));
-			pixel_y <= std_logic_vector(to_unsigned(erasing_y, 10));
-			erasing_x := erasing_x + 1;
-			if(erasing_x = COLUMNS) then
-				erasing_x := 0;
-				erasing_y := erasing_y + 1;
-			end if;
-			if(erasing_y = ROWS) then
-				erasing_y := 0;
-			end if;
-
-		elsif(rising_edge(clk)) then
-
-			if(enable = '1') then
-
-				if(point_position >= 0  and point_position < MAX_POSITION) then
-					--While writing points of the line, set pixel on to 1
-					pixel_on <= "1";
-
-					point_position := point_position + 1;
-					
-					--Compute address to set to memory
-					x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
-
-					--To give time to the cordic to process the data, we shall draw the previous point and in the end set the next point to be processed
-					moved_x := unsigned(output_x_from_cordic) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
-					moved_y := unsigned(output_y_from_cordic) + ONE; --Move the y value up so that all it's possible locations are a positive number
-
-					extended_moved_x_bit := std_logic_vector(moved_x * PIXEL_COEF); --Compute the pixel location
-					moved_x_bit := extended_moved_x_bit(32 + 9 downto 32); --Truncate to integer value
-					
-					extended_moved_y_bit_unsigned := moved_y * PIXEL_COEF; --Compute the pixel location
-					truncated_extended_moved_y_bit_unsigned := extended_moved_y_bit_unsigned(32 + 9 downto 32); --Truncate to integer value
-					inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
-					moved_y_bit := std_logic_vector(inverted_y_bit);
-
-					--report "WRITER: " & integer'image(to_integer(unsigned(moved_x_bit))) & " : " & integer'image(to_integer(unsigned(moved_y_bit)));
-
-					pixel_x <= moved_x_bit;
-					pixel_y <= moved_y_bit;
-
-				else
-					pixel_on <= "0";
+		if(rising_edge(clk)) then
+			if(should_erase = '1') then
+				point_position := 0;
+				x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
+				pixel_on <= (others => '0');
+				pixel_x <= std_logic_vector(to_unsigned(erasing_x, 10));
+				pixel_y <= std_logic_vector(to_unsigned(erasing_y, 10));
+				erasing_x := erasing_x + 1;
+				if(erasing_x = COLUMNS) then
 					erasing_x := 0;
-					erasing_y := 0;
-					accumulated_angle := accumulated_angle + ROTATION_ANGLE;
-					accumulated_angle_int := to_integer(accumulated_angle);
-					if(accumulated_angle_int >= 360) then
-						accumulated_angle_int := accumulated_angle_int - 360;
-					end if;
-					accumulated_angle := to_signed(accumulated_angle_int, BITS);
-					preprocessor_angle_input <= std_logic_vector(accumulated_angle);
+					erasing_y := erasing_y + 1;
 				end if;
+				if(erasing_y = ROWS) then
+					erasing_y := 0;
+				end if;
+			else
+				if(enable = '1') then
+					if(point_position >= 0  and point_position < MAX_POSITION) then
+						--While writing points of the line, set pixel on to 1
+						pixel_on <= "1";
 
+						point_position := point_position + 1;
+						
+						--Compute address to set to memory
+						x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
 
+						--To give time to the cordic to process the data, we shall draw the previous point and in the end set the next point to be processed
+						moved_x := unsigned(output_x_from_cordic) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
+						moved_y := unsigned(output_y_from_cordic) + ONE; --Move the y value up so that all it's possible locations are a positive number
 
+						extended_moved_x_bit := std_logic_vector(moved_x * PIXEL_COEF); --Compute the pixel location
+						moved_x_bit := extended_moved_x_bit(32 + 9 downto 32); --Truncate to integer value
+						
+						extended_moved_y_bit_unsigned := moved_y * PIXEL_COEF; --Compute the pixel location
+						truncated_extended_moved_y_bit_unsigned := extended_moved_y_bit_unsigned(32 + 9 downto 32); --Truncate to integer value
+						inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
+						moved_y_bit := std_logic_vector(inverted_y_bit);
+
+						--report "WRITER: " & integer'image(to_integer(unsigned(moved_x_bit))) & " : " & integer'image(to_integer(unsigned(moved_y_bit)));
+
+						pixel_x <= moved_x_bit;
+						pixel_y <= moved_y_bit;
+					else
+						pixel_on <= "0";
+						erasing_x := 0;
+						erasing_y := 0;
+						preprocessor_angle_input <= std_logic_vector(accumulated_angle);
+					end if;
+				end if;
 			end if;
-
 		end if;
 
 	end process;

@@ -17,15 +17,15 @@ entity display is
 	 
 	 attribute loc : string;
 	 
-	--attribute loc of clk: signal is "C9";
-	--attribute loc of rst: signal is "H13";
-	--attribute loc of ena: signal is "D18";
+	attribute loc of clk: signal is "C9";
+	attribute loc of rst: signal is "H13";
+	attribute loc of ena: signal is "D18";
 
-	--attribute loc of hs: signal is "F15";
-	--attribute loc of vs: signal is "F14";
-	--attribute loc of red_o: signal is "H14";
-	--attribute loc of grn_o: signal is "H15";
-	--attribute loc of blu_o: signal is "G15";
+	attribute loc of hs: signal is "F15";
+	attribute loc of vs: signal is "F14";
+	attribute loc of red_o: signal is "H14";
+	attribute loc of grn_o: signal is "H15";
+	attribute loc of blu_o: signal is "G15";
 
 end display;
 
@@ -182,8 +182,7 @@ architecture display_arq of display is
     blu_o <= blue;
 
     memory_values_rst <= '0' when (
-      to_integer(unsigned(x_vga_to_proxy)) > MIN_X and 
-      to_integer(unsigned(y_vga_to_proxy)) > MIN_Y )
+		to_integer(unsigned(y_vga_to_proxy)) < MAX_Y)
       else '1';
 
 end architecture;
