@@ -7,6 +7,11 @@ from translator import Translator
 from time import sleep
 import config
 
+
+def clean():
+    reader.clean()
+    vga_controller.save()
+
 def loop():
     info = reader.readline()
     while (info):
@@ -14,36 +19,32 @@ def loop():
         values = info.split(config.DELIMITER)
         if (len(values) < 5):
             print "Values not matching, expecting x y r g b"
-            break
-        try:
-            vga_controller.update(int(values[0]),
-                                  int(values[1]),
-                                  translator.bin_to_int(values[2]),
-                                  translator.bin_to_int(values[3]),
-                                  translator.bin_to_int(values[4]))
-        except IndexError:
-            break
+            info = reader.readline()
+            continue
+        vga_controller.update(int(values[0]),
+                              int(values[1]),
+                              translator.bin_to_int(values[2]),
+                              translator.bin_to_int(values[3]),
+                              translator.bin_to_int(values[4]))
         info = reader.readline()
 
-    screen.clean()
-    reader.clean()
+# #Start a screen
+# screen = Screen(config.VISIBLE_HEIGHT,config.VISIBLE_WIDTH)
+# screen.start()
 
+# Start the vgaController
+vga_controller = VGAController([config.VISIBLE_WIDTH, config.VISIBLE_HEIGHT])
 
-#Start a screen
-screen = Screen(config.VISIBLE_HEIGHT,config.VISIBLE_WIDTH)
-screen.start()
-
-#Start the vgaController
-vga_controller = VGAController(screen)
-
-#Start a reader
+# Start a reader
 reader = Reader()
 reader.initialize()
 
-#Start translator
+# Start translator
 translator = Translator()
 
 print "Starting"
-
-loop()
-
+try:
+    loop()
+except Exception as e:
+    print e
+clean()

@@ -23,11 +23,13 @@ architecture preprocessor_arq of preprocessor is
 
     	process (x_in, y_in, angle_in) is
             variable angle_int : integer := 0;
+            variable fractional_angle_part : std_logic_vector((TOTAL_BITS/2) - 1 downto 0) := (others => '0');
             variable x_int : integer := 0;
             variable y_int : integer := 0;
             variable tmp_int: integer := 0;
 		begin
-            angle_int := to_integer(signed(angle_in));
+            angle_int := to_integer(signed(angle_in(TOTAL_BITS - 1 downto TOTAL_BITS/2))); --Get only the integer part, not the factional part
+            fractional_angle_part := angle_in((TOTAL_BITS/2) - 1 downto 0);
             x_int := to_integer(signed(x_in)); 
             y_int := to_integer(signed(y_in));
 
@@ -51,7 +53,7 @@ architecture preprocessor_arq of preprocessor is
 
             end if;
 
-            angle_out <= std_logic_vector(to_signed(angle_int,TOTAL_BITS));
+            angle_out <= std_logic_vector(to_signed(angle_int,TOTAL_BITS/2)) & fractional_angle_part;
             x_out <= std_logic_vector(to_signed(x_int,TOTAL_BITS));
             y_out <= std_logic_vector(to_signed(y_int,TOTAL_BITS));
 

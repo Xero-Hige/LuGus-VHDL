@@ -31,7 +31,7 @@ architecture memory_writer_arq of memory_writer is
 	constant MAX_POSITION : integer := 177;
 
 	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
---	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
+	--constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
 
 	signal clk_signal : std_logic := '0';
 
@@ -52,7 +52,8 @@ architecture memory_writer_arq of memory_writer is
 	signal preprocessor_angle_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 	
 	signal should_erase : std_logic := '0';
-	signal accumulated_angle : signed(BITS - 1 downto 0) := "00000000001011010000000000000000";
+	signal accumulated_angle : signed(BITS - 1 downto 0) := "00000000010110100000000000000000";
+	--signal accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
 
 	--Output signals
 	signal output_x_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
@@ -164,16 +165,19 @@ begin
   
 	erase : process(clk, rst)
 		variable last_rst : std_logic := '0';
+		variable local_accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
 		variable accumulated_angle_int : integer := 0;
+		variable accumulated_angle_fractional : signed((BITS/2) - 1 downto 0) := (others => '0');
 	begin
 		if(rst = '1' and last_rst = '0') then --switch mode
 			should_erase <= not should_erase;
-			accumulated_angle <= ROTATION_ANGLE;
-			accumulated_angle_int := to_integer(accumulated_angle);
+			local_accumulated_angle := accumulated_angle + ROTATION_ANGLE;
+			accumulated_angle_int := to_integer(local_accumulated_angle(BITS-1 downto BITS/2));
+			accumulated_angle_fractional := local_accumulated_angle((BITS/2) - 1 downto 0);
 			if(accumulated_angle_int >= 360) then
 				accumulated_angle_int := accumulated_angle_int - 360;
 			end if;
---			accumulated_angle <= to_signed(accumulated_angle_int, BITS);
+			accumulated_angle <= to_signed(accumulated_angle_int, BITS/2) & accumulated_angle_fractional;
 		end if;
 		last_rst := rst;
 	end process;
@@ -196,8 +200,6 @@ begin
 		variable moved_y_bit : std_logic_vector(9 downto 0) := (others => '0');
 
 		variable point_position : integer := 0;
-
---		variable accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
 		
 		variable erasing_x : integer := 0;
 		variable erasing_y : integer := 0;

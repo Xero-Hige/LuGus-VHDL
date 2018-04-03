@@ -49,6 +49,7 @@ begin
 	 variable clk_div : std_logic := '0';
   begin
     --report integer'image(to_integer(horizontal)) & " : " & integer'image(to_integer(vertical));
+    --report std_logic'image(hs) & " : " & std_logic'image(vs);
     wait until mclk = '1';
 	 
 	 if(clk_div = '1') then

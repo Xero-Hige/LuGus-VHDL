@@ -11,8 +11,8 @@ end entity;
 
 architecture display_tb_arq of display_tb is 
 
-    constant FRONT_PORT_HORIZONTAL : natural := 45;  -- front guard: 1.89 us
-    constant FRONT_PORT_VERTICAL : natural := 32;  -- front guard: 1.02 ms
+    constant MIN_X : natural := 145;  -- front guard: 1.89 us
+    constant MIN_Y : natural := 65;  -- front guard: 1.02 ms
 
     signal clk: std_logic := '0';
     signal r,g,b: std_logic :=  '0';
@@ -56,7 +56,7 @@ architecture display_tb_arq of display_tb is
     end process;
 
     process (clk)
-    file file_pointer: text is out "../VGASimulator/tmplink";
+    file file_pointer: text is out "../VGASimulator/pixels.txt";
     --file file_pointer: text open WRITE_MODE is out "write.txt";
     variable line_el: line;
     variable last_h,last_v,last_r,last_g,last_b : std_logic;
@@ -68,18 +68,13 @@ architecture display_tb_arq of display_tb is
         
         if (enter = true) then
             enter := false;
-
-            if( h = '0' and v = '0') then
-
-                if(x >= FRONT_PORT_HORIZONTAL and x < 350 + FRONT_PORT_HORIZONTAL and y >= FRONT_PORT_VERTICAL and y < 350 + FRONT_PORT_VERTICAL) then
-
-                    --if(last_r /= r or last_g /= g or last_b /= b or y /= last_y) then
+            if(x >= MIN_X and x < 350 + MIN_X and y >= MIN_Y and y < 350 + MIN_Y) then
                 
-                        report integer'image(x - FRONT_PORT_HORIZONTAL) & ":" & integer'image(y - FRONT_PORT_VERTICAL) & " " & std_logic'image(r) & std_logic'image(g) & std_logic'image(b);
+                        --report integer'image(x - MIN_X) & ":" & integer'image(y - MIN_Y) & " " & std_logic'image(r) & std_logic'image(g) & std_logic'image(b);
 
-                        write(line_el, integer'image(x - FRONT_PORT_HORIZONTAL));
+                        write(line_el, integer'image(x - MIN_X));
                         write(line_el, string'(" "));
-                        write(line_el, integer'image(y - FRONT_PORT_VERTICAL));
+                        write(line_el, integer'image(y - MIN_Y));
                         write(line_el, string'(" "));  
                         write(line_el, std_logic'image(r));
                         write(line_el, string'(" "));  
@@ -88,7 +83,6 @@ architecture display_tb_arq of display_tb is
                         write(line_el, std_logic'image(b));
                         writeline(file_pointer, line_el); -- write the contents into the file.
 
-                    --end if;
                         last_r := r;
                         last_g := g;
                         last_b := b;
@@ -96,20 +90,18 @@ architecture display_tb_arq of display_tb is
                 end if;
                 x := x + 1;
                 updated_y := false;
-            else
-                if(h /= '0') then
+                if(x = 800) then
                     if(not updated_y) then
                         y := y + 1;
                         x := 0;
                         updated_y := true;
                     end if;
                 end if;
-                if(v /= '0') then
+                if(y = 525) then
                     x := 0;
                     y := 0;
                 end if;
 
-            end if;
 
         else
             enter := true;
