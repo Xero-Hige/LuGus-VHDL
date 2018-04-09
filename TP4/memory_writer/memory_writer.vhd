@@ -50,10 +50,6 @@ architecture memory_writer_arq of memory_writer is
 	signal preprocessor_x_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 	signal preprocessor_y_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
 	signal preprocessor_angle_output_to_cordic : std_logic_vector(BITS - 1 downto 0) := (others => '0');
-	
-	signal should_erase : std_logic := '0';
-	signal accumulated_angle : signed(BITS - 1 downto 0) := "00000000010110100000000000000000";
-	--signal accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
 
 	--Output signals
 	signal output_x_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
@@ -163,26 +159,6 @@ begin
   preprocessor_x_input <= ("0000000000000000" & memory_read_x);
   preprocessor_y_input <= (others => '0');
   
-	erase : process(clk, rst)
-		variable last_rst : std_logic := '0';
-		variable local_accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
-		variable accumulated_angle_int : integer := 0;
-		variable accumulated_angle_fractional : signed((BITS/2) - 1 downto 0) := (others => '0');
-	begin
-		if(rst = '1' and last_rst = '0') then --switch mode
-			should_erase <= not should_erase;
-			local_accumulated_angle := accumulated_angle + ROTATION_ANGLE;
-			accumulated_angle_int := to_integer(local_accumulated_angle(BITS-1 downto BITS/2));
-			accumulated_angle_fractional := local_accumulated_angle((BITS/2) - 1 downto 0);
-			if(accumulated_angle_int >= 360) then
-				accumulated_angle_int := accumulated_angle_int - 360;
-			end if;
-			accumulated_angle <= to_signed(accumulated_angle_int, BITS/2) & accumulated_angle_fractional;
-		end if;
-		last_rst := rst;
-	end process;
-		
-
 	process(clk, rst)
 
 		variable moved_x : unsigned(BITS - 1 downto 0) := (others => '0');
@@ -204,29 +180,33 @@ begin
 		variable erasing_x : integer := 0;
 		variable erasing_y : integer := 0;
 
+		variable should_erase : std_logic := '0';
+		variable done_writing : std_logic := '0';
+
+		variable accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
+
 	begin
 
 		if(rising_edge(clk)) then
-			if(should_erase = '1') then
-				point_position := 0;
-				x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
-				pixel_on <= (others => '0');
-				pixel_x <= std_logic_vector(to_unsigned(erasing_x, 10));
-				pixel_y <= std_logic_vector(to_unsigned(erasing_y, 10));
-				erasing_x := erasing_x + 1;
-				if(erasing_x = COLUMNS) then
-					erasing_x := 0;
-					erasing_y := erasing_y + 1;
-				end if;
-				if(erasing_y = ROWS) then
-					erasing_y := 0;
-				end if;
-			else
-				if(enable = '1') then
+			--If rst is 1 we should either erase previous values or start writing the new ones
+			if(rst = '1') then
+				if(should_erase = '1') then
+					erasing_x := erasing_x + 1;
+					if(erasing_x = COLUMNS) then
+						erasing_x := 0;
+						erasing_y := erasing_y + 1;
+					end if;
+					if(erasing_y = ROWS) then
+						should_erase := '0';
+					end if;
+					report "ERASING: " & integer'image(erasing_x) & ":" & integer'image(erasing_y);
+					pixel_x <= std_logic_vector(to_unsigned(erasing_x, 10));
+					pixel_y <= std_logic_vector(to_unsigned(erasing_y, 10));
+					pixel_on <= (others => '0');
+					point_position := 0;
+					x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
+				else --We should start writing the next values
 					if(point_position >= 0  and point_position < MAX_POSITION) then
-						--While writing points of the line, set pixel on to 1
-						pixel_on <= "1";
-
 						point_position := point_position + 1;
 						
 						--Compute address to set to memory
@@ -244,20 +224,31 @@ begin
 						inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
 						moved_y_bit := std_logic_vector(inverted_y_bit);
 
-						--report "WRITER: " & integer'image(to_integer(unsigned(moved_x_bit))) & " : " & integer'image(to_integer(unsigned(moved_y_bit)));
+						report "WRITTING: " & integer'image(point_position);
 
 						pixel_x <= moved_x_bit;
 						pixel_y <= moved_y_bit;
+						pixel_on <= "1";
 					else
+						report "DONE WRITTING -> WAITING_TO_ERASE";
 						pixel_on <= "0";
 						erasing_x := 0;
 						erasing_y := 0;
-						preprocessor_angle_input <= std_logic_vector(accumulated_angle);
 					end if;
 				end if;
+			else
+				report "VIDEO ON, DONT MODIFY MEMORY";
+				if(should_erase = '0') then
+					accumulated_angle := accumulated_angle + ROTATION_ANGLE;
+					preprocessor_angle_input <= std_logic_vector(accumulated_angle);
+				end if;
+
+				should_erase := '1';
+				erasing_x := 0;
+				erasing_y := 0;
+				
 			end if;
 		end if;
-
 	end process;
 
 

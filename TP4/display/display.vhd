@@ -182,7 +182,8 @@ architecture display_arq of display is
     blu_o <= blue;
 
     memory_values_rst <= '0' when (
-		to_integer(unsigned(y_vga_to_proxy)) < MAX_Y)
+      to_integer(unsigned(y_vga_to_proxy)) > MIN_Y and
+		  to_integer(unsigned(y_vga_to_proxy)) < MAX_Y)
       else '1';
 
 end architecture;
