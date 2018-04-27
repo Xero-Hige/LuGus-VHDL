@@ -26,7 +26,7 @@ architecture memory_writer_arq of memory_writer is
 	constant AXIS_Y_BIT : std_logic_vector(9 downto 0) := std_logic_vector(shift_right(to_unsigned(ROWS,10),1));
 
 	constant ONE : unsigned(BITS - 1 downto 0) := "00000000000000010000000000000000"; --1.0
-	constant PIXEL_COEF : unsigned(BITS - 1 downto 0) := "00000000101011110000000000000000"; --350/2 to account for the displacement by 1
+	constant PIXEL_COEF : std_logic_vector(BITS - 1 downto 0) := "00000000101011110000000000000000"; --350/2 to account for the displacement by 1
 
 	constant MAX_POSITION : integer := 177;
 
@@ -55,6 +55,12 @@ architecture memory_writer_arq of memory_writer is
 	signal output_x_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
 	signal output_y_from_cordic : std_logic_vector(BITS - 1 downto 0 ) := (others => '0');
 
+	--Mapped values
+	signal decimal_x : std_logic_vector(31 downto 0) := (others => '0');
+	signal decimal_y : std_logic_vector(31 downto 0) := (others => '0');
+	signal mapped_x : std_logic_vector(63 downto 0) := (others => '0');
+	signal mapped_y : std_logic_vector(63 downto 0) := (others => '0');
+
 	component cordic is
     generic(TOTAL_BITS: integer := 32; STEPS: integer := 16);
     port(
@@ -75,6 +81,14 @@ architecture memory_writer_arq of memory_writer is
       x_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
       y_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
       angle_out: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0')
+    );
+	end component;
+
+	component multiplier is
+    port(
+      op_1_in: in std_logic_vector(31 downto 0) := (others => '0');
+      op_2_in: in std_logic_vector(31 downto 0) := (others => '0');
+      result_out: out std_logic_vector(63 downto 0) := (others => '0')
     );
 	end component;
 
@@ -100,6 +114,20 @@ begin
       x_out => output_x_from_cordic,
       y_out => output_y_from_cordic
     );
+
+  multiplier_0 : multiplier
+		port map(
+			op_1_in => decimal_x,
+			op_2_in => PIXEL_COEF,
+			result_out => mapped_x
+		);
+
+	multiplier_1 : multiplier
+		port map(
+			op_1_in => decimal_y,
+			op_2_in => PIXEL_COEF,
+			result_out => mapped_y
+		);
 
    x_values_ram: RAMB16_S18_S18
     generic map(WRITE_MODE_B => "READ_FIRST",
@@ -216,10 +244,12 @@ begin
 						moved_x := unsigned(output_x_from_cordic) + ONE; --Move the x value to the right so that all it's posible locations are a positive number
 						moved_y := unsigned(output_y_from_cordic) + ONE; --Move the y value up so that all it's possible locations are a positive number
 
-						extended_moved_x_bit := std_logic_vector(moved_x * PIXEL_COEF); --Compute the pixel location
+						decimal_x <= std_logic_vector(moved_x);
+						extended_moved_x_bit := mapped_x; --Compute the pixel location
 						moved_x_bit := extended_moved_x_bit(32 + 9 downto 32); --Truncate to integer value
 						
-						extended_moved_y_bit_unsigned := moved_y * PIXEL_COEF; --Compute the pixel location
+						decimal_y <= std_logic_vector(moved_y);
+						extended_moved_y_bit_unsigned := unsigned(mapped_y); --Compute the pixel location
 						truncated_extended_moved_y_bit_unsigned := extended_moved_y_bit_unsigned(32 + 9 downto 32); --Truncate to integer value
 						inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
 						moved_y_bit := std_logic_vector(inverted_y_bit);
