@@ -8,6 +8,9 @@ entity display is
       rst: in std_logic := '0'; 
       ena: in std_logic := '0';
 
+      rx: in std_logic := '0';
+      tx : out std_logic := '0';
+
       hs: out std_logic := '0';
       vs: out std_logic := '0';
       red_o: out std_logic;
@@ -20,6 +23,9 @@ entity display is
 	attribute loc of clk: signal is "C9";
 	attribute loc of rst: signal is "H13";
 	attribute loc of ena: signal is "D18";
+
+  attribute loc of rx: signal is "R7";
+  attribute loc of tx: signal is "M14";
 
 	attribute loc of hs: signal is "F15";
 	attribute loc of vs: signal is "F14";
@@ -35,6 +41,8 @@ architecture display_arq of display is
   constant MAX_X : integer := 145 + 350;
   constant MIN_Y : integer := 65;
   constant MAX_Y : integer := 65 + 350;
+
+  constant Divisor : std_logic_vector := "000000011011"; -- Divisor=27 para 115200 baudios
     
   component memory_matrix is
   generic(ROWS: integer := 350; COLUMNS: integer := 350; CLK_DELAY_COUNT: integer := 9);
@@ -96,6 +104,42 @@ architecture display_arq of display is
     );
   end component;
 
+  component uart
+    generic (
+        F: natural;
+        min_baud: natural;
+        num_data_bits: natural
+    );
+  port (
+    Rx  : in std_logic;
+    Tx  : out std_logic;
+    Din : in std_logic_vector(7 downto 0);
+    StartTx : in std_logic;
+    TxBusy  : out std_logic;
+    Dout  : out std_logic_vector(7 downto 0);
+    RxRdy : out std_logic;
+    RxErr : out std_logic;
+    Divisor : in std_logic_vector; 
+    clk : in std_logic;
+    rst : in std_logic
+  );
+  end component;
+
+  component mode_decoder is
+    generic(
+      N: integer:= 6;
+      M: integer:= 3;
+      W: integer:= 8
+    );
+    port(
+      clk: in std_logic := '0';
+      char_in: in std_logic_vector(7 downto 0) := (others => '0');
+      RxRdy: in std_logic := '0';
+      mode: out std_logic_vector(1 downto 0) := (others => '0');
+      angle: out std_logic_vector(31 downto 0) := (others => '0')
+    );
+  end component;
+
   signal x_vga_to_proxy : std_logic_vector(9 downto 0) := (others => '0');
   signal y_vga_to_proxy : std_logic_vector(9 downto 0) := (others => '0');
 
@@ -120,6 +164,16 @@ architecture display_arq of display is
 
   signal vsync : std_logic := '0';
   signal memory_values_rst : std_logic := '0';
+
+  signal sig_Din  : std_logic_vector(7 downto 0);
+  signal sig_Dout : std_logic_vector(7 downto 0);
+  signal sig_RxErr  : std_logic;
+  signal sig_RxRdy  : std_logic;
+  signal sig_TxBusy : std_logic;
+  signal sig_StartTx: std_logic;
+       
+  signal char_in : std_logic_vector(7 downto 0) := (others => '0');
+  signal mode : std_logic_vector(1 downto 0) := (others => '0');
 
   
   begin
@@ -157,7 +211,7 @@ architecture display_arq of display is
     memory_writer_0 : memory_writer
     port map(
       clk => clk,
-      enable => ena,
+      enable => mode(0),
       rst =>  memory_values_rst,
       pixel_x => writer_to_memory_x,
       pixel_y => writer_to_memory_y,
@@ -173,6 +227,36 @@ architecture display_arq of display is
       y_out => y_proxy_to_ram,
       memory_value => pixel_to_proxy,
       proxy_value => pixel_to_vga
+    );
+
+    uart_0 : uart
+      generic map (
+        F   => 50000,
+        min_baud => 1200,
+        num_data_bits => 8
+      )
+      port map (
+        Rx  => rx,
+        Tx  => tx,
+        Din => sig_Din,
+        StartTx => sig_StartTx,
+        TxBusy  => sig_TxBusy,
+        Dout  => sig_Dout,
+        RxRdy => sig_RxRdy,
+        RxErr => sig_RxErr,
+        Divisor => Divisor,
+        clk => clk,
+        rst => '0'
+    );
+
+    mode_decoder_0: mode_decoder
+    generic map(N => 6, M => 3, W => 8)
+    port map(
+      clk => clk,
+      char_in => char_in,
+      RxRdy => sig_RxRdy,
+      mode => mode,
+      angle => open
     );
 
     vs <= vsync;
