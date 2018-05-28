@@ -82,37 +82,40 @@ architecture mode_decoder_arq of mode_decoder is
 
 		begin
 			if(char_in = LETTER_ENTER) then
-				if(accumm_chars(0) = LETTER_R and
-					accumm_chars(1) = LETTER_O and
-					accumm_chars(2) = LETTER_C and
-					accumm_chars(3) = LETTER_SPACE) then
-
-					if(accumm_chars(4) = LETTER_C) then
-						if(accumm_chars(5) = LETTER_SPACE) then
-							if(accumm_chars(6) = LETTER_A) then
-								mode <= CONSTANT_ROTATION_LEFT;
-							elsif (accumm_chars(6) = LETTER_H) then
-								mode <= CONSTANT_ROTATION_RIGHT;
-							end if;
-						end if;
-					elsif(accumm_chars(4) = LETTER_A) then
-						if(accumm_chars(5) = LETTER_SPACE) then
-							if(position = 8) then --Means that the angle is a 3 digit one
-								tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 100 + CHAR_TO_NUMBER(accumm_chars(7)) * 10 + CHAR_TO_NUMBER(accumm_chars(8));
-							else --2 digit angle
-								tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 10 + CHAR_TO_NUMBER(accumm_chars(7));
-							end if;
-							angle_integer_part := std_logic_vector(to_signed(tmp_angle,16));
-							angle <= angle_integer_part & "0000000000000000";
-							mode <= SINGLE_ROTATION;
-						end if;
-					end if;
-				end if;
-			elsif(position > 8) then
-				valid := false;
+				mode <= "11";
 			else
-				accumm_chars(position) := char_in;
-				position := position + 1;
+				mode <= "00";
+			--	if(accumm_chars(0) = LETTER_R and
+			--		accumm_chars(1) = LETTER_O and
+			--		accumm_chars(2) = LETTER_C and
+			--		accumm_chars(3) = LETTER_SPACE) then
+
+			--		if(accumm_chars(4) = LETTER_C) then
+			--			if(accumm_chars(5) = LETTER_SPACE) then
+			--				if(accumm_chars(6) = LETTER_A) then
+			--					mode <= CONSTANT_ROTATION_LEFT;
+			--				elsif (accumm_chars(6) = LETTER_H) then
+			--					mode <= CONSTANT_ROTATION_RIGHT;
+			--				end if;
+			--			end if;
+			--		elsif(accumm_chars(4) = LETTER_A) then
+			--			if(accumm_chars(5) = LETTER_SPACE) then
+			--				if(position = 8) then --Means that the angle is a 3 digit one
+			--					tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 100 + CHAR_TO_NUMBER(accumm_chars(7)) * 10 + CHAR_TO_NUMBER(accumm_chars(8));
+			--				else --2 digit angle
+			--					tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 10 + CHAR_TO_NUMBER(accumm_chars(7));
+			--				end if;
+			--				angle_integer_part := std_logic_vector(to_signed(tmp_angle,16));
+			--				angle <= angle_integer_part & "0000000000000000";
+			--				mode <= SINGLE_ROTATION;
+			--			end if;
+			--		end if;
+			--	end if;
+			--elsif(position > 8) then
+			--	valid := false;
+			--else
+			--	accumm_chars(position) := char_in;
+			--	position := position + 1;
 			end if;
 				
 			
