@@ -186,7 +186,7 @@ architecture display_arq of display is
       write_data => pixel_to_matrix,
       write_enable => '1',
       clk => clk,
-      enable => ena,
+      enable => '1',
       reset => rst,
       x_read => x_proxy_to_ram,
       y_read => y_proxy_to_ram,
@@ -198,7 +198,7 @@ architecture display_arq of display is
         mclk => clk,
         red_i => pixel_to_vga(0),
         grn_i => pixel_to_vga(0),
-        blu_i => ena,
+        blu_i => '1',
         hs => hs,
         vs => vsync,
         red_o => red,
@@ -237,7 +237,7 @@ architecture display_arq of display is
       )
       port map (
         Rx  => rx,
-        Tx  => tx,
+        Tx  => open,
         Din => sig_Din,
         StartTx => sig_StartTx,
         TxBusy  => sig_TxBusy,

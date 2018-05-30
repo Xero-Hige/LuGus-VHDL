@@ -184,6 +184,9 @@ begin
 		variable done_writing : std_logic := '0';
 
 		variable accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
+		variable local_accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
+		variable accumulated_angle_int : integer := 0;
+		variable accumulated_angle_fractional : signed((BITS/2) - 1 downto 0) := (others => '0');
 
 	begin
 
@@ -239,7 +242,13 @@ begin
 			else
 				report "VIDEO ON, DONT MODIFY MEMORY";
 				if(should_erase = '0') then
-					accumulated_angle := accumulated_angle + ROTATION_ANGLE;
+					local_accumulated_angle := accumulated_angle + ROTATION_ANGLE;
+					accumulated_angle_int := to_integer(local_accumulated_angle(BITS - 1 downto BITS/2));
+					accumulated_angle_fractional := local_accumulated_angle((BITS/2) - 1 downto 0);
+					if(accumulated_angle_int >= 360) then
+						accumulated_angle_int := accumulated_angle_int - 360;
+					end if;
+					accumulated_angle := to_signed(accumulated_angle_int,BITS/2) & accumulated_angle_fractional;
 					preprocessor_angle_input <= std_logic_vector(accumulated_angle);
 				end if;
 
