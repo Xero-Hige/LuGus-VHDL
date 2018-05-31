@@ -24,8 +24,8 @@ entity display is
 	attribute loc of rst: signal is "H13";
 	attribute loc of ena: signal is "D18";
 
-  attribute loc of rx: signal is "R7";
-  attribute loc of tx: signal is "M14";
+	attribute loc of rx: signal is "R7";
+	attribute loc of tx: signal is "M14";
 
 	attribute loc of hs: signal is "F15";
 	attribute loc of vs: signal is "F14";
@@ -172,7 +172,6 @@ architecture display_arq of display is
   signal sig_TxBusy : std_logic;
   signal sig_StartTx: std_logic;
        
-  signal char_in : std_logic_vector(7 downto 0) := (others => '0');
   signal mode : std_logic_vector(1 downto 0) := (others => '0');
 
   
@@ -237,7 +236,7 @@ architecture display_arq of display is
       )
       port map (
         Rx  => rx,
-        Tx  => open,
+        Tx  => tx,
         Din => sig_Din,
         StartTx => sig_StartTx,
         TxBusy  => sig_TxBusy,
@@ -253,7 +252,7 @@ architecture display_arq of display is
     generic map(N => 6, M => 3, W => 8)
     port map(
       clk => clk,
-      char_in => char_in,
+      char_in => sig_Dout,
       RxRdy => sig_RxRdy,
       mode => mode,
       angle => open

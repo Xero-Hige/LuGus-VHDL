@@ -8,8 +8,7 @@ entity cordic_commander is
   port(
     clk : in std_logic := '0';
     enable : in std_logic := '0';
-    mode : in  std_logic_vector(1 downto 0) := (others => '0');
-    angle : out std_logic_vector(TOTAL_BITS  - 1 downto 0) := (others => '0')
+	 rx
   );
 end cordic_commander;
 

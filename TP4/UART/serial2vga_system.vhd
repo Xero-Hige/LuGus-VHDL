@@ -9,15 +9,35 @@ entity serial2vga_system is
 port (
       clk :	in std_logic;
       rst :	in std_logic;
+		ena : in std_logic;
 --      Divisor :	in std_logic_vector (11 downto 0); descomentar para otras velocidades
       rx :	in std_logic;
       tx :	out std_logic;
-      hsync : out std_logic;
-      vsync : out std_logic;
-		red_out : out std_logic;
-      grn_out : out std_logic;
-      blu_out : out std_logic
+		led0 : out std_logic;
+		led1 : out std_logic;
+		led2 : out std_logic;
+		led3 : out std_logic;
+		led4 : out std_logic;
+		led5 : out std_logic;
+		led6 : out std_logic;
+		led7 : out std_logic
 );
+	attribute loc : string;
+	attribute loc of clk: signal is "C9";
+	attribute loc of rst: signal is "H13";
+	attribute loc of ena: signal is "D18";
+
+	attribute loc of rx: signal is "R7";
+	attribute loc of tx: signal is "M14";
+
+	attribute loc of led0: signal is "F12";
+	attribute loc of led1: signal is "E12";
+	attribute loc of led2: signal is "E11";
+	attribute loc of led3: signal is "F11";
+	attribute loc of led4: signal is "C11";
+	attribute loc of led5: signal is "D11";
+	attribute loc of led6: signal is "E9";
+	attribute loc of led7: signal is "F9";
 end serial2vga_system;
 
 architecture arch of serial2vga_system is
@@ -42,19 +62,6 @@ architecture arch of serial2vga_system is
 	);
       end component;
 
-      component aplicVGA
-      	port (
-      	      clk: in std_logic;
-             char_in: in std_logic_vector(7 downto 0);
-             RxRdy: in std_logic;
-             hsync : out std_logic;
-             vsync : out std_logic;
-             red_out : out std_logic;
-             grn_out : out std_logic;
-             blu_out : out std_logic
-             );
-      end component;
-
       constant Divisor : std_logic_vector := "000000011011"; -- Divisor=27 para 115200 baudios
       signal sig_Din	: std_logic_vector(7 downto 0);
       signal sig_Dout	: std_logic_vector(7 downto 0);
@@ -64,37 +71,40 @@ architecture arch of serial2vga_system is
       signal sig_StartTx: std_logic;
 
    begin
-   -- UART Instanciation :
-	UUT : uart
-	generic map (
-		F 	=> 50000,
-		min_baud => 1200,
-		num_data_bits => 8
-	)
-	port map (
-         	Rx	=> rx,
-	 	Tx	=> tx,
-	 	Din	=> sig_Din,
-	 	StartTx	=> sig_StartTx,
-		TxBusy	=> sig_TxBusy,
-		Dout	=> sig_Dout,
-		RxRdy	=> sig_RxRdy,
-		RxErr	=> sig_RxErr,
-		Divisor	=> Divisor,
-		clk	=> clk,
-		rst	=> rst
-	);
+		-- UART Instanciation :
+		UUT : uart
+		generic map (
+			F 	=> 50000,
+			min_baud => 1200,
+			num_data_bits => 8
+		)
+		port map (
+			Rx	=> rx,
+			Tx	=> tx,
+			Din	=> sig_Din,
+			StartTx	=> sig_StartTx,
+			TxBusy	=> sig_TxBusy,
+			Dout	=> sig_Dout,
+			RxRdy	=> sig_RxRdy,
+			RxErr	=> sig_RxErr,
+			Divisor	=> Divisor,
+			clk	=> clk,
+			rst	=> rst
+		);
+		
+		process(sig_RxRdy)
+		begin
+			if(sig_RxRdy = '1') then
+				led0 <= sig_Dout(0);
+				led1 <= sig_Dout(1);
+				led2 <= sig_Dout(2);
+				led3 <= sig_Dout(3);
+				led4 <= sig_Dout(4);
+				led5 <= sig_Dout(5);
+				led6 <= sig_Dout(6);
+				led7 <= sig_Dout(7);
+			end if;
+		end process;
    
-   -- BACKEND APPLICATION Instanciation :
-	APPLICATION: aplicVGA
-	port map (
-		CLK	=> clk,
-		char_in	=> sig_Dout,
-		RxRdy	=> sig_RxRdy,
-		hsync => hsync,
-      vsync => vsync,
-      red_out => red_out,
-      grn_out => grn_out,
-      blu_out => blu_out
-	);
+   
 end arch;
