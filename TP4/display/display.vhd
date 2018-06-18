@@ -13,9 +13,17 @@ entity display is
 
       hs: out std_logic := '0';
       vs: out std_logic := '0';
-      red_o: out std_logic;
-      grn_o: out std_logic;
-      blu_o: out std_logic
+      red_o: out std_logic := '0';
+      grn_o: out std_logic := '0';
+      blu_o: out std_logic := '0';
+		led0 : out std_logic := '0';
+		led1 : out std_logic := '0';
+		led2 : out std_logic := '0';
+		led3 : out std_logic := '0';
+		led4 : out std_logic := '0';
+		led5 : out std_logic := '0';
+		led6 : out std_logic := '0';
+		led7 : out std_logic := '0'
     );
 	 
 	 attribute loc : string;
@@ -32,6 +40,15 @@ entity display is
 	attribute loc of red_o: signal is "H14";
 	attribute loc of grn_o: signal is "H15";
 	attribute loc of blu_o: signal is "G15";
+	
+	attribute loc of led0: signal is "F12";
+	attribute loc of led1: signal is "E12";
+	attribute loc of led2: signal is "E11";
+	attribute loc of led3: signal is "F11";
+	attribute loc of led4: signal is "C11";
+	attribute loc of led5: signal is "D11";
+	attribute loc of led6: signal is "E9";
+	attribute loc of led7: signal is "F9";
 
 end display;
 
@@ -85,6 +102,8 @@ architecture display_arq of display is
       clk : in std_logic := '0';
       enable : in std_logic := '0';
       rst : in std_logic := '0';
+		mode : in std_logic_vector(1 downto 0) := (others => '0');
+		angle : in std_logic_vector(BITS - 1 downto 0) := (others => '0');
       pixel_x : out std_logic_vector(9 downto 0) := (others => '0');
       pixel_y : out std_logic_vector(9 downto 0) := (others => '0');
       pixel_on : out std_logic_vector(0 downto 0) := (others => '0')
@@ -136,7 +155,15 @@ architecture display_arq of display is
       char_in: in std_logic_vector(7 downto 0) := (others => '0');
       RxRdy: in std_logic := '0';
       mode: out std_logic_vector(1 downto 0) := (others => '0');
-      angle: out std_logic_vector(31 downto 0) := (others => '0')
+      angle: out std_logic_vector(31 downto 0) := (others => '0');
+		led0 : out std_logic := '0';
+		led1 : out std_logic := '0';
+		led2 : out std_logic := '0';
+		led3 : out std_logic := '0';
+		led4 : out std_logic := '0';
+		led5 : out std_logic := '0';
+		led6 : out std_logic := '0';
+		led7 : out std_logic := '0'
     );
   end component;
 
@@ -173,8 +200,7 @@ architecture display_arq of display is
   signal sig_StartTx: std_logic;
        
   signal mode : std_logic_vector(1 downto 0) := (others => '0');
-
-  
+  signal angle : std_logic_vector(31  downto 0) := (others => '0');
   begin
 
     memory_matrix_0 : memory_matrix
@@ -210,8 +236,10 @@ architecture display_arq of display is
     memory_writer_0 : memory_writer
     port map(
       clk => clk,
-      enable => mode(0),
+      enable => '1',
       rst =>  memory_values_rst,
+		mode => mode,
+		angle => angle,
       pixel_x => writer_to_memory_x,
       pixel_y => writer_to_memory_y,
       pixel_on => pixel_to_matrix
@@ -255,7 +283,15 @@ architecture display_arq of display is
       char_in => sig_Dout,
       RxRdy => sig_RxRdy,
       mode => mode,
-      angle => open
+      angle => angle,
+		led0 => led0,
+		led1 => led1,
+		led2 => led2,
+		led3 => led3,
+		led4 => led4,
+		led5 => led5,
+		led6 => led6,
+		led7 => led7
     );
 
     vs <= vsync;

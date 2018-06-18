@@ -4,6 +4,7 @@
 -- ---------------------------------------------
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+use ieee.numeric_std.all;
 
 entity serial2vga_system is
 port (
@@ -12,7 +13,7 @@ port (
 		ena : in std_logic;
 --      Divisor :	in std_logic_vector (11 downto 0); descomentar para otras velocidades
       rx :	in std_logic;
-      tx :	out std_logic;
+      --tx :	out std_logic;
 		led0 : out std_logic;
 		led1 : out std_logic;
 		led2 : out std_logic;
@@ -28,7 +29,7 @@ port (
 	attribute loc of ena: signal is "D18";
 
 	attribute loc of rx: signal is "R7";
-	attribute loc of tx: signal is "M14";
+	--attribute loc of tx: signal is "M14";
 
 	attribute loc of led0: signal is "F12";
 	attribute loc of led1: signal is "E12";
@@ -41,28 +42,18 @@ port (
 end serial2vga_system;
 
 architecture arch of serial2vga_system is
-      component uart
-      	generic (
-		F: natural;
-		min_baud: natural;
-		num_data_bits: natural
-	);
-	port (
-         	Rx	: in std_logic;
-	 	Tx	: out std_logic;
-	 	Din	: in std_logic_vector(7 downto 0);
-	 	StartTx	: in std_logic;
-		TxBusy	: out std_logic;
-		Dout	: out std_logic_vector(7 downto 0);
-		RxRdy	: out std_logic;
-		RxErr	: out std_logic;
-		Divisor	: in std_logic_vector; 
-		clk	: in std_logic;
-		rst	: in std_logic
-	);
+      component UART_RX
+      generic (
+			g_CLKS_PER_BIT : integer := 115     -- Needs to be set correctly
+		);
+		port (
+			i_Clk       : in  std_logic;
+			i_RX_Serial : in  std_logic;
+			o_RX_DV     : out std_logic;
+			o_RX_Byte   : out std_logic_vector(7 downto 0)
+		);
       end component;
-
-      constant Divisor : std_logic_vector := "000000011011"; -- Divisor=27 para 115200 baudios
+		
       signal sig_Din	: std_logic_vector(7 downto 0);
       signal sig_Dout	: std_logic_vector(7 downto 0);
       signal sig_RxErr	: std_logic;
@@ -72,37 +63,42 @@ architecture arch of serial2vga_system is
 
    begin
 		-- UART Instanciation :
-		UUT : uart
+		UUT : UART_RX
 		generic map (
-			F 	=> 50000,
-			min_baud => 1200,
-			num_data_bits => 8
-		)
+			g_CLKS_PER_BIT => 434
+      )
 		port map (
-			Rx	=> rx,
-			Tx	=> tx,
-			Din	=> sig_Din,
-			StartTx	=> sig_StartTx,
-			TxBusy	=> sig_TxBusy,
-			Dout	=> sig_Dout,
-			RxRdy	=> sig_RxRdy,
-			RxErr	=> sig_RxErr,
-			Divisor	=> Divisor,
-			clk	=> clk,
-			rst	=> rst
-		);
+			i_clk       => clk,
+			i_rx_serial => rx,
+			o_rx_dv     => sig_RxRdy,
+			o_rx_byte   => sig_Dout
+      );
 		
-		process(sig_RxRdy)
+		process(clk)
+			variable position : integer := 0;
+			variable position_v : std_logic_vector(7 downto 0) := (others => '0');
 		begin
-			if(sig_RxRdy = '1') then
-				led0 <= sig_Dout(0);
-				led1 <= sig_Dout(1);
-				led2 <= sig_Dout(2);
-				led3 <= sig_Dout(3);
-				led4 <= sig_Dout(4);
-				led5 <= sig_Dout(5);
-				led6 <= sig_Dout(6);
-				led7 <= sig_Dout(7);
+			if(rising_edge(clk)) then
+				if(sig_RxRdy = '1') then
+					position := position + 1;
+					position_v := std_logic_vector(to_unsigned(position, 8));
+					led0 <= position_v(0);
+					led1 <= position_v(1);
+					led2 <= position_v(2);
+					led3 <= position_v(3);
+					led4 <= position_v(4);
+					led5 <= position_v(5);
+					led6 <= position_v(6);
+					led7 <= position_v(7);
+	--				led0 <= sig_Dout(0);
+	--				led1 <= sig_Dout(1);
+	--				led2 <= sig_Dout(2);
+	--				led3 <= sig_Dout(3);
+	--				led4 <= sig_Dout(4);
+	--				led5 <= sig_Dout(5);
+	--				led6 <= sig_Dout(6);
+	--				led7 <= sig_Dout(7);
+				end if;
 			end if;
 		end process;
    

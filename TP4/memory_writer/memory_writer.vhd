@@ -13,6 +13,8 @@ entity memory_writer is
 		clk : in std_logic := '0';
 		enable : in std_logic := '0';
 		rst : in std_logic := '0';
+		mode : in std_logic_vector(1 downto 0) := (others => '0');
+		angle : in std_logic_vector(BITS - 1 downto 0) := (others => '0');
 		pixel_x : out std_logic_vector(9 downto 0) := (others => '0');
 		pixel_y : out std_logic_vector(9 downto 0) := (others => '0');
 		pixel_on : out std_logic_vector(0 downto 0) := (others => '0')
@@ -32,6 +34,10 @@ architecture memory_writer_arq of memory_writer is
 
 	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
 	--constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
+	
+	constant SINGLE_ROTATION : std_logic_vector(1 downto 0) := "00";
+	constant CONSTANT_ROTATION_RIGHT : std_logic_vector(1 downto 0) := "11";
+	constant CONSTANT_ROTATION_LEFT : std_logic_vector(1 downto 0) := "01";
 
 	signal clk_signal : std_logic := '0';
 
@@ -187,10 +193,22 @@ begin
 		variable local_accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
 		variable accumulated_angle_int : integer := 0;
 		variable accumulated_angle_fractional : signed((BITS/2) - 1 downto 0) := (others => '0');
+		
+		variable current_rotation_angle : signed(31 downto 0) := ROTATION_ANGLE;
 
 	begin
 
 		if(rising_edge(clk)) then
+			--first setup mode
+			if(mode = SINGLE_ROTATION) then
+				current_rotation_angle := (others => '0');
+				accumulated_angle := signed(angle);
+			elsif(mode = CONSTANT_ROTATION_RIGHT) then
+				current_rotation_angle := - ROTATION_ANGLE;
+			elsif(mode = CONSTANT_ROTATION_LEFT) then
+				current_rotation_angle := ROTATION_ANGLE;
+			end if;
+		
 			--If rst is 1 we should either erase previous values or start writing the new ones
 			if(rst = '1') then
 				if(should_erase = '1') then
@@ -242,11 +260,14 @@ begin
 			else
 				report "VIDEO ON, DONT MODIFY MEMORY";
 				if(should_erase = '0') then
-					local_accumulated_angle := accumulated_angle + ROTATION_ANGLE;
+					local_accumulated_angle := accumulated_angle + current_rotation_angle;
 					accumulated_angle_int := to_integer(local_accumulated_angle(BITS - 1 downto BITS/2));
 					accumulated_angle_fractional := local_accumulated_angle((BITS/2) - 1 downto 0);
-					if(accumulated_angle_int >= 360) then
+					if(accumulated_angle_int >= 360 and mode = CONSTANT_ROTATION_LEFT) then
 						accumulated_angle_int := accumulated_angle_int - 360;
+					end if;
+					if(accumulated_angle_int <= 0 and mode = CONSTANT_ROTATION_RIGHT) then
+						accumulated_angle_int := accumulated_angle_int + 360;
 					end if;
 					accumulated_angle := to_signed(accumulated_angle_int,BITS/2) & accumulated_angle_fractional;
 					preprocessor_angle_input <= std_logic_vector(accumulated_angle);
