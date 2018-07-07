@@ -12,10 +12,18 @@ entity mode_decoder is
 		clk: in std_logic := '0';
 		char_in: in std_logic_vector(7 downto 0) := (others => '0');
 		RxRdy: in std_logic := '0';
-    mode: out std_logic_vector(1 downto 0) := (others => '0');
-    angle: out std_logic_vector(31 downto 0) := (others => '0')
+		mode: out std_logic_vector(1 downto 0) := (others => '0');
+		angle: out std_logic_vector(31 downto 0) := (others => '0');
+		led0 : out std_logic := '0';
+		led1 : out std_logic := '0';
+		led2 : out std_logic := '0';
+		led3 : out std_logic := '0';
+		led4 : out std_logic := '0';
+		led5 : out std_logic := '0';
+		led6 : out std_logic := '0';
+		led7 : out std_logic := '0'
 	);
-	end mode_decoder;
+end mode_decoder;
 
 architecture mode_decoder_arq of mode_decoder is
 
@@ -53,8 +61,7 @@ architecture mode_decoder_arq of mode_decoder is
 	function CHAR_TO_NUMBER(INPUT_CHARACTER : std_logic_vector(7 downto 0) := "00000000") return integer is
 	begin
 		case( INPUT_CHARACTER ) is
-	
-			when LETTER_O => return 0;
+			when LETTER_0 => return 0;
 			when LETTER_1 => return 1;
 			when LETTER_2 => return 2;
 			when LETTER_3 => return 3;
@@ -66,59 +73,118 @@ architecture mode_decoder_arq of mode_decoder is
 			when LETTER_9 => return 9;
 			when others => return 0;
 	end case ;
- end CHAR_TO_NUMBER;
+	end CHAR_TO_NUMBER;
+	
+	function IS_NUMBER(INPUT_CHARACTER : std_logic_vector(7 downto 0) := "00000000") return boolean is
+	begin
+		case( INPUT_CHARACTER ) is
+			when LETTER_0 => return true;
+			when LETTER_1 => return true;
+			when LETTER_2 => return true;
+			when LETTER_3 => return true;
+			when LETTER_4 => return true;
+			when LETTER_5 => return true;
+			when LETTER_6 => return true;
+			when LETTER_7 => return true;
+			when LETTER_8 => return true;
+			when LETTER_9 => return true;
+			when others => return false;
+	end case ;
+	end IS_NUMBER;
+	
+	function ROUND(ANGLE : integer := 0) return integer is
+	begin
+		if(ANGLE >= 360) then
+			return angle - 360;
+		else
+			return angle;
+		end if;
+	end ROUND;
 	
 	begin
-		
-		process(RxRdy)
-			variable step_to_check : integer := 0;
-			variable valid : boolean := false;
+		process(clk)	
 			variable tmp_angle : integer := 0;
-			variable angle_integer_part : std_logic_vector(15 downto 0) := (others => '0');
-
 			variable position : integer := 0;
-			type string_array is array (8 downto 0) of std_logic_vector(7 downto 0);
-			variable accumm_chars : string_array := (LETTER_R,LETTER_O,LETTER_C,LETTER_SPACE,LETTER_A,LETTER_SPACE,LETTER_0,LETTER_0,LETTER_0);
-
 		begin
-			if(char_in = LETTER_ENTER) then
-				mode <= "11";
-			else
-				mode <= "00";
-			--	if(accumm_chars(0) = LETTER_R and
-			--		accumm_chars(1) = LETTER_O and
-			--		accumm_chars(2) = LETTER_C and
-			--		accumm_chars(3) = LETTER_SPACE) then
-
-			--		if(accumm_chars(4) = LETTER_C) then
-			--			if(accumm_chars(5) = LETTER_SPACE) then
-			--				if(accumm_chars(6) = LETTER_A) then
-			--					mode <= CONSTANT_ROTATION_LEFT;
-			--				elsif (accumm_chars(6) = LETTER_H) then
-			--					mode <= CONSTANT_ROTATION_RIGHT;
-			--				end if;
-			--			end if;
-			--		elsif(accumm_chars(4) = LETTER_A) then
-			--			if(accumm_chars(5) = LETTER_SPACE) then
-			--				if(position = 8) then --Means that the angle is a 3 digit one
-			--					tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 100 + CHAR_TO_NUMBER(accumm_chars(7)) * 10 + CHAR_TO_NUMBER(accumm_chars(8));
-			--				else --2 digit angle
-			--					tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 10 + CHAR_TO_NUMBER(accumm_chars(7));
-			--				end if;
-			--				angle_integer_part := std_logic_vector(to_signed(tmp_angle,16));
-			--				angle <= angle_integer_part & "0000000000000000";
-			--				mode <= SINGLE_ROTATION;
-			--			end if;
-			--		end if;
-			--	end if;
-			--elsif(position > 8) then
-			--	valid := false;
-			--else
-			--	accumm_chars(position) := char_in;
-			--	position := position + 1;
-			end if;
-				
+			if(rising_edge(clk)) then
+				if(RxRdy = '1') then
+					if(not IS_NUMBER(char_in) and position > 6) then
+						position := 0;
+					end if;
+					if(position = 0 and char_in = LETTER_R) then
+						position := position + 1;
+					elsif(position = 1 and char_in = LETTER_O) then
+						position := position + 1;
+						mode <= CONSTANT_ROTATION_RIGHT;
+					elsif(position = 2 and char_in = LETTER_T) then
+						position := position + 1;
+					elsif(position = 3 and char_in = LETTER_SPACE) then
+						position := position + 1;
+					elsif(position = 4 and (char_in = LETTER_C or char_in = LETTER_A)) then
+						position := position + 1;
+					elsif(position = 5 and char_in = LETTER_SPACE) then
+						position := position + 1;
+					elsif(position = 6) then
+						if(char_in = LETTER_H) then
+							mode <= CONSTANT_ROTATION_RIGHT;
+							position := 0;
+						elsif(char_in = LETTER_A) then
+							mode <= CONSTANT_ROTATION_LEFT;
+							position := 0;
+						elsif(IS_NUMBER(char_in) = true) then
+							tmp_angle := CHAR_TO_NUMBER(char_in);
+							angle <= std_logic_vector(to_signed(tmp_angle, 16)) & "0000000000000000";
+							mode <= SINGLE_ROTATION;
+							position := position + 1;
+						else
+							position := 0;
+						end if;
+					elsif(position = 7 and IS_NUMBER(char_in)) then
+						tmp_angle := tmp_angle * 10 + CHAR_TO_NUMBER(char_in);
+						angle <= std_logic_vector(to_signed(tmp_angle, 16)) & "0000000000000000";
+						mode <= SINGLE_ROTATION;
+						position := position + 1;	
+					elsif(position = 8 and IS_NUMBER(char_in)) then
+						tmp_angle := ROUND(tmp_angle * 10 + CHAR_TO_NUMBER(char_in));
+						mode <= SINGLE_ROTATION;
+						angle <= std_logic_vector(to_signed(tmp_angle, 16)) & "0000000000000000";
+						position := 0;
+					else
+						position := 0;
+					end if;
+				end if;
 			
+				
+--				if(accumm_chars(0) = LETTER_R and
+--					accumm_chars(1) = LETTER_O and
+--					accumm_chars(2) = LETTER_C and
+--					accumm_chars(3) = LETTER_SPACE) then
+--
+--					if(accumm_chars(4) = LETTER_C) then
+--						if(accumm_chars(5) = LETTER_SPACE) then
+--							if(accumm_chars(6) = LETTER_A) then
+--								mode <= CONSTANT_ROTATION_LEFT;
+--							elsif (accumm_chars(6) = LETTER_H) then
+--								mode <= CONSTANT_ROTATION_RIGHT;
+--							end if;
+--						end if;
+--					elsif(accumm_chars(4) = LETTER_A) then
+--						if(accumm_chars(5) = LETTER_SPACE) then
+--							if(position = 8) then --Means that the angle is a 3 digit one
+--								tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 100 + CHAR_TO_NUMBER(accumm_chars(7)) * 10 + CHAR_TO_NUMBER(accumm_chars(8));
+--							else --2 digit angle
+--								tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 10 + CHAR_TO_NUMBER(accumm_chars(7));
+--							end if;
+--							angle_integer_part := std_logic_vector(to_signed(tmp_angle,16));
+--							angle <= angle_integer_part & "0000000000000000";
+--							mode <= SINGLE_ROTATION;
+--						end if;
+--					end if;
+--				end if;
+--			elsif(position > 8) then
+--				valid := false;
+--			else
+			end if;
 		end process;
 	
-end mode_decoder_arq;
+end;
