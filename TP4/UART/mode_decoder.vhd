@@ -13,15 +13,7 @@ entity mode_decoder is
 		char_in: in std_logic_vector(7 downto 0) := (others => '0');
 		RxRdy: in std_logic := '0';
 		mode: out std_logic_vector(1 downto 0) := (others => '0');
-		angle: out std_logic_vector(31 downto 0) := (others => '0');
-		led0 : out std_logic := '0';
-		led1 : out std_logic := '0';
-		led2 : out std_logic := '0';
-		led3 : out std_logic := '0';
-		led4 : out std_logic := '0';
-		led5 : out std_logic := '0';
-		led6 : out std_logic := '0';
-		led7 : out std_logic := '0'
+		angle: out std_logic_vector(31 downto 0) := (others => '0')
 	);
 end mode_decoder;
 
@@ -49,7 +41,6 @@ architecture mode_decoder_arq of mode_decoder is
 	constant SINGLE_ROTATION : std_logic_vector(1 downto 0) := "00";
 	constant CONSTANT_ROTATION_RIGHT : std_logic_vector(1 downto 0) := "11";
 	constant CONSTANT_ROTATION_LEFT : std_logic_vector(1 downto 0) := "01";
-
 
 	signal rom_out, enable: std_logic;
 	signal address: std_logic_vector(5 downto 0);

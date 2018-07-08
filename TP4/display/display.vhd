@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity display is
     port(
       clk: in std_logic := '0';
-      rst: in std_logic := '0'; 
+      rst: in std_logic := '0';
       ena: in std_logic := '0';
 
       rx: in std_logic := '0';
@@ -15,19 +15,11 @@ entity display is
       vs: out std_logic := '0';
       red_o: out std_logic := '0';
       grn_o: out std_logic := '0';
-      blu_o: out std_logic := '0';
-		led0 : out std_logic := '0';
-		led1 : out std_logic := '0';
-		led2 : out std_logic := '0';
-		led3 : out std_logic := '0';
-		led4 : out std_logic := '0';
-		led5 : out std_logic := '0';
-		led6 : out std_logic := '0';
-		led7 : out std_logic := '0'
+      blu_o: out std_logic := '0'
     );
-	 
+
 	 attribute loc : string;
-	 
+
 	attribute loc of clk: signal is "C9";
 	attribute loc of rst: signal is "H13";
 	attribute loc of ena: signal is "D18";
@@ -40,15 +32,6 @@ entity display is
 	attribute loc of red_o: signal is "H14";
 	attribute loc of grn_o: signal is "H15";
 	attribute loc of blu_o: signal is "G15";
-	
-	attribute loc of led0: signal is "F12";
-	attribute loc of led1: signal is "E12";
-	attribute loc of led2: signal is "E11";
-	attribute loc of led3: signal is "F11";
-	attribute loc of led4: signal is "C11";
-	attribute loc of led5: signal is "D11";
-	attribute loc of led6: signal is "E9";
-	attribute loc of led7: signal is "F9";
 
 end display;
 
@@ -60,7 +43,7 @@ architecture display_arq of display is
   constant MAX_Y : integer := 65 + 350;
 
   constant Divisor : std_logic_vector := "000000011011"; -- Divisor=27 para 115200 baudios
-    
+
   component memory_matrix is
   generic(ROWS: integer := 350; COLUMNS: integer := 350; CLK_DELAY_COUNT: integer := 9);
     port(
@@ -68,7 +51,7 @@ architecture display_arq of display is
       y_write: in std_logic_vector(9 downto 0) := (others => '0');
       write_data: in std_logic_vector(0 downto 0) := (others => '0');
       write_enable: in std_logic := '0';
-      
+
       clk: in std_logic := '0';
       enable: in std_logic := '0';
       reset: in std_logic := '0';
@@ -138,7 +121,7 @@ architecture display_arq of display is
     Dout  : out std_logic_vector(7 downto 0);
     RxRdy : out std_logic;
     RxErr : out std_logic;
-    Divisor : in std_logic_vector; 
+    Divisor : in std_logic_vector;
     clk : in std_logic;
     rst : in std_logic
   );
@@ -155,15 +138,7 @@ architecture display_arq of display is
       char_in: in std_logic_vector(7 downto 0) := (others => '0');
       RxRdy: in std_logic := '0';
       mode: out std_logic_vector(1 downto 0) := (others => '0');
-      angle: out std_logic_vector(31 downto 0) := (others => '0');
-		led0 : out std_logic := '0';
-		led1 : out std_logic := '0';
-		led2 : out std_logic := '0';
-		led3 : out std_logic := '0';
-		led4 : out std_logic := '0';
-		led5 : out std_logic := '0';
-		led6 : out std_logic := '0';
-		led7 : out std_logic := '0'
+      angle: out std_logic_vector(31 downto 0) := (others => '0')
     );
   end component;
 
@@ -172,7 +147,7 @@ architecture display_arq of display is
 
   signal x_proxy_to_ram : std_logic_vector(9 downto 0) := (others => '0');
   signal y_proxy_to_ram : std_logic_vector(9 downto 0) := (others => '0');
-  
+
   signal x_cordic_to_ram : std_logic_vector(9 downto 0) := (others => '0');
   signal y_cordic_to_ram : std_logic_vector(9 downto 0) := (others => '0');
 
@@ -198,7 +173,7 @@ architecture display_arq of display is
   signal sig_RxRdy  : std_logic;
   signal sig_TxBusy : std_logic;
   signal sig_StartTx: std_logic;
-       
+
   signal mode : std_logic_vector(1 downto 0) := (others => '0');
   signal angle : std_logic_vector(31  downto 0) := (others => '0');
   begin
@@ -283,15 +258,7 @@ architecture display_arq of display is
       char_in => sig_Dout,
       RxRdy => sig_RxRdy,
       mode => mode,
-      angle => angle,
-		led0 => led0,
-		led1 => led1,
-		led2 => led2,
-		led3 => led3,
-		led4 => led4,
-		led5 => led5,
-		led6 => led6,
-		led7 => led7
+      angle => angle
     );
 
     vs <= vsync;
