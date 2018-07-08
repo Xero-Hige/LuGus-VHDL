@@ -74,7 +74,7 @@ architecture mode_decoder_arq of mode_decoder is
 			when others => return 0;
 	end case ;
 	end CHAR_TO_NUMBER;
-	
+
 	function IS_NUMBER(INPUT_CHARACTER : std_logic_vector(7 downto 0) := "00000000") return boolean is
 	begin
 		case( INPUT_CHARACTER ) is
@@ -91,7 +91,7 @@ architecture mode_decoder_arq of mode_decoder is
 			when others => return false;
 	end case ;
 	end IS_NUMBER;
-	
+
 	function ROUND(ANGLE : integer := 0) return integer is
 	begin
 		if(ANGLE >= 360) then
@@ -100,9 +100,9 @@ architecture mode_decoder_arq of mode_decoder is
 			return angle;
 		end if;
 	end ROUND;
-	
+
 	begin
-		process(clk)	
+		process(clk)
 			variable tmp_angle : integer := 0;
 			variable position : integer := 0;
 		begin
@@ -143,7 +143,7 @@ architecture mode_decoder_arq of mode_decoder is
 						tmp_angle := tmp_angle * 10 + CHAR_TO_NUMBER(char_in);
 						angle <= std_logic_vector(to_signed(tmp_angle, 16)) & "0000000000000000";
 						mode <= SINGLE_ROTATION;
-						position := position + 1;	
+						position := position + 1;
 					elsif(position = 8 and IS_NUMBER(char_in)) then
 						tmp_angle := ROUND(tmp_angle * 10 + CHAR_TO_NUMBER(char_in));
 						mode <= SINGLE_ROTATION;
@@ -153,38 +153,7 @@ architecture mode_decoder_arq of mode_decoder is
 						position := 0;
 					end if;
 				end if;
-			
-				
---				if(accumm_chars(0) = LETTER_R and
---					accumm_chars(1) = LETTER_O and
---					accumm_chars(2) = LETTER_C and
---					accumm_chars(3) = LETTER_SPACE) then
---
---					if(accumm_chars(4) = LETTER_C) then
---						if(accumm_chars(5) = LETTER_SPACE) then
---							if(accumm_chars(6) = LETTER_A) then
---								mode <= CONSTANT_ROTATION_LEFT;
---							elsif (accumm_chars(6) = LETTER_H) then
---								mode <= CONSTANT_ROTATION_RIGHT;
---							end if;
---						end if;
---					elsif(accumm_chars(4) = LETTER_A) then
---						if(accumm_chars(5) = LETTER_SPACE) then
---							if(position = 8) then --Means that the angle is a 3 digit one
---								tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 100 + CHAR_TO_NUMBER(accumm_chars(7)) * 10 + CHAR_TO_NUMBER(accumm_chars(8));
---							else --2 digit angle
---								tmp_angle := CHAR_TO_NUMBER(accumm_chars(6)) * 10 + CHAR_TO_NUMBER(accumm_chars(7));
---							end if;
---							angle_integer_part := std_logic_vector(to_signed(tmp_angle,16));
---							angle <= angle_integer_part & "0000000000000000";
---							mode <= SINGLE_ROTATION;
---						end if;
---					end if;
---				end if;
---			elsif(position > 8) then
---				valid := false;
---			else
 			end if;
 		end process;
-	
+
 end;

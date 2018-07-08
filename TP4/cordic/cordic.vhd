@@ -28,11 +28,11 @@ architecture cordic_arq of cordic is
         z: std_logic_vector(TOTAL_BITS -1 downto 0);
     end record;
     type cordic_steps_array is array (natural range <>) of cordic_step;
-    
+
     signal cordic_steps : cordic_steps_array(STEPS downto 0);
     signal normalized_x : std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
     signal normalized_y : std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
-    
+
     component angle_step_applier is
         generic(TOTAL_BITS: integer := 32);
         port(
@@ -89,7 +89,5 @@ architecture cordic_arq of cordic is
 
         x_out <= normalized_x when angle /= ZERO else x_in;
         y_out <= normalized_y when angle /= ZERO else y_in;
-
-
 
 end architecture;

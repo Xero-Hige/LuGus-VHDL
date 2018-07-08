@@ -9,7 +9,7 @@ entity memory_matrix is
       y_write: in std_logic_vector(9 downto 0) := (others => '0');
       write_data: in std_logic_vector(0 downto 0) := (others => '0');
       write_enable: in std_logic := '0';
-      
+
       clk: in std_logic := '0';
       enable: in std_logic := '0';
       reset: in std_logic := '0';
@@ -44,14 +44,14 @@ architecture memory_matrix_arq of memory_matrix is
     signal data : std_logic_vector(0 downto 0) := (others => '0');
 
     signal rb : integer := 0;
-    
+
     component dual_port_ram is
     port (
       data_in : in std_logic_vector (0 downto 0) := (others => '0');
       write_address : in std_logic_vector (13 downto 0) := (others => '0');
       write_enable : in std_logic := '0';
       ram_write_mask : in std_logic_vector(7 downto 0) := (others => '0');
-      
+
       enable : in std_logic := '0';
       clk : in std_logic := '0';
       reset : in std_logic := '0';
@@ -91,8 +91,6 @@ architecture memory_matrix_arq of memory_matrix is
       x_write_int := to_integer(unsigned(x_write));
       y_write_int := to_integer(unsigned(y_write));
 
-      --report "MATRIX-W " & integer'image(x_write_int) & " : " & integer'image(y_write_int)  & "=>" & std_logic'image(write_data(0));
-
       if(x_write_int <= COLUMNS and y_write_int <= ROWS) then
 
         write_bit_position := x_write_int + y_write_int  * ROWS;
@@ -121,19 +119,14 @@ architecture memory_matrix_arq of memory_matrix is
 
     read_process : process(enable, reset, x_read, y_read, data)
       variable x_read_int : integer := 0;
-      variable y_read_int : integer := 0; 
-      variable tmp_read_ram : integer := 0; 
+      variable y_read_int : integer := 0;
+      variable tmp_read_ram : integer := 0;
       variable read_bit_position : integer := 0;
       variable read_pos_in_ram : integer := 0;
-      
+
     begin
       x_read_int := to_integer(unsigned(x_read));
       y_read_int := to_integer(unsigned(y_read));
-
-      --if(data(0) = '1') then
-      --  report "MATRIX-R " & integer'image(x_read_int) & " : " & integer'image(y_read_int) & "=>" & std_logic'image(data(0));
-      --end if;
-      
 
       if(ROWS > MAX_ROWS) then
         report "MAX ROWS is: " & integer'image(MAX_ROWS) severity failure;
@@ -158,14 +151,13 @@ architecture memory_matrix_arq of memory_matrix is
           when RAM_SIZE_6 to RAM_SIZE_7-1 => tmp_read_ram := 7;
           when others => tmp_read_ram := 0;
         end case;
-
-        
+    
         read_pos_in_ram := read_bit_position - (tmp_read_ram * RAM_SIZE);
-        
+
         read_address <= std_logic_vector(to_unsigned(read_pos_in_ram, 14));
-        
+
         ram_read_mask <= std_logic_vector(shift_left(default_ram_mask, tmp_read_ram));
-        
+
         read_data <= data;
 
       end if;

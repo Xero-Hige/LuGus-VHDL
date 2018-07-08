@@ -16,7 +16,7 @@ architecture cordic_commander_arq of cordic_commander is
 
   constant CONSTANT_ROTATION_ANGLE_LEFT : std_logic_vector(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
   constant CONSTANT_ROTATION_ANGLE_RIGHT : std_logic_vector(31 downto 0) := "11111111111111110100110000000000"; --(-0.703125) degrees
-   
+
 begin
 
   process(clk)
@@ -29,21 +29,19 @@ begin
     mode_int := to_integer(signed(mode));
 
     if(rising_edge(clk)) then
-
       case( mode_int ) is
-      
         when 0 =>
           if(not  rotated) then
             angle <= tmp_angle;
             rotated := true;
-          else 
+          else
             angle <= (others => '0');
           end if;
-        when 1 => 
+        when 1 =>
           angle <= CONSTANT_ROTATION_ANGLE_LEFT;
           rotated := false;
-        when -1 => 
-          angle <= CONSTANT_ROTATION_ANGLE_RIGHT; 
+        when -1 =>
+          angle <= CONSTANT_ROTATION_ANGLE_RIGHT;
           rotated := false;
         when others =>
           angle <= (others => '0');
@@ -51,7 +49,6 @@ begin
      end case ;
     end if;
       
-
   end process;
 
 end architecture;

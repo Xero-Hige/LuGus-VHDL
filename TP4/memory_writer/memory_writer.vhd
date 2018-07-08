@@ -33,8 +33,7 @@ architecture memory_writer_arq of memory_writer is
 	constant MAX_POSITION : integer := 177;
 
 	constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000001011010000000000"; --0.703125 degrees
-	--constant ROTATION_ANGLE : signed(31 downto 0) := "00000000000000000000000000000000";
-	
+
 	constant SINGLE_ROTATION : std_logic_vector(1 downto 0) := "00";
 	constant CONSTANT_ROTATION_RIGHT : std_logic_vector(1 downto 0) := "11";
 	constant CONSTANT_ROTATION_LEFT : std_logic_vector(1 downto 0) := "01";
@@ -140,49 +139,27 @@ begin
       WEB  => '0'
     );
 
-
-   --y_values_ram: RAMB16_S18_S18
-   -- generic map(WRITE_MODE_B => "READ_FIRST")
-   -- port map (
-   --   DOA  => open,
-   --   DOB  => memory_read_y,
-   --   ADDRA => open,
-   --   ADDRB => y_read_address_to_memory,
-   --   DIPA => (others => '0'),
-   --   DIPB => (others => '0'),
-   --   CLKA  => clk_signal,
-   --   CLKB => clk_signal,
-   --   DIA  => y_input_to_memory,
-   --   DIB  => (others => '0'),
-   --   ENA  => enable,
-   --   ENB  => enable,
-   --   SSRA  => '0',
-   --   SSRB => '0',
-   --   WEA  => enable,
-   --   WEB  => '0'
-   -- );
-
   preprocessor_x_input <= ("0000000000000000" & memory_read_x);
   preprocessor_y_input <= (others => '0');
-  
+
 	process(clk, rst)
 
 		variable moved_x : unsigned(BITS - 1 downto 0) := (others => '0');
 		variable moved_y : unsigned(BITS - 1 downto 0) := (others => '0');
 
 		variable extended_moved_x_bit : std_logic_vector(BITS * 2 - 1 downto 0) := (others => '0');
-		
+
 		variable extended_moved_y_bit_unsigned : unsigned(BITS * 2 - 1 downto 0) := (others => '0');
 		variable truncated_extended_moved_y_bit_unsigned : unsigned(9 downto 0) := (others => '0');
 		variable inverted_y_bit : unsigned(9 downto 0) := (others => '0');
-		
+
 		variable extended_moved_y_bit : std_logic_vector(BITS * 2 - 1 downto 0) := (others => '0');
 
 		variable moved_x_bit : std_logic_vector(9 downto 0) := (others => '0');
 		variable moved_y_bit : std_logic_vector(9 downto 0) := (others => '0');
 
 		variable point_position : integer := 0;
-		
+
 		variable erasing_x : integer := 0;
 		variable erasing_y : integer := 0;
 
@@ -193,7 +170,7 @@ begin
 		variable local_accumulated_angle : signed(BITS - 1 downto 0) := (others => '0');
 		variable accumulated_angle_int : integer := 0;
 		variable accumulated_angle_fractional : signed((BITS/2) - 1 downto 0) := (others => '0');
-		
+
 		variable current_rotation_angle : signed(31 downto 0) := ROTATION_ANGLE;
 
 	begin
@@ -208,7 +185,7 @@ begin
 			elsif(mode = CONSTANT_ROTATION_LEFT) then
 				current_rotation_angle := ROTATION_ANGLE;
 			end if;
-		
+
 			--If rst is 1 we should either erase previous values or start writing the new ones
 			if(rst = '1') then
 				if(should_erase = '1') then
@@ -229,7 +206,7 @@ begin
 				else --We should start writing the next values
 					if(point_position >= 0  and point_position < MAX_POSITION) then
 						point_position := point_position + 1;
-						
+
 						--Compute address to set to memory
 						x_read_address_to_memory <= std_logic_vector(to_unsigned(point_position,10));
 
@@ -239,7 +216,7 @@ begin
 
 						extended_moved_x_bit := std_logic_vector(moved_x * PIXEL_COEF); --Compute the pixel location
 						moved_x_bit := extended_moved_x_bit(32 + 9 downto 32); --Truncate to integer value
-						
+
 						extended_moved_y_bit_unsigned := moved_y * PIXEL_COEF; --Compute the pixel location
 						truncated_extended_moved_y_bit_unsigned := extended_moved_y_bit_unsigned(32 + 9 downto 32); --Truncate to integer value
 						inverted_y_bit := ROWS - truncated_extended_moved_y_bit_unsigned;
@@ -276,11 +253,9 @@ begin
 				should_erase := '1';
 				erasing_x := 0;
 				erasing_y := 0;
-				
+
 			end if;
 		end if;
 	end process;
-
-
-
+	
 end memory_writer_arq;

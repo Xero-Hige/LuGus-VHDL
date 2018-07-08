@@ -22,12 +22,12 @@ architecture angle_step_applier_arq of angle_step_applier is
 
     signal lut_index : integer := 0;
     signal arctg_lut_angle : std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
-    
+
     component arctg_lut is
         generic(TOTAL_BITS: integer := 32);
         port(
             step_index: in integer := 0;
-            angle: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0') 
+            angle: out std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0')
         );
     end component;
 
@@ -54,10 +54,6 @@ architecture angle_step_applier_arq of angle_step_applier is
             variable y_offset_vector : std_logic_vector(TOTAL_BITS - 1 downto 0) := (others => '0');
 		begin
 
-            --report integer'image(step_index);
-            --report integer'image(to_integer(unsigned(x_in)));
-            --report integer'image(to_integer(unsigned(y_in)));
-
             lut_index <= step_index;
 
             x_integer := to_integer(signed(x_in));
@@ -68,8 +64,6 @@ architecture angle_step_applier_arq of angle_step_applier is
                 d := 1;
             else
                 d := -1;
-            --else
-            --    d := 0; --No longer not applying step if the angle is exactly as expected. In every step the vercor will move a little bit
             end if;
 
             x_offset_vector := std_logic_vector(shift_right(signed(y_in),step_index));

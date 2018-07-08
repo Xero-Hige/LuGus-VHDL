@@ -30,7 +30,7 @@ architecture preprocessor_arq of preprocessor is
 		begin
             angle_int := to_integer(signed(angle_in(TOTAL_BITS - 1 downto TOTAL_BITS/2))); --Get only the integer part, not the factional part
             fractional_angle_part := angle_in((TOTAL_BITS/2) - 1 downto 0);
-            x_int := to_integer(signed(x_in)); 
+            x_int := to_integer(signed(x_in));
             y_int := to_integer(signed(y_in));
 
             if(angle_int > 180) then
@@ -39,7 +39,6 @@ architecture preprocessor_arq of preprocessor is
                 angle_int := 360 + angle_int;
             end if;
                 
-
             if(angle_int > 90) then
                 tmp_int := x_int;
                 x_int := -y_int;
